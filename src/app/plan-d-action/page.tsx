@@ -1,10 +1,11 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   closestCenter,
   DndContext,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -17,7 +18,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import EtapeSortable from "@/app/plan-d-action/etape";
-import { Etape } from "@/app/plan-d-action/type";
+import { Etape } from "@/types/etape";
 
 export default function Problematiques() {
   const [etapes, setEtapes] = useState<Etape[]>([]);
@@ -33,7 +34,12 @@ export default function Problematiques() {
     }),
   );
 
-  const planHandler = (event) => {
+  const planHandler = (
+    event:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
     event.preventDefault();
 
     let finalEtape = {
@@ -73,11 +79,10 @@ export default function Problematiques() {
     setEtapes([...temp]);
   };
 
-  function handleDragEnd(event) {
+  function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-    console.log(active, over);
 
-    if (active.id !== over.id) {
+    if (active.id !== over?.id) {
       let steps = etapes;
 
       const oldIndex = steps
@@ -116,9 +121,9 @@ export default function Problematiques() {
           placeholder="Etudier le fromage"
           value={etape.content}
           onInput={(event) => {
-            console.log(event.target.value);
             setEtape({
               ...etape,
+              // @ts-ignore
               content: event.target.value,
             });
           }}

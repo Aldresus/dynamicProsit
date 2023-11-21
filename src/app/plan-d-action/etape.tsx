@@ -2,7 +2,7 @@
 import { Button, Title } from "@mantine/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Etape } from "@/app/plan-d-action/type";
+import { Etape } from "@/types/etape";
 import { GripVertical } from "lucide-react";
 
 interface EtapeProps extends React.HTMLAttributes<HTMLDivElement> {

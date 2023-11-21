@@ -1,13 +1,18 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function Problematiques() {
   const [problematiques, setProblematiques] = useState<string[]>(["test"]);
   const [problematique, setProblematique] = useState("");
 
-  const problematiqueHandler = (event) => {
+  const problematiqueHandler = (
+    event:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
     event.preventDefault();
     setProblematiques([...problematiques, problematique]);
     setProblematique("");
@@ -34,7 +39,7 @@ export default function Problematiques() {
           placeholder="Comment trouver le voleur de fromage ?"
           value={problematique}
           onInput={(event) => {
-            console.log(event.target.value);
+            // @ts-ignore
             setProblematique(event.target.value);
           }}
         />

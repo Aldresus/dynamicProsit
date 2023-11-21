@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function Pistes() {
   const [pistesDeSolutions, setPistesDeSolutions] = useState<string[]>([
@@ -9,7 +9,12 @@ export default function Pistes() {
   ]);
   const [pisteDeSolution, setPisteDeSolution] = useState("");
 
-  const pisteHandler = (event) => {
+  const pisteHandler = (
+    event:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
     event.preventDefault();
     setPistesDeSolutions([...pistesDeSolutions, pisteDeSolution]);
     setPisteDeSolution("");
@@ -37,7 +42,7 @@ export default function Pistes() {
           placeholder="Il faut faire un algorithme de recherche de fromage avec python"
           value={pisteDeSolution}
           onInput={(event) => {
-            console.log(event.target.value);
+            // @ts-ignore
             setPisteDeSolution(event.target.value);
           }}
         />

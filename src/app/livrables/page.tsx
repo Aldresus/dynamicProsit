@@ -1,13 +1,18 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function Livrables() {
   const [livrables, setLivrables] = useState<string[]>(["test"]);
   const [livrable, setLivrable] = useState("");
 
-  const livrableHandler = (event) => {
+  const livrableHandler = (
+    event:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
     event.preventDefault();
     setLivrables([...livrables, livrable]);
     setLivrable("");
@@ -35,7 +40,7 @@ export default function Livrables() {
           placeholder="Un rapport de 10 pages sur le voleur de fromage, son histoire, ses motivations, et comment il a fait pour voler le fromage"
           value={livrable}
           onInput={(event) => {
-            console.log(event.target.value);
+            // @ts-ignore
             setLivrable(event.target.value);
           }}
         />
