@@ -1,13 +1,18 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function MotsClefs() {
   const [keywords, setKeywords] = useState<string[]>(["test"]);
   const [keyword, setKeyword] = useState("");
 
-  const keywordHandler = (event) => {
+  const keywordHandler = (
+    event:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
     event.preventDefault();
     setKeywords([...keywords, keyword]);
     setKeyword("");
@@ -35,7 +40,7 @@ export default function MotsClefs() {
           placeholder="fromage"
           value={keyword}
           onInput={(event) => {
-            console.log(event.target.value);
+            // @ts-ignore
             setKeyword(event.target.value);
           }}
         />
