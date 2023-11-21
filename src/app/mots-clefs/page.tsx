@@ -1,10 +1,11 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import PrositContext from "@/components/prositContext";
 
 export default function MotsClefs() {
-  const [keywords, setKeywords] = useState<string[]>(["test"]);
+  const { prosit, setProsit } = useContext(PrositContext);
   const [keyword, setKeyword] = useState("");
 
   const keywordHandler = (
@@ -14,7 +15,11 @@ export default function MotsClefs() {
       | React.KeyboardEvent<HTMLTextAreaElement>,
   ) => {
     event.preventDefault();
-    setKeywords([...keywords, keyword]);
+    // setKeywords([...keywords, keyword]);
+    setProsit({
+      ...prosit,
+      motsCles: [...prosit.motsCles, keyword],
+    });
     setKeyword("");
   };
 
@@ -55,7 +60,7 @@ export default function MotsClefs() {
       </form>
 
       <div className="px-6">
-        {keywords?.map((value, index) => (
+        {prosit.motsCles?.map((value, index) => (
           <div className="group flex items-center gap-2" key={value + index}>
             <Title order={3}>- {value}</Title>
             <div className="flex group gap-1 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
@@ -64,18 +69,24 @@ export default function MotsClefs() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...keywords];
+                  let temp = [...prosit.motsCles];
                   temp.splice(index, 1);
-                  setKeywords([...temp]);
+                  setProsit({
+                    ...prosit,
+                    motsCles: [...temp],
+                  });
                 }}
               >
                 Supprimer
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...keywords];
+                  let temp = [...prosit.motsCles];
                   setKeyword(temp.splice(index, 1)[0]);
-                  setKeywords([...temp]);
+                  setProsit({
+                    ...prosit,
+                    motsCles: [...temp],
+                  });
                 }}
                 size="compact-md"
               >

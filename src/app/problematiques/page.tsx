@@ -1,10 +1,11 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import PrositContext from "@/components/prositContext";
 
 export default function Problematiques() {
-  const [problematiques, setProblematiques] = useState<string[]>(["test"]);
+  const { prosit, setProsit } = useContext(PrositContext);
   const [problematique, setProblematique] = useState("");
 
   const problematiqueHandler = (
@@ -14,7 +15,10 @@ export default function Problematiques() {
       | React.KeyboardEvent<HTMLTextAreaElement>,
   ) => {
     event.preventDefault();
-    setProblematiques([...problematiques, problematique]);
+    setProsit({
+      ...prosit,
+      problematiques: [...prosit.problematiques, problematique],
+    });
     setProblematique("");
   };
 
@@ -54,7 +58,7 @@ export default function Problematiques() {
       </form>
 
       <div className="px-6">
-        {problematiques?.map((value, index) => (
+        {prosit.problematiques?.map((value, index) => (
           <div className="group flex items-center gap-1" key={value + index}>
             <Title order={3}>- {value}</Title>
             <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
@@ -63,18 +67,18 @@ export default function Problematiques() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...problematiques];
+                  let temp = [...prosit.problematiques];
                   temp.splice(index, 1);
-                  setProblematiques([...temp]);
+                  setProsit({ ...prosit, problematiques: [...temp] });
                 }}
               >
                 Supprimer
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...problematiques];
+                  let temp = [...prosit.problematiques];
                   setProblematique(temp.splice(index, 1)[0]);
-                  setProblematiques([...temp]);
+                  setProsit({ ...prosit, problematiques: [...temp] });
                 }}
                 size="compact-md"
               >

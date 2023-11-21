@@ -1,10 +1,11 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import PrositContext from "@/components/prositContext";
 
 export default function Livrables() {
-  const [livrables, setLivrables] = useState<string[]>(["test"]);
+  const { prosit, setProsit } = useContext(PrositContext);
   const [livrable, setLivrable] = useState("");
 
   const livrableHandler = (
@@ -14,7 +15,10 @@ export default function Livrables() {
       | React.KeyboardEvent<HTMLTextAreaElement>,
   ) => {
     event.preventDefault();
-    setLivrables([...livrables, livrable]);
+    setProsit({
+      ...prosit,
+      livrables: [...prosit.livrables, livrable],
+    });
     setLivrable("");
   };
 
@@ -55,7 +59,7 @@ export default function Livrables() {
       </form>
 
       <div className="px-6">
-        {livrables?.map((value, index) => (
+        {prosit.livrables?.map((value, index) => (
           <div className="group flex items-center gap-1" key={value + index}>
             <Title order={3}>- {value}</Title>
             <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
@@ -64,18 +68,18 @@ export default function Livrables() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...livrables];
+                  let temp = [...prosit.livrables];
                   temp.splice(index, 1);
-                  setLivrables([...temp]);
+                  setProsit({ ...prosit, livrables: [...temp] });
                 }}
               >
                 Supprimer
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...livrables];
+                  let temp = [...prosit.livrables];
                   setLivrable(temp.splice(index, 1)[0]);
-                  setLivrables([...temp]);
+                  setProsit({ ...prosit, livrables: [...temp] });
                 }}
                 size="compact-md"
               >

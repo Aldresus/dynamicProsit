@@ -1,12 +1,12 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import PrositContext from "@/components/prositContext";
 
 export default function Pistes() {
-  const [pistesDeSolutions, setPistesDeSolutions] = useState<string[]>([
-    "test",
-  ]);
+  const { prosit, setProsit } = useContext(PrositContext);
+
   const [pisteDeSolution, setPisteDeSolution] = useState("");
 
   const pisteHandler = (
@@ -16,7 +16,10 @@ export default function Pistes() {
       | React.KeyboardEvent<HTMLTextAreaElement>,
   ) => {
     event.preventDefault();
-    setPistesDeSolutions([...pistesDeSolutions, pisteDeSolution]);
+    setProsit({
+      ...prosit,
+      pistesDeSolutions: [...prosit.pistesDeSolutions, pisteDeSolution],
+    });
     setPisteDeSolution("");
   };
 
@@ -57,7 +60,7 @@ export default function Pistes() {
       </form>
 
       <div className="px-6">
-        {pistesDeSolutions?.map((value, index) => (
+        {prosit.pistesDeSolutions?.map((value, index) => (
           <div className="group flex items-center gap-1" key={value + index}>
             <Title order={3}>- {value}</Title>
             <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
@@ -66,18 +69,25 @@ export default function Pistes() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...pistesDeSolutions];
+                  let temp = [...prosit.pistesDeSolutions];
                   temp.splice(index, 1);
-                  setPistesDeSolutions([...temp]);
+
+                  setProsit({
+                    ...prosit,
+                    pistesDeSolutions: [...temp],
+                  });
                 }}
               >
                 Supprimer
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...pistesDeSolutions];
+                  let temp = [...prosit.pistesDeSolutions];
                   setPisteDeSolution(temp.splice(index, 1)[0]);
-                  setPistesDeSolutions([...temp]);
+                  setProsit({
+                    ...prosit,
+                    pistesDeSolutions: [...temp],
+                  });
                 }}
                 size="compact-md"
               >

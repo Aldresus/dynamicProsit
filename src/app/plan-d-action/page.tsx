@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   closestCenter,
   DndContext,
@@ -19,9 +19,10 @@ import {
 } from "@dnd-kit/sortable";
 import EtapeSortable from "@/app/plan-d-action/etape";
 import { Etape } from "@/types/etape";
+import PrositContext from "@/components/prositContext";
 
 export default function Problematiques() {
-  const [etapes, setEtapes] = useState<Etape[]>([]);
+  const { prosit, setProsit } = useContext(PrositContext);
   const [etape, setEtape] = useState<Etape>({
     etapeNo: 0,
     content: "",
@@ -43,11 +44,14 @@ export default function Problematiques() {
     event.preventDefault();
 
     let finalEtape = {
-      etapeNo: etapes.length + 1,
+      etapeNo: prosit.planDAction.length + 1,
       content: etape.content,
     };
 
-    setEtapes([...etapes, finalEtape]);
+    setProsit({
+      ...prosit,
+      planDAction: [...prosit.planDAction, finalEtape],
+    });
     setEtape({
       etapeNo: 0,
       content: "",
@@ -66,24 +70,31 @@ export default function Problematiques() {
   };
 
   const editEtape = (index: number) => {
+    //fixme
     console.log(index);
-    let temp = [...etapes];
+    let temp = [...prosit.planDAction];
     setEtape(temp.splice(index - 1, 1)[0]);
-    setEtapes([...temp]);
+    setProsit({
+      ...prosit,
+      planDAction: [...temp],
+    });
   };
 
   const deleteEtape = (index: number) => {
     console.log(index);
-    let temp = [...etapes];
+    let temp = [...prosit.planDAction];
     temp.splice(index - 1, 1);
-    setEtapes([...temp]);
+    setProsit({
+      ...prosit,
+      planDAction: [...temp],
+    });
   };
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
     if (active.id !== over?.id) {
-      let steps = etapes;
+      let steps = prosit.planDAction;
 
       const oldIndex = steps
         .map((etape) => etape.etapeNo)
@@ -92,9 +103,12 @@ export default function Problematiques() {
         .map((etape) => etape.etapeNo)
         .indexOf(over!.id as number);
 
-      setEtapes((items) => {
-        let tempEtapes = arrayMove(items, oldIndex, newIndex);
-        return reorganizeSteps(tempEtapes);
+      steps = arrayMove(steps, oldIndex, newIndex);
+      steps = reorganizeSteps(steps);
+
+      setProsit({
+        ...prosit,
+        planDAction: [...steps],
       });
     }
   }
@@ -144,12 +158,12 @@ export default function Problematiques() {
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={etapes.map((etape) => etape.etapeNo)}
+          items={prosit.planDAction.map((etape) => etape.etapeNo)}
           strategy={verticalListSortingStrategy}
         >
           <div className="px-6 w-full flex flex-col gap-1">
             {/*todo avoir des sous truc jor 1. a. b. c. */}
-            {etapes?.map((value) => (
+            {prosit.planDAction?.map((value) => (
               <EtapeSortable
                 key={value.etapeNo + value.content}
                 value={value}

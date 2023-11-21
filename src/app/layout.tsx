@@ -4,15 +4,17 @@ import "@mantine/core/styles.css";
 
 import {
   AppShell,
+  Button,
   ColorSchemeScript,
   Kbd,
   MantineProvider,
+  Modal,
   NavLink,
   Text,
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import React from "react";
+import React, { useContext } from "react";
 import {
   AreaChart,
   HelpCircle,
@@ -23,6 +25,7 @@ import {
   Settings,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import PrositContext, { PrositProvider } from "@/components/prositContext";
 
 export default function RootLayout({
   children,
@@ -30,6 +33,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [opened, { toggle }] = useDisclosure();
+  const [modalopened, { open, close }] = useDisclosure(false);
+
   const pathname = usePathname();
 
   return (
@@ -39,25 +44,41 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider>
+          <Modal
+            centered
+            opened={modalopened}
+            onClose={close}
+            title="Etes vous sur de voir réinitialiser votre prosit ?"
+          >
+            <div className="flex justify-between items-end h-20">
+              <Button
+                onClick={() => {
+                  localStorage.removeItem("prosit");
+                  //refresh the page
+                  window.location.reload();
+                }}
+                color="red"
+                variant="transparent"
+              >
+                Réinitialiser
+              </Button>
+              <Button onClick={close}>Annuler</Button>
+            </div>
+          </Modal>
+
           <AppShell
             // header={{ height: 60 }}
             navbar={{
               width: 300,
               breakpoint: "sm",
-              collapsed: { mobile: !opened },
             }}
             aside={{
               width: 300,
               breakpoint: "sm",
-              collapsed: { mobile: !opened },
+              collapsed: { mobile: !opened, desktop: !opened },
             }}
             padding="md"
           >
-            {/*<AppShell.Header>*/}
-            {/*  <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />*/}
-            {/*  <div>Logo</div>*/}
-            {/*</AppShell.Header>*/}
-
             <AppShell.Navbar p="md" className="flex flex-col gap-9 ">
               <Title order={1}>Les prosits là, super.</Title>
               <div className="flex flex-col justify-center flex-1 gap-3">
@@ -100,16 +121,27 @@ export default function RootLayout({
                   active={pathname === "/plan-d-action"}
                 />
               </div>
-              <NavLink
-                label="Options"
-                leftSection={<Settings size="1rem" />}
-                href={"/options"}
-                active={pathname === "/options"}
-              />
+
+              <div className="flex">
+                <NavLink
+                  label="Options"
+                  leftSection={<Settings size="1rem" />}
+                  href={"/options"}
+                  active={pathname === "/options"}
+                />
+                <Button onClick={toggle} variant="transparent">
+                  Aide
+                </Button>
+              </div>
+              <Button fullWidth color="red" onClick={open}>
+                Réinitialiser le prosit
+              </Button>
             </AppShell.Navbar>
 
             <AppShell.Main>
-              <div className="px-20">{children}</div>
+              <PrositProvider>
+                <div className="px-20">{children}</div>
+              </PrositProvider>
             </AppShell.Main>
 
             <AppShell.Aside p="md" className="flex flex-col gap-3 ">
