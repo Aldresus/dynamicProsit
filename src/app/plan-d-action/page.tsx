@@ -91,6 +91,7 @@ export default function Problematiques() {
     console.log(index);
     let temp = [...prosit.planDAction];
     setEtape(temp.splice(index - 1, 1)[0]);
+    temp = reorganizeSteps(temp);
     setProsit({
       ...prosit,
       planDAction: [...temp],
@@ -101,6 +102,7 @@ export default function Problematiques() {
     console.log(index);
     let temp = [...prosit.planDAction];
     temp.splice(index - 1, 1);
+    temp = reorganizeSteps(temp);
     setProsit({
       ...prosit,
       planDAction: [...temp],
