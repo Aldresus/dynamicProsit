@@ -11,8 +11,6 @@ export default function Home() {
 
   const { prosit, setProsit } = useContext(PrositContext);
 
-  console.log(prosit);
-
   return (
     <form
       onSubmit={(e) => {
