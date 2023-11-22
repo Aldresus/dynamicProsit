@@ -68,7 +68,7 @@ export default function Problematiques() {
             problematiqueHandler();
           }}
         >
-          Ajouter le mot clef
+          Ajouter la problématique
         </Button>
       </form>
 

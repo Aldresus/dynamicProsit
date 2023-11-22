@@ -11,6 +11,7 @@ import {
   Modal,
   NavLink,
   Title,
+  createTheme,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import React, { useEffect, useState } from "react";
@@ -22,7 +23,6 @@ import {
   KeyRound,
   Lightbulb,
   MapPinned,
-  Settings,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
@@ -81,13 +81,23 @@ export default function RootLayout({
     ...globalHotKeys(router),
   ]);
 
+  const theme = createTheme({
+    fontSizes: {
+      // xs: "1rem",
+      // sm: "1.1rem",
+      // md: "1.25rem",
+      // lg: "1.35rem",
+      // xl: "1.5rem",
+    },
+  });
+
   return (
     <html lang="en">
       <head>
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider>
+        <MantineProvider theme={theme}>
           <PrositContext.Provider value={{ prosit, setProsit, clearProsit }}>
             <Modal
               centered
@@ -125,7 +135,9 @@ export default function RootLayout({
               padding="md"
             >
               <AppShell.Navbar p="md" className="flex flex-col gap-9 ">
-                <Title order={1}>Les prosits là, super.</Title>
+                <Title order={1} lh={1}>
+                  Les prosits là, <span className="font-light">super</span>
+                </Title>
                 <div className="flex flex-col justify-center flex-1 gap-3">
                   <NavLink
                     active={pathname === "/"}
@@ -172,26 +184,15 @@ export default function RootLayout({
                     href={"/plan-d-action"}
                     active={pathname === "/plan-d-action"}
                   />
-                  <Button
-                    fullWidth
-                    color="green"
-                    onClick={() => todocx(prosit)}
-                  >
-                    Exporter en .docx
+                  <Button fullWidth onClick={toggle} variant="light">
+                    {!opened ? "Afficher" : "Masquer"} les raccourcis
                   </Button>
                 </div>
 
-                <div className="flex">
-                  <NavLink
-                    label="Options"
-                    leftSection={<Settings size="1rem" />}
-                    href={"/options"}
-                    active={pathname === "/options"}
-                  />
-                  <Button onClick={toggle} variant="transparent">
-                    Aide
-                  </Button>
-                </div>
+                <Button fullWidth color="green" onClick={() => todocx(prosit)}>
+                  Exporter en .docx
+                </Button>
+
                 <Button fullWidth variant="subtle" color="red" onClick={open}>
                   Réinitialiser le prosit
                 </Button>
