@@ -10,7 +10,6 @@ import {
   MantineProvider,
   Modal,
   NavLink,
-  Text,
   Title,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
@@ -166,20 +165,55 @@ export default function RootLayout({
 
               <AppShell.Aside p="md" className="flex flex-col gap-3 ">
                 <Title order={2}>Aide</Title>
-                <div className="flex flex-col justify-center flex-1">
-                  <Text>bla bla bla aide super</Text>
+                <div className="flex flex-col gap-3 justify-center flex-1">
                   <Title order={3}>Raccourcis</Title>
                   <div>
-                    <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>1..2..3..4</Kbd>
-                    pour changer de page
+                    <div>
+                      <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>a</Kbd>
+                    </div>
+                    page informations
                   </div>
                   <div>
-                    <Kbd>ctrl</Kbd> + <Kbd>enter</Kbd> pour passer à la page
-                    suivante
+                    <div>
+                      <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>z</Kbd>
+                    </div>
+                    page mots clefs
                   </div>
                   <div>
-                    <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>enter</Kbd> pour
-                    passer à la page precedente
+                    <div>
+                      <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>e</Kbd>
+                    </div>
+                    page problematiques
+                  </div>
+                  <div>
+                    <div>
+                      <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>r</Kbd>
+                    </div>
+                    page pistes de solution
+                  </div>
+                  <div>
+                    <div>
+                      <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>t</Kbd>
+                    </div>
+                    page livrables
+                  </div>
+                  <div>
+                    <div>
+                      <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>y</Kbd>
+                    </div>
+                    page plan d&apos;action
+                  </div>
+                  <div>
+                    <div>
+                      <Kbd>ctrl</Kbd> + <Kbd>enter</Kbd>
+                    </div>
+                    pour passer à la page suivante
+                  </div>
+                  <div>
+                    <div>
+                      <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>enter</Kbd>
+                    </div>
+                    pour passer à la page precedente
                   </div>
                 </div>
               </AppShell.Aside>
