@@ -1,21 +1,38 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PrositContext from "@/components/prositContext";
+import { useRouter } from "next/navigation";
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { globalHotKeys } from "@/components/globalHotKeys";
 
 export default function MotsClefs() {
   const { prosit, setProsit } = useContext(PrositContext);
   const [keyword, setKeyword] = useState("");
+  const [keywords, setKeywords] = useState<string[]>([]);
 
-  const keywordHandler = (
-    event:
-      | React.FormEvent<HTMLFormElement>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    event.preventDefault();
-    // setKeywords([...keywords, keyword]);
+  useEffect(() => {
+    setKeywords(prosit.motsCles);
+  }, [prosit]);
+
+  const router = useRouter();
+
+  const pageHotkeys: any[] = [
+    ["ctrl+enter", () => router.push("/problematiques")],
+    ["ctrl+shift+enter", () => router.push("/")],
+  ];
+
+  useHotkeys(pageHotkeys);
+
+  const hotkeys = getHotkeyHandler([
+    ["enter", () => keywordHandler()],
+    ["shift+enter", () => keywordHandler()],
+    ...globalHotKeys(router),
+    ...pageHotkeys,
+  ]);
+
+  const keywordHandler = () => {
     setProsit({
       ...prosit,
       motsCles: [...prosit.motsCles, keyword],
@@ -28,17 +45,14 @@ export default function MotsClefs() {
       <Title order={2}>Mots clefs</Title>
 
       <form
-        onSubmit={(event) => keywordHandler(event)}
+        onSubmit={(event) => {
+          event.preventDefault();
+          keywordHandler();
+        }}
         className="flex gap-2 items-end"
       >
         <Textarea
-          onKeyDown={(e) => {
-            if (e.keyCode == 13) {
-              //method to prevent from default behaviour
-              e.preventDefault();
-              keywordHandler(e);
-            }
-          }}
+          onKeyDown={hotkeys}
           className="flex-1"
           autoFocus
           label="Mot clef"
@@ -52,7 +66,8 @@ export default function MotsClefs() {
         <Button
           type="submit"
           onClick={(event) => {
-            keywordHandler(event);
+            event.preventDefault();
+            keywordHandler();
           }}
         >
           Ajouter le mot clef
@@ -60,7 +75,7 @@ export default function MotsClefs() {
       </form>
 
       <div className="px-6">
-        {prosit.motsCles?.map((value, index) => (
+        {keywords.map((value, index) => (
           <div className="group flex items-center gap-2" key={value + index}>
             <Title order={3}>- {value}</Title>
             <div className="flex group gap-1 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">

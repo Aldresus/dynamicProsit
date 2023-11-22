@@ -13,7 +13,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import React, { useEffect, useState } from "react";
 import {
   AreaChart,
@@ -24,9 +24,10 @@ import {
   MapPinned,
   Settings,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import { Prosit } from "@/types/prosit";
+import { globalHotKeys } from "@/components/globalHotKeys";
 
 export default function RootLayout({
   children,
@@ -36,6 +37,7 @@ export default function RootLayout({
   const [opened, { toggle }] = useDisclosure();
   const [modalopened, { open, close }] = useDisclosure(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const [prosit, setProsit] = useState<Prosit>(() => {
     if (typeof window === "undefined") return defaultPrositValue;
@@ -53,6 +55,8 @@ export default function RootLayout({
     console.log("prosit changed");
     localStorage.setItem("prosit", JSON.stringify(prosit));
   }, [prosit]);
+
+  useHotkeys([["f1", () => toggle()], ...globalHotKeys(router)]);
 
   return (
     <html lang="en">
@@ -166,7 +170,7 @@ export default function RootLayout({
                   <Text>bla bla bla aide super</Text>
                   <Title order={3}>Raccourcis</Title>
                   <div>
-                    <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>1..2..3..4</Kbd>{" "}
+                    <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>1..2..3..4</Kbd>
                     pour changer de page
                   </div>
                   <div>

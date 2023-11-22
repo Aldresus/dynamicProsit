@@ -5,11 +5,22 @@ import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import PrositContext from "@/components/prositContext";
 import { Prosit } from "@/types/prosit";
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { globalHotKeys } from "@/components/globalHotKeys";
 
 export default function Home() {
   const router = useRouter();
 
   const { prosit, setProsit } = useContext(PrositContext);
+
+  const pageHotkeys: any[] = [
+    ["ctrl+enter", () => router.push("/mots-clefs")],
+    ["ctrl+shift+enter", () => router.push("/plan-d-action")],
+  ];
+
+  useHotkeys(pageHotkeys);
+
+  let hotkeys = getHotkeyHandler([...globalHotKeys(router), ...pageHotkeys]);
 
   return (
     <form
@@ -34,6 +45,7 @@ export default function Home() {
               titre: event.target.value,
             } as Prosit);
           }}
+          onKeyDown={hotkeys}
         />
         <TextInput
           label="Lien vers le prosit"
@@ -47,6 +59,7 @@ export default function Home() {
               lien: event.target.value,
             } as Prosit);
           }}
+          onKeyDown={hotkeys}
         />
         <TextInput
           required
@@ -60,6 +73,7 @@ export default function Home() {
               generalisation: event.target.value,
             } as Prosit);
           }}
+          onKeyDown={hotkeys}
         />
         <TextInput
           required
@@ -73,6 +87,7 @@ export default function Home() {
               contexte: event.target.value,
             } as Prosit);
           }}
+          onKeyDown={hotkeys}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -89,6 +104,7 @@ export default function Home() {
                 animateur: event.target.value,
               } as Prosit);
             }}
+            onKeyDown={hotkeys}
           />
           <TextInput
             className="flex-1"
@@ -102,6 +118,7 @@ export default function Home() {
                 scribe: event.target.value,
               } as Prosit);
             }}
+            onKeyDown={hotkeys}
           />
         </div>
         <div className="flex gap-3">
@@ -117,6 +134,7 @@ export default function Home() {
                 gestionnaire: event.target.value,
               } as Prosit);
             }}
+            onKeyDown={hotkeys}
           />
           <TextInput
             className="flex-1"
@@ -130,7 +148,10 @@ export default function Home() {
                 secretaire: event.target.value,
               } as Prosit);
             }}
+            onKeyDown={hotkeys}
           />
+          {/*  todo pass the hotkeys by the context*/}
+
           <input type="submit" hidden />
         </div>
       </div>

@@ -1,20 +1,37 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PrositContext from "@/components/prositContext";
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
+import { globalHotKeys } from "@/components/globalHotKeys";
 
 export default function Livrables() {
   const { prosit, setProsit } = useContext(PrositContext);
+  const [livrables, setLivrables] = useState<string[]>([]);
   const [livrable, setLivrable] = useState("");
 
-  const livrableHandler = (
-    event:
-      | React.FormEvent<HTMLFormElement>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    event.preventDefault();
+  useEffect(() => {
+    setLivrables(prosit.livrables);
+  }, [prosit]);
+
+  const router = useRouter();
+
+  const pageHotkeys: any[] = [
+    ["ctrl+enter", () => router.push("/plan-d-action")],
+    ["ctrl+shift+enter", () => router.push("/pistes-de-solution")],
+  ];
+
+  useHotkeys(pageHotkeys);
+
+  const hotkeys = getHotkeyHandler([
+    ["enter", () => livrableHandler()],
+    ["shift+enter", () => livrableHandler()],
+    ...globalHotKeys(router),
+    ...pageHotkeys,
+  ]);
+  const livrableHandler = () => {
     setProsit({
       ...prosit,
       livrables: [...prosit.livrables, livrable],
@@ -27,17 +44,14 @@ export default function Livrables() {
       <Title order={2}>Livrables</Title>
 
       <form
-        onSubmit={(event) => livrableHandler(event)}
+        onSubmit={(event) => {
+          event.preventDefault();
+          livrableHandler();
+        }}
         className="flex gap-2 items-end"
       >
         <Textarea
-          onKeyDown={(e) => {
-            if (e.keyCode == 13) {
-              //method to prevent from default behaviour
-              e.preventDefault();
-              livrableHandler(e);
-            }
-          }}
+          onKeyDown={hotkeys}
           className="flex-1"
           autoFocus
           label="Livrable"
@@ -51,7 +65,8 @@ export default function Livrables() {
         <Button
           type="submit"
           onClick={(event) => {
-            livrableHandler(event);
+            event.preventDefault();
+            livrableHandler();
           }}
         >
           Ajouter le livrable
@@ -59,7 +74,7 @@ export default function Livrables() {
       </form>
 
       <div className="px-6">
-        {prosit.livrables?.map((value, index) => (
+        {livrables.map((value, index) => (
           <div className="group flex items-center gap-1" key={value + index}>
             <Title order={3}>- {value}</Title>
             <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Textarea, Title } from "@mantine/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   closestCenter,
   DndContext,
@@ -20,6 +20,9 @@ import {
 import EtapeSortable from "@/app/plan-d-action/etape";
 import { Etape } from "@/types/etape";
 import PrositContext from "@/components/prositContext";
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
+import { globalHotKeys } from "@/components/globalHotKeys";
 
 export default function Problematiques() {
   const { prosit, setProsit } = useContext(PrositContext);
@@ -27,6 +30,13 @@ export default function Problematiques() {
     etapeNo: 0,
     content: "",
   });
+  const [etapes, setEtapes] = useState<Etape[]>([]);
+
+  useEffect(() => {
+    setEtapes(prosit.planDAction);
+  }, [prosit]);
+
+  const router = useRouter();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -35,14 +45,21 @@ export default function Problematiques() {
     }),
   );
 
-  const planHandler = (
-    event:
-      | React.FormEvent<HTMLFormElement>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    event.preventDefault();
+  const pageHotkeys: any[] = [
+    ["ctrl+enter", () => router.push("/")],
+    ["ctrl+shift+enter", () => router.push("/livrables")],
+  ];
 
+  useHotkeys(pageHotkeys);
+
+  const hotkeys = getHotkeyHandler([
+    ["enter", () => planHandler()],
+    ["shift+enter", () => planHandler()],
+    ...globalHotKeys(router),
+    ...pageHotkeys,
+  ]);
+
+  const planHandler = () => {
     let finalEtape = {
       etapeNo: prosit.planDAction.length + 1,
       content: etape.content,
@@ -118,17 +135,14 @@ export default function Problematiques() {
       <Title order={2}>Plan d&apos;action</Title>
 
       <form
-        onSubmit={(event) => planHandler(event)}
+        onSubmit={(event) => {
+          event.preventDefault();
+          planHandler();
+        }}
         className="flex gap-2 items-end"
       >
         <Textarea
-          onKeyDown={(e) => {
-            if (e.keyCode == 13) {
-              //method to prevent from default behaviour
-              e.preventDefault();
-              planHandler(e);
-            }
-          }}
+          onKeyDown={hotkeys}
           className="flex-1"
           autoFocus
           label="Etape du plan d'action"
@@ -145,7 +159,8 @@ export default function Problematiques() {
         <Button
           type="submit"
           onClick={(event) => {
-            planHandler(event);
+            event.preventDefault();
+            planHandler();
           }}
         >
           Ajouter l&apos;étape
@@ -158,12 +173,12 @@ export default function Problematiques() {
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={prosit.planDAction.map((etape) => etape.etapeNo)}
+          items={etapes.map((etape) => etape.etapeNo)}
           strategy={verticalListSortingStrategy}
         >
           <div className="px-6 w-full flex flex-col gap-1">
             {/*todo avoir des sous truc jor 1. a. b. c. */}
-            {prosit.planDAction?.map((value) => (
+            {etapes.map((value) => (
               <EtapeSortable
                 key={value.etapeNo + value.content}
                 value={value}
