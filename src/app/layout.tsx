@@ -28,6 +28,7 @@ import { usePathname, useRouter } from "next/navigation";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import { Prosit } from "@/types/prosit";
 import { globalHotKeys } from "@/components/globalHotKeys";
+import { todocx } from "@/components/todocx";
 
 export default function RootLayout({
   children,
@@ -56,7 +57,11 @@ export default function RootLayout({
     localStorage.setItem("prosit", JSON.stringify(prosit));
   }, [prosit]);
 
-  useHotkeys([["f1", () => toggle()], ...globalHotKeys(router)]);
+  useHotkeys([
+    ["f1", () => toggle()],
+    ["ctrl+s", () => todocx(prosit)],
+    ...globalHotKeys(router),
+  ]);
 
   return (
     <html lang="en">
@@ -149,6 +154,13 @@ export default function RootLayout({
                     href={"/plan-d-action"}
                     active={pathname === "/plan-d-action"}
                   />
+                  <Button
+                    fullWidth
+                    color="green"
+                    onClick={() => todocx(prosit)}
+                  >
+                    Exporter en .docx
+                  </Button>
                 </div>
 
                 <div className="flex">
@@ -162,7 +174,7 @@ export default function RootLayout({
                     Aide
                   </Button>
                 </div>
-                <Button fullWidth color="red" onClick={open}>
+                <Button fullWidth variant="subtle" color="red" onClick={open}>
                   Réinitialiser le prosit
                 </Button>
               </AppShell.Navbar>
@@ -222,6 +234,12 @@ export default function RootLayout({
                       <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>enter</Kbd>
                     </div>
                     pour passer à la page precedente
+                  </div>
+                  <div>
+                    <div>
+                      <Kbd>ctrl</Kbd> + <Kbd>s</Kbd>
+                    </div>
+                    pour exporter en .docx
                   </div>
                 </div>
               </AppShell.Aside>
