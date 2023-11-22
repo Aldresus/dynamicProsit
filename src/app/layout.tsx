@@ -15,6 +15,7 @@ import {
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import React, { useEffect, useState } from "react";
 import {
+  AlertCircle,
   AreaChart,
   HelpCircle,
   Info,
@@ -115,6 +116,13 @@ export default function RootLayout({
                     leftSection={<KeyRound size="1rem" />}
                     href={"/mots-clefs"}
                     active={pathname === "/mots-clefs"}
+                  />
+
+                  <NavLink
+                    label="Contraintes"
+                    leftSection={<AlertCircle size="1rem" />}
+                    href={"/contraintes"}
+                    active={pathname === "/contraintes"}
                   />
 
                   <NavLink

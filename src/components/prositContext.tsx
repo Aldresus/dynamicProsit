@@ -17,6 +17,7 @@ export const defaultPrositValue: Prosit = {
   pistesDeSolutions: [],
   livrables: [],
   motsCles: [],
+  contraintes: [],
 };
 
 interface PrositProviderProps {

@@ -15,4 +15,5 @@ export interface Prosit {
   pistesDeSolutions: string[];
   livrables: string[];
   motsCles: string[];
+  contraintes: string[];
 }

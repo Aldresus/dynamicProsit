@@ -19,7 +19,7 @@ export default function Problematiques() {
 
   const pageHotkeys: any[] = [
     ["ctrl+enter", () => router.push("/pistes-de-solution")],
-    ["ctrl+shift+enter", () => router.push("/mots-clefs")],
+    ["ctrl+shift+enter", () => router.push("/contraintes")],
   ];
 
   useHotkeys(pageHotkeys);

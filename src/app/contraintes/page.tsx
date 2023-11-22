@@ -3,51 +3,50 @@
 import { Button, Textarea, Title } from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
 import PrositContext from "@/components/prositContext";
-import { useRouter } from "next/navigation";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
 import { globalHotKeys } from "@/components/globalHotKeys";
 
-export default function MotsClefs() {
+export default function Contraintes() {
   const { prosit, setProsit } = useContext(PrositContext);
-  const [keyword, setKeyword] = useState("");
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const [contraintes, setContraintes] = useState<string[]>([]);
+  const [contrainte, setContrainte] = useState("");
 
   useEffect(() => {
-    setKeywords(prosit.motsCles);
+    setContraintes(prosit.contraintes);
   }, [prosit]);
 
   const router = useRouter();
 
   const pageHotkeys: any[] = [
-    ["ctrl+enter", () => router.push("/contraintes")],
-    ["ctrl+shift+enter", () => router.push("/")],
+    ["ctrl+enter", () => router.push("/problematiques")],
+    ["ctrl+shift+enter", () => router.push("/mots-clefs")],
   ];
 
   useHotkeys(pageHotkeys);
 
   const hotkeys = getHotkeyHandler([
-    ["enter", () => keywordHandler()],
-    ["shift+enter", () => keywordHandler()],
+    ["enter", () => contrainteHandler()],
+    ["shift+enter", () => contrainteHandler()],
     ...globalHotKeys(router),
     ...pageHotkeys,
   ]);
-
-  const keywordHandler = () => {
+  const contrainteHandler = () => {
     setProsit({
       ...prosit,
-      motsCles: [...prosit.motsCles, keyword],
+      contraintes: [...prosit.contraintes, contrainte],
     });
-    setKeyword("");
+    setContrainte("");
   };
 
   return (
     <div className="h-full flex flex-col gap-9 py-3">
-      <Title order={2}>Mots clefs</Title>
+      <Title order={2}>Contraintes</Title>
 
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          keywordHandler();
+          contrainteHandler();
         }}
         className="flex gap-2 items-end"
       >
@@ -55,53 +54,47 @@ export default function MotsClefs() {
           onKeyDown={hotkeys}
           className="flex-1"
           autoFocus
-          label="Mot clef"
-          placeholder="fromage"
-          value={keyword}
+          label="Contrainte"
+          placeholder="Le fromage doit être retrouvé avant de pourrir"
+          value={contrainte}
           onInput={(event) => {
             // @ts-ignore
-            setKeyword(event.target.value);
+            setContrainte(event.target.value);
           }}
         />
         <Button
           type="submit"
           onClick={(event) => {
             event.preventDefault();
-            keywordHandler();
+            contrainteHandler();
           }}
         >
-          Ajouter le mot clef
+          Ajouter la contrainte
         </Button>
       </form>
 
       <div className="px-6">
-        {keywords.map((value, index) => (
-          <div className="group flex items-center gap-2" key={value + index}>
+        {contraintes.map((value, index) => (
+          <div className="group flex items-center gap-1" key={value + index}>
             <Title order={3}>- {value}</Title>
-            <div className="flex group gap-1 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
+            <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
               <Button
                 variant="transparent"
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...prosit.motsCles];
+                  let temp = [...prosit.livrables];
                   temp.splice(index, 1);
-                  setProsit({
-                    ...prosit,
-                    motsCles: [...temp],
-                  });
+                  setProsit({ ...prosit, livrables: [...temp] });
                 }}
               >
                 Supprimer
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...prosit.motsCles];
-                  setKeyword(temp.splice(index, 1)[0]);
-                  setProsit({
-                    ...prosit,
-                    motsCles: [...temp],
-                  });
+                  let temp = [...prosit.livrables];
+                  setContrainte(temp.splice(index, 1)[0]);
+                  setProsit({ ...prosit, livrables: [...temp] });
                 }}
                 size="compact-md"
               >
