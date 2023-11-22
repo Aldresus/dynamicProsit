@@ -43,8 +43,26 @@ export default function RootLayout({
   const [prosit, setProsit] = useState<Prosit>(() => {
     if (typeof window === "undefined") return defaultPrositValue;
     // Attempt to get stored value from localStorage
+    //check if the value is already in localstorage and of the right type
+
     const storedProsit = localStorage.getItem("prosit");
-    return storedProsit ? JSON.parse(storedProsit) : defaultPrositValue;
+
+    let parsedProsit = storedProsit
+      ? JSON.parse(storedProsit)
+      : defaultPrositValue;
+
+    Object.keys(defaultPrositValue).forEach((key) => {
+      if (!parsedProsit.hasOwnProperty(key)) {
+        parsedProsit[key] = defaultPrositValue[key as keyof Prosit];
+      } else if (
+        typeof parsedProsit[key] !==
+        typeof defaultPrositValue[key as keyof Prosit]
+      ) {
+        parsedProsit[key] = defaultPrositValue[key as keyof Prosit];
+      }
+    });
+
+    return parsedProsit;
   });
 
   const clearProsit = () => {
