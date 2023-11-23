@@ -70,6 +70,15 @@ export default function RootLayout({
   };
 
   useEffect(() => {
+    router.prefetch("/mots-clefs");
+    router.prefetch("/contraintes");
+    router.prefetch("/problematiques");
+    router.prefetch("/pistes-de-solution");
+    router.prefetch("/livrables");
+    router.prefetch("/plan-d-action");
+  }, [router]);
+
+  useEffect(() => {
     // Store prosit in localStorage whenever it changes
     console.log("prosit changed");
     localStorage.setItem("prosit", JSON.stringify(prosit));
