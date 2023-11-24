@@ -83,18 +83,18 @@ export default function Contraintes() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...prosit.livrables];
+                  let temp = [...prosit.contraintes];
                   temp.splice(index, 1);
-                  setProsit({ ...prosit, livrables: [...temp] });
+                  setProsit({ ...prosit, contraintes: [...temp] });
                 }}
               >
                 Supprimer
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...prosit.livrables];
+                  let temp = [...prosit.contraintes];
                   setContrainte(temp.splice(index, 1)[0]);
-                  setProsit({ ...prosit, livrables: [...temp] });
+                  setProsit({ ...prosit, contraintes: [...temp] });
                 }}
                 size="compact-md"
               >

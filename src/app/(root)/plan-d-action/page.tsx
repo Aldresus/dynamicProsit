@@ -17,7 +17,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import EtapeSortable from "@/app/plan-d-action/etape";
+import EtapeSortable from "@/app/(root)/plan-d-action/etape";
 import { Etape } from "@/types/etape";
 import PrositContext from "@/components/prositContext";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
