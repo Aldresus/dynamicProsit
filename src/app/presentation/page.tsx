@@ -1,18 +1,14 @@
 "use client";
 
-import { Button, Divider, List, Text, Textarea, Title } from "@mantine/core";
+import { Title } from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
-import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
-import { globalHotKeys } from "@/components/globalHotKeys";
 import { Prosit } from "@/types/prosit";
 import PresentationElement from "@/app/presentation/presentationElement";
 
 export default function Visualisation() {
   const { prosit, setProsit } = useContext(PrositContext);
   const [prositState, setPrositState] = useState<Prosit>(defaultPrositValue);
-  const router = useRouter();
 
   useEffect(() => {
     setPrositState(prosit);

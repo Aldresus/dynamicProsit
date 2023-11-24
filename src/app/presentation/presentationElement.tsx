@@ -1,6 +1,5 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import { List, Text, Title } from "@mantine/core";
-import prositContext from "@/components/prositContext";
 
 interface PresentationElementProps {
   anchor: string;
