@@ -26,7 +26,7 @@ export default function FormLayout({
   const [modalopened, { open, close }] = useDisclosure(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { prosit, clearProsit } = useContext(PrositContext);
+  const { prosit, setProsit, clearProsit } = useContext(PrositContext);
   const [presentationWindow, setPresentationWindow] = useState<Window | null>();
 
   useEffect(() => {
@@ -42,21 +42,18 @@ export default function FormLayout({
     console.log(presentationWindow);
   }, [presentationWindow]);
 
-  useEffect(() => {
-    console.log("pathname changed", pathname, presentationWindow);
-    if (presentationWindow) {
-      console.log("scrolling to plan d'action");
-      presentationWindow.document
-        .getElementById("planDAction")
-        ?.scrollIntoView();
-    }
-  }, [pathname]);
-
   useHotkeys([
     ["f1", () => toggle()],
     ["ctrl+s", () => todocx(prosit)],
     ...globalHotKeys(router),
   ]);
+
+  const navigate = (anchor: string) => {
+    setProsit({
+      ...prosit,
+      currentAnchor: anchor,
+    });
+  };
 
   return (
     <div>
@@ -105,6 +102,9 @@ export default function FormLayout({
               label="Informations"
               leftSection={<Info size="1rem" />}
               href={"/"}
+              onClick={() => {
+                navigate("informations");
+              }}
             ></NavLink>
 
             <NavLink
@@ -113,12 +113,7 @@ export default function FormLayout({
               href={"/mots-clefs"}
               active={pathname === "/mots-clefs"}
               onClick={() => {
-                if (presentationWindow) {
-                  console.log("scrolling to plan d'action");
-                  presentationWindow.document
-                    .getElementById("motsCles")
-                    ?.scrollIntoView();
-                }
+                navigate("motsClefs");
               }}
             />
 
@@ -127,6 +122,9 @@ export default function FormLayout({
               leftSection={<AlertCircle size="1rem" />}
               href={"/contraintes"}
               active={pathname === "/contraintes"}
+              onClick={() => {
+                navigate("contraintes");
+              }}
             />
 
             <NavLink
@@ -134,18 +132,27 @@ export default function FormLayout({
               leftSection={<HelpCircle size="1rem" />}
               href={"/problematiques"}
               active={pathname === "/problematiques"}
+              onClick={() => {
+                navigate("problematiques");
+              }}
             />
             <NavLink
               label="Pistes de solution"
               leftSection={<Lightbulb size="1rem" />}
               href={"/pistes-de-solution"}
               active={pathname === "/pistes-de-solution"}
+              onClick={() => {
+                navigate("pistesDeSolution");
+              }}
             />
             <NavLink
               label="Livrables"
               leftSection={<AreaChart size="1rem" />}
               href={"/livrables"}
               active={pathname === "/livrables"}
+              onClick={() => {
+                navigate("livrables");
+              }}
             />
             <NavLink
               label="Plan d'action"
@@ -153,12 +160,7 @@ export default function FormLayout({
               href={"/plan-d-action"}
               active={pathname === "/plan-d-action"}
               onClick={() => {
-                if (presentationWindow) {
-                  console.log("scrolling to plan d'action");
-                  presentationWindow.document
-                    .getElementById("planDAction")
-                    ?.scrollIntoView();
-                }
+                navigate("planDAction");
               }}
             />
             <Button fullWidth onClick={toggle} variant="light">

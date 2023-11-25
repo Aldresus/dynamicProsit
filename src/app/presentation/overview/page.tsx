@@ -19,7 +19,6 @@ export default function Visualisation() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.addEventListener("storage", () => {
-      console.log("storage event");
       const storedProsit = localStorage.getItem("prosit");
 
       let parsedProsit = storedProsit
@@ -30,31 +29,16 @@ export default function Visualisation() {
     });
   }, []);
 
-  useEffect(() => {
-    console.log("scrolling to", prositState.currentAnchor);
-    if (typeof window !== "undefined")
-      console.log(window.document.getElementById(prositState.currentAnchor));
-    window.document.getElementById(prositState.currentAnchor)?.scrollIntoView({
-      block: "start",
-      behavior: "smooth",
-    });
-  }, [prositState.currentAnchor]);
-
   return (
-    <div className="h-full w-full flex flex-col gap-6">
-      <Title order={1}>Prosit : {prositState.titre}</Title>
-      <div
-        id="informations"
-        className={twMerge(
-          "flex flex-col gap-6 rounded-xl",
-          prositState.currentAnchor === "informations" ? "bg-red-200" : "",
-        )}
-      >
+    <div className="h-full w-full  flex flex-col gap-6">
+      <div className="grid grid-cols-6 gap-6">
+        <Title order={1}>Prosit : {prositState.titre}</Title>
         <PresentationElement
           titre={"Contexte :"}
           anchor="contexte"
           valeurs={prositState.contexte}
           className={twMerge(
+            "col-span-3",
             prositState.contexte.length === 0 ? "opacity-0" : "opacity-100",
           )}
         />
@@ -63,20 +47,20 @@ export default function Visualisation() {
           titre={"Generalisation :"}
           valeurs={prositState.generalisation}
           className={twMerge(
+            "col-span-2",
             prositState.generalisation.length === 0
               ? "opacity-0"
               : "opacity-100",
           )}
         />
       </div>
-      <div className="flex flex-col gap-9 w-full h-full whitespace-break-spaces overflow-hidden">
+      <div className="flex flex-col flex-wrap gap-9 w-full h-full whitespace-break-spaces overflow-hidden">
         <PresentationElement
-          anchor="motsClefs"
+          anchor="/mots-clefs"
           titre={"Mots-clefs"}
           valeurs={prositState.motsCles}
           className={twMerge(
             prositState.motsCles.length === 0 ? "opacity-0" : "opacity-100",
-            prositState.currentAnchor === "motsClefs" ? "bg-red-200" : "",
           )}
         ></PresentationElement>
         <PresentationElement
@@ -85,7 +69,6 @@ export default function Visualisation() {
           valeurs={prositState.contraintes}
           className={twMerge(
             prositState.contraintes.length === 0 ? "opacity-0" : "opacity-100",
-            prositState.currentAnchor === "contraintes" ? "bg-red-200" : "",
           )}
         ></PresentationElement>
         <PresentationElement
@@ -96,39 +79,32 @@ export default function Visualisation() {
             prositState.problematiques.length === 0
               ? "opacity-0"
               : "opacity-100",
-            prositState.currentAnchor === "problematiques" ? "bg-red-200" : "",
           )}
         ></PresentationElement>
         <PresentationElement
-          anchor="pistesDeSolution"
+          anchor="pisteDeSolutions"
           titre={"Pistes de solution"}
           valeurs={prositState.pistesDeSolutions}
           className={twMerge(
             prositState.pistesDeSolutions.length === 0
               ? "opacity-0"
               : "opacity-100",
-            prositState.currentAnchor === "pistesDeSolution"
-              ? "bg-red-200"
-              : "",
           )}
         ></PresentationElement>
         <PresentationElement
-          anchor="livrables"
+          anchor="Livrables"
           titre={"Livrables"}
           valeurs={prositState.livrables}
           className={twMerge(
             prositState.livrables.length === 0 ? "opacity-0" : "opacity-100",
-            prositState.currentAnchor === "livrables" ? "bg-red-200" : "",
           )}
         ></PresentationElement>
         <PresentationElement
-          anchor="planDAction"
-          ordered
+          anchor="/plan-d-action"
           titre={"Plan d'action :"}
           valeurs={prositState.planDAction.map((value) => value.content)}
           className={twMerge(
             prositState.planDAction.length === 0 ? "opacity-0" : "opacity-100",
-            prositState.currentAnchor === "planDAction" ? "bg-red-200" : "",
           )}
         ></PresentationElement>
       </div>

@@ -1,6 +1,8 @@
 import { Etape } from "@/types/etape";
 
 export interface Prosit {
+  currentAnchor: string;
+
   titre: string;
   lien: string;
   generalisation: string;

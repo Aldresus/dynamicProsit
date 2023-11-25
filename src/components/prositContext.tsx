@@ -1,9 +1,10 @@
 "use client";
-import { createContext, ReactNode } from "react";
+import { createContext } from "react";
 import { Prosit } from "@/types/prosit";
 
 export const defaultPrositValue: Prosit = {
   // Provide default values
+  currentAnchor: "",
   titre: "",
   lien: "",
   generalisation: "",
@@ -19,10 +20,6 @@ export const defaultPrositValue: Prosit = {
   motsCles: [],
   contraintes: [],
 };
-
-interface PrositProviderProps {
-  children: ReactNode;
-}
 
 const PrositContext = createContext({
   prosit: defaultPrositValue,

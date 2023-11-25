@@ -1,19 +1,27 @@
-import React from "react";
+import React, { HTMLProps } from "react";
 import { List, Text, Title } from "@mantine/core";
+import { twMerge } from "tailwind-merge";
 
-interface PresentationElementProps {
+interface PresentationElementProps extends HTMLProps<HTMLDivElement> {
   anchor: string;
   titre: string;
   valeurs: string[] | string;
+  ordered?: boolean;
 }
 
 const PresentationElement = React.forwardRef<
   HTMLDivElement,
   PresentationElementProps
->(({ titre, valeurs, anchor, ...props }, ref) => {
+>(({ titre, valeurs, anchor, className, ordered = false, ...props }, ref) => {
   return (
-    <div className="p-1 px-3 rounded-xl h-full">
-      <a id={`#${anchor}`}>
+    <div
+      className={twMerge(
+        "p-1 px-3 rounded-xl transition-all duration-200 ",
+        className,
+      )}
+      {...props}
+    >
+      <a id={`${anchor}`}>
         <Title order={2}>{titre}</Title>
       </a>
       {typeof valeurs === "string" ? (
@@ -21,7 +29,7 @@ const PresentationElement = React.forwardRef<
           {valeurs}
         </Text>
       ) : (
-        <List size="xl" withPadding>
+        <List type={ordered ? "ordered" : "unordered"} size="xl" withPadding>
           {valeurs.map((valeur, i) => (
             <List.Item key={valeur + i}>{valeur}</List.Item>
           ))}
