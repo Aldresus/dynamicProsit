@@ -1,6 +1,15 @@
 "use client";
 
-import { AppShell, Button, Kbd, Modal, NavLink, Title } from "@mantine/core";
+import {
+  AppShell,
+  Button,
+  Kbd,
+  Modal,
+  NavLink,
+  Text,
+  Title,
+  Tooltip,
+} from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -11,6 +20,7 @@ import {
   KeyRound,
   Lightbulb,
   MapPinned,
+  MonitorPlay,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { globalHotKeys } from "@/components/globalHotKeys";
@@ -164,34 +174,36 @@ export default function FormLayout({
               }}
             />
             <Button fullWidth onClick={toggle} variant="light">
-              {!opened ? "Afficher" : "Masquer"} les raccourcis
+              {!opened ? "Afficher" : "Masquer"} l&apos;aide
             </Button>
           </div>
 
-          <div>
+          <div className="flex gap-3">
             <Button fullWidth color="green" onClick={() => todocx(prosit)}>
               Exporter en .docx
             </Button>
-            <Button
-              fullWidth
-              color="green"
-              onClick={() => {
-                if (
-                  !presentationWindow ||
-                  (typeof window !== "undefined" && presentationWindow?.closed)
-                ) {
-                  let finalpath = window.location.href.split("/");
-                  finalpath.pop();
-                  finalpath.push("presentation");
-                  setPresentationWindow(
-                    window.open(finalpath.join("/"), "_blank", "popup=true"),
-                  );
-                  console.log(finalpath);
-                }
-              }}
-            >
-              Ouvrir la presentation
-            </Button>
+            <Tooltip label="Ouvrir la présentation">
+              <Button
+                color="blue"
+                onClick={() => {
+                  if (
+                    !presentationWindow ||
+                    (typeof window !== "undefined" &&
+                      presentationWindow?.closed)
+                  ) {
+                    let finalpath = window.location.href.split("/");
+                    finalpath.pop();
+                    finalpath.push("presentation");
+                    setPresentationWindow(
+                      window.open(finalpath.join("/"), "_blank", "popup=true"),
+                    );
+                    console.log(finalpath);
+                  }
+                }}
+              >
+                <MonitorPlay />
+              </Button>
+            </Tooltip>
           </div>
 
           <Button fullWidth variant="subtle" color="red" onClick={open}>
@@ -203,8 +215,23 @@ export default function FormLayout({
           <div className="px-20">{children}</div>
         </AppShell.Main>
 
-        <AppShell.Aside p="md" className="flex flex-col gap-3 ">
+        <AppShell.Aside p="md" className="flex flex-col gap-3 overflow-auto">
           <Title order={2}>Aide</Title>
+          <Title order={3}>Vue de présentation</Title>
+          <Text>
+            La présentation s&apos;ouvre dans une popup qui contient les valeurs
+            sous une forme plus lisible pensée pour être projetée.
+          </Text>
+          <Text>
+            Les valeurs sont automatiquement mises à jour et la présentation est
+            synchronisée avec le formulaire, l&apos;endroit où vous êtes dans le
+            formulaire est mis en évidence dans la présentation.
+          </Text>
+          <Text>
+            Gardez simplement le formulaire sur l&apos;écran de votre pc et la
+            présentation sur le projecteur.
+          </Text>
+
           <div className="flex flex-col gap-3 justify-center flex-1">
             <Title order={3}>Raccourcis</Title>
             <div>

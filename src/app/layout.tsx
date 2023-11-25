@@ -50,11 +50,11 @@ export default function RootLayout({
 
   const theme = createTheme({
     fontSizes: {
-      xs: "1rem",
-      sm: "1.1rem",
-      md: "1.25rem",
-      lg: "1.35rem",
-      xl: "1.5rem",
+      // xs: "1rem",
+      // sm: "1.1rem",
+      // md: "1.25rem",
+      // lg: "1.35rem",
+      // xl: "1.5rem",
     },
   });
 
