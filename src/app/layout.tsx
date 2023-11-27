@@ -55,6 +55,7 @@ export default function RootLayout({
       // lg: "1.35rem",
       // xl: "1.5rem",
     },
+    white: "white",
   });
 
   return (
@@ -63,7 +64,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider theme={theme}>
+        <MantineProvider defaultColorScheme="dark" theme={theme}>
           <PrositContext.Provider value={{ prosit, setProsit, clearProsit }}>
             {children}
           </PrositContext.Provider>

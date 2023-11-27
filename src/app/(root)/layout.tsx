@@ -9,6 +9,7 @@ import {
   Text,
   Title,
   Tooltip,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import React, { useContext, useEffect, useState } from "react";
@@ -21,11 +22,15 @@ import {
   Lightbulb,
   MapPinned,
   MonitorPlay,
+  MoonStar,
+  Sun,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import { todocx } from "@/components/todocx";
 import PrositContext from "@/components/prositContext";
+import classes from "./Demo.module.css";
+import clsx from "clsx";
 
 export default function FormLayout({
   children,
@@ -38,6 +43,7 @@ export default function FormLayout({
   const router = useRouter();
   const { prosit, setProsit, clearProsit } = useContext(PrositContext);
   const [presentationWindow, setPresentationWindow] = useState<Window | null>();
+  const { toggleColorScheme } = useMantineColorScheme();
 
   useEffect(() => {
     router.prefetch("/mots-clefs");
@@ -51,6 +57,7 @@ export default function FormLayout({
   useHotkeys([
     ["f1", () => toggle()],
     ["ctrl+s", () => todocx(prosit)],
+    ["ctrl+alt+l", () => toggleColorScheme()],
     ...globalHotKeys(router),
   ]);
 
@@ -168,36 +175,51 @@ export default function FormLayout({
                 navigate("planDAction");
               }}
             />
+
             <Button fullWidth onClick={toggle} variant="light">
               {!opened ? "Afficher" : "Masquer"} l&apos;aide
             </Button>
           </div>
 
-          <div className="flex gap-3">
-            <Button fullWidth color="green" onClick={() => todocx(prosit)}>
-              Exporter en .docx
-            </Button>
-            <Tooltip label="Ouvrir la présentation">
-              <Button
-                color="blue"
-                onClick={() => {
-                  if (
-                    !presentationWindow ||
-                    (typeof window !== "undefined" &&
-                      presentationWindow?.closed)
-                  ) {
-                    let finalpath = window.location.href.split("/");
-                    finalpath.pop();
-                    finalpath.push("presentation");
-                    setPresentationWindow(
-                      window.open(finalpath.join("/"), "_blank", "popup=true"),
-                    );
-                  }
-                }}
-              >
-                <MonitorPlay />
+          <div className="flex flex-col gap-3">
+            <div className="flex gap-3">
+              <Button fullWidth color="green" onClick={() => todocx(prosit)}>
+                Exporter en .docx
               </Button>
-            </Tooltip>
+              <Tooltip label="Ouvrir la présentation">
+                <Button
+                  color="blue"
+                  onClick={() => {
+                    if (
+                      !presentationWindow ||
+                      (typeof window !== "undefined" &&
+                        presentationWindow?.closed)
+                    ) {
+                      let finalpath = window.location.href.split("/");
+                      finalpath.pop();
+                      finalpath.push("presentation");
+                      setPresentationWindow(
+                        window.open(
+                          finalpath.join("/"),
+                          "_blank",
+                          "popup=true",
+                        ),
+                      );
+                    }
+                  }}
+                >
+                  <MonitorPlay />
+                </Button>
+              </Tooltip>
+            </div>
+            <Button
+              onClick={toggleColorScheme}
+              variant="light"
+              className={classes.toggle}
+            >
+              <Sun className={clsx(classes.light, classes.toggleIcon)} />
+              <MoonStar className={clsx(classes.dark, classes.toggleIcon)} />
+            </Button>
           </div>
 
           <Button fullWidth variant="subtle" color="red" onClick={open}>
@@ -282,6 +304,12 @@ export default function FormLayout({
               </div>
               pour exporter en .docx
             </div>
+          </div>
+          <div>
+            <div>
+              <Kbd>ctrl</Kbd> + <Kbd>alt</Kbd> + <Kbd>l</Kbd>
+            </div>
+            pour changer de thème (clair/sombre)
           </div>
         </AppShell.Aside>
       </AppShell>

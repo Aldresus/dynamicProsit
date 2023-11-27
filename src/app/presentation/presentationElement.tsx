@@ -8,6 +8,7 @@ interface PresentationElementProps {
   valeurs: string[] | string;
   ordered?: boolean;
   className?: string;
+  bg?: MantineColor;
   color?: MantineColor;
 }
 
@@ -19,7 +20,8 @@ const PresentationElement = React.forwardRef<
     {
       titre,
       valeurs,
-      color = "transparent",
+      color,
+      bg = "transparent",
       anchor,
       className,
       ordered = false,
@@ -28,7 +30,8 @@ const PresentationElement = React.forwardRef<
   ) => {
     return (
       <Box
-        bg={color}
+        bg={bg}
+        c={color}
         className={twMerge(
           "p-1 px-3 rounded-xl transition-all duration-200 ",
           className,

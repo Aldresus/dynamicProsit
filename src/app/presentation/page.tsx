@@ -43,6 +43,7 @@ export default function Visualisation() {
         id="informations"
         className={twMerge("flex flex-col gap-6 rounded-xl")}
         bg={prositState.currentAnchor === "informations" ? "blue.1" : undefined}
+        c={prositState.currentAnchor === "informations" ? "blue.9" : undefined}
       >
         <PresentationElement
           titre={"Contexte :"}
@@ -68,8 +69,9 @@ export default function Visualisation() {
           anchor="motsClefs"
           titre={"Mots-clefs"}
           valeurs={prositState.motsCles}
+          bg={prositState.currentAnchor === "motsClefs" ? "blue.1" : undefined}
           color={
-            prositState.currentAnchor === "motsClefs" ? "blue.1" : undefined
+            prositState.currentAnchor === "motsClefs" ? "blue.9" : undefined
           }
           className={twMerge(
             prositState.motsCles.length === 0 ? "opacity-0" : "opacity-100",
@@ -82,8 +84,11 @@ export default function Visualisation() {
           className={twMerge(
             prositState.contraintes.length === 0 ? "opacity-0" : "opacity-100",
           )}
-          color={
+          bg={
             prositState.currentAnchor === "contraintes" ? "blue.1" : undefined
+          }
+          color={
+            prositState.currentAnchor === "contraintes" ? "blue.9" : undefined
           }
         ></PresentationElement>
         <PresentationElement
@@ -95,9 +100,14 @@ export default function Visualisation() {
               ? "opacity-0"
               : "opacity-100",
           )}
-          color={
+          bg={
             prositState.currentAnchor === "problematiques"
               ? "blue.1"
+              : undefined
+          }
+          color={
+            prositState.currentAnchor === "problematiques"
+              ? "blue.9"
               : undefined
           }
         ></PresentationElement>
@@ -110,9 +120,14 @@ export default function Visualisation() {
               ? "opacity-0"
               : "opacity-100",
           )}
-          color={
+          bg={
             prositState.currentAnchor === "pistesDeSolution"
               ? "blue.1"
+              : undefined
+          }
+          color={
+            prositState.currentAnchor === "pistesDeSolution"
+              ? "blue.9"
               : undefined
           }
         ></PresentationElement>
@@ -123,8 +138,9 @@ export default function Visualisation() {
           className={twMerge(
             prositState.livrables.length === 0 ? "opacity-0" : "opacity-100",
           )}
+          bg={prositState.currentAnchor === "livrables" ? "blue.1" : undefined}
           color={
-            prositState.currentAnchor === "livrables" ? "blue.1" : undefined
+            prositState.currentAnchor === "livrables" ? "blue.9" : undefined
           }
         ></PresentationElement>
         <PresentationElement
@@ -135,8 +151,11 @@ export default function Visualisation() {
           className={twMerge(
             prositState.planDAction.length === 0 ? "opacity-0" : "opacity-100",
           )}
-          color={
+          bg={
             prositState.currentAnchor === "planDAction" ? "blue.1" : undefined
+          }
+          color={
+            prositState.currentAnchor === "planDAction" ? "blue.9" : undefined
           }
         ></PresentationElement>
       </div>
