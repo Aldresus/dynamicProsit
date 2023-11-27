@@ -13,7 +13,6 @@ export default function Visualisation() {
 
   useEffect(() => {
     setPrositState(prosit);
-    console.log("fgsdhsdsfhs", prosit);
   }, [prosit]);
 
   useEffect(() => {

@@ -13,31 +13,27 @@ export default function Visualisation() {
 
   useEffect(() => {
     setPrositState(prosit);
-    console.log("fgsdhsdsfhs", prosit);
   }, [prosit]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.addEventListener("storage", () => {
-      console.log("storage event");
       const storedProsit = localStorage.getItem("prosit");
-
       let parsedProsit = storedProsit
         ? JSON.parse(storedProsit)
         : defaultPrositValue;
       setPrositState(parsedProsit);
-      // ...
     });
   }, []);
 
   useEffect(() => {
-    console.log("scrolling to", prositState.currentAnchor);
     if (typeof window !== "undefined")
-      console.log(window.document.getElementById(prositState.currentAnchor));
-    window.document.getElementById(prositState.currentAnchor)?.scrollIntoView({
-      block: "start",
-      behavior: "smooth",
-    });
+      window.document
+        .getElementById(prositState.currentAnchor)
+        ?.scrollIntoView({
+          block: "start",
+          behavior: "smooth",
+        });
   }, [prositState.currentAnchor]);
 
   return (

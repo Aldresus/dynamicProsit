@@ -88,7 +88,6 @@ export default function Problematiques() {
 
   const editEtape = (index: number) => {
     //fixme
-    console.log(index);
     let temp = [...prosit.planDAction];
     setEtape(temp.splice(index - 1, 1)[0]);
     temp = reorganizeSteps(temp);
@@ -99,7 +98,6 @@ export default function Problematiques() {
   };
 
   const deleteEtape = (index: number) => {
-    console.log(index);
     let temp = [...prosit.planDAction];
     temp.splice(index - 1, 1);
     temp = reorganizeSteps(temp);

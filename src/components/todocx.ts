@@ -22,7 +22,6 @@ export const todocx = (prosit: Prosit) => {
       .loadZip(zip)
       .setOptions({ paragraphLoop: true, linebreaks: true });
     // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
-    console.log(prosit);
     doc.render({
       titre: prosit.titre,
       motsCles: prosit.motsCles,

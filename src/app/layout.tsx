@@ -42,7 +42,6 @@ export default function RootLayout({
   };
   useEffect(() => {
     // Store prosit in localStorage whenever it changes
-    console.log("prosit changed");
     localStorage.setItem("prosit", JSON.stringify(prosit));
     if (typeof window !== "undefined")
       window.dispatchEvent(new Event("storage"));

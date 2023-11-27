@@ -48,10 +48,6 @@ export default function FormLayout({
     router.prefetch("/plan-d-action");
   }, [router]);
 
-  useEffect(() => {
-    console.log(presentationWindow);
-  }, [presentationWindow]);
-
   useHotkeys([
     ["f1", () => toggle()],
     ["ctrl+s", () => todocx(prosit)],
@@ -76,7 +72,6 @@ export default function FormLayout({
         <div className="flex justify-between items-end h-20">
           <Button
             onClick={() => {
-              console.log("clearing prosit");
               clearProsit();
               close();
             }}
@@ -197,7 +192,6 @@ export default function FormLayout({
                     setPresentationWindow(
                       window.open(finalpath.join("/"), "_blank", "popup=true"),
                     );
-                    console.log(finalpath);
                   }
                 }}
               >
