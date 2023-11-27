@@ -1,6 +1,6 @@
 "use client";
 
-import { TextInput, Title } from "@mantine/core";
+import { Textarea, TextInput, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import PrositContext from "@/components/prositContext";
@@ -48,6 +48,7 @@ export default function Home() {
           onKeyDown={hotkeys}
         />
         <TextInput
+          type="url"
           label="Lien vers le prosit"
           placeholder="https://hugochampy.fr"
           value={prosit.lien}
@@ -75,7 +76,7 @@ export default function Home() {
           }}
           onKeyDown={hotkeys}
         />
-        <TextInput
+        <Textarea
           required
           label="Contexte"
           placeholder="Quelqu'un à volé mon fromage, je dois faire un algorithme en python pour savoir qui est le voleur"
