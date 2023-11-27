@@ -186,7 +186,7 @@ export default function FormLayout({
               <Button fullWidth color="green" onClick={() => todocx(prosit)}>
                 Exporter en .docx
               </Button>
-              <Tooltip bg="blue" label="Ouvrir la présentation">
+              <Tooltip bg="blue" c="white" label="Ouvrir la présentation">
                 <Button
                   color="blue"
                   onClick={() => {
