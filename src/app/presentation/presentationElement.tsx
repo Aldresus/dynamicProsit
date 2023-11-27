@@ -1,12 +1,13 @@
-import React, { HTMLProps } from "react";
+import React from "react";
 import { Box, List, MantineColor, Text, Title } from "@mantine/core";
 import { twMerge } from "tailwind-merge";
 
-interface PresentationElementProps extends HTMLProps<HTMLDivElement> {
+interface PresentationElementProps {
   anchor: string;
   titre: string;
   valeurs: string[] | string;
   ordered?: boolean;
+  className?: string;
   color?: MantineColor;
 }
 
@@ -22,7 +23,6 @@ const PresentationElement = React.forwardRef<
       anchor,
       className,
       ordered = false,
-      ...props
     },
     ref,
   ) => {
