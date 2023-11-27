@@ -6,6 +6,8 @@ import { ColorSchemeScript, MantineProvider, createTheme } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import { Prosit } from "@/types/prosit";
+import { Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export default function RootLayout({
   children,
@@ -66,6 +68,12 @@ export default function RootLayout({
       <body>
         <MantineProvider defaultColorScheme="auto" theme={theme}>
           <PrositContext.Provider value={{ prosit, setProsit, clearProsit }}>
+            <Link href="https://hugochampy.fr">
+              <Sparkles
+                size={30}
+                className="fixed stroke-[hsl(211,95%,63%)] z-[10000] right-0 bottom-0 m-3"
+              />
+            </Link>
             {children}
           </PrositContext.Provider>
         </MantineProvider>

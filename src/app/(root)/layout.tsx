@@ -106,8 +106,10 @@ export default function FormLayout({
       >
         <AppShell.Navbar p="md" className="flex flex-col gap-9 ">
           <Title order={1} lh={1}>
-            Les prosits là, <span className="font-light">super</span>
+            Les prosits là,
+            <div className="font-light"> super</div>
           </Title>
+
           <div className="flex flex-col justify-center flex-1 gap-3">
             <NavLink
               active={pathname === "/"}
