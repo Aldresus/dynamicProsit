@@ -1,6 +1,6 @@
 "use client";
 
-import { Title } from "@mantine/core";
+import { Box, Title } from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import { Prosit } from "@/types/prosit";
@@ -43,12 +43,10 @@ export default function Visualisation() {
   return (
     <div className="h-full w-full flex flex-col gap-6">
       <Title order={1}>Prosit : {prositState.titre}</Title>
-      <div
+      <Box
         id="informations"
-        className={twMerge(
-          "flex flex-col gap-6 rounded-xl",
-          prositState.currentAnchor === "informations" ? "bg-red-200" : "",
-        )}
+        className={twMerge("flex flex-col gap-6 rounded-xl")}
+        bg={prositState.currentAnchor === "informations" ? "blue.1" : undefined}
       >
         <PresentationElement
           titre={"Contexte :"}
@@ -68,7 +66,7 @@ export default function Visualisation() {
               : "opacity-100",
           )}
         />
-      </div>
+      </Box>
       <div className="flex flex-col gap-9 w-full h-full whitespace-break-spaces overflow-hidden">
         <PresentationElement
           anchor="motsClefs"
