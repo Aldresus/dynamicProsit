@@ -38,9 +38,11 @@
     @mixin light {
         stroke: var(--mantine-color-yellow-0);
         fill: var(--mantine-color-yellow-0);
+        color: var(--mantine-color-yellow-0);
     }
     @mixin dark {
         stroke: var(--mantine-color-yellow-4);
         fill: var(--mantine-color-yellow-4);
+        color: var(--mantine-color-yellow-4);
     }
 }

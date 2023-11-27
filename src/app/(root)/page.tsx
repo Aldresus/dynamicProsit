@@ -22,6 +22,8 @@ export default function Home() {
 
   let hotkeys = getHotkeyHandler([...globalHotKeys(router), ...pageHotkeys]);
 
+  //todo add a call to action so the user know that the presentation mode exist
+
   return (
     <form
       onSubmit={(e) => {

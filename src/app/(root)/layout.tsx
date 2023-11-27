@@ -186,7 +186,7 @@ export default function FormLayout({
               <Button fullWidth color="green" onClick={() => todocx(prosit)}>
                 Exporter en .docx
               </Button>
-              <Tooltip label="Ouvrir la présentation">
+              <Tooltip bg="blue" label="Ouvrir la présentation">
                 <Button
                   color="blue"
                   onClick={() => {
@@ -212,14 +212,19 @@ export default function FormLayout({
                 </Button>
               </Tooltip>
             </div>
-            <Button
-              onClick={toggleColorScheme}
-              variant="light"
-              className={classes.toggle}
+            <Tooltip
+              className={clsx(classes.toggleIcon, classes.toggle)}
+              label={"Changer de thème"}
             >
-              <Sun className={clsx(classes.light, classes.toggleIcon)} />
-              <MoonStar className={clsx(classes.dark, classes.toggleIcon)} />
-            </Button>
+              <Button
+                onClick={toggleColorScheme}
+                variant="light"
+                className={classes.toggle}
+              >
+                <Sun className={clsx(classes.light, classes.toggleIcon)} />
+                <MoonStar className={clsx(classes.dark, classes.toggleIcon)} />
+              </Button>
+            </Tooltip>
           </div>
 
           <Button fullWidth variant="subtle" color="red" onClick={open}>
