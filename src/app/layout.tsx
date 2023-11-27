@@ -64,7 +64,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider defaultColorScheme="dark" theme={theme}>
+        <MantineProvider defaultColorScheme="auto" theme={theme}>
           <PrositContext.Provider value={{ prosit, setProsit, clearProsit }}>
             {children}
           </PrositContext.Provider>
