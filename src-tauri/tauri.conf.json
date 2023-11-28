@@ -8,11 +8,11 @@
   },
   "package": {
     "productName": "dynamicprosit",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": true
     },
     "bundle": {
       "active": true,
@@ -55,12 +55,12 @@
     },
     "windows": [
       {
-        "fullscreen": false,
         "maximized": true,
         "height": 800,
         "resizable": true,
         "title": "DynamicPrositX",
-        "width": 800
+        "width": 800,
+        "decorations": false
       }
     ]
   }

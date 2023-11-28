@@ -1,6 +1,6 @@
 "use client";
 
-import { Title } from "@mantine/core";
+import { Box, Title } from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import { Prosit } from "@/types/prosit";
@@ -13,42 +13,37 @@ export default function Visualisation() {
 
   useEffect(() => {
     setPrositState(prosit);
-    console.log("fgsdhsdsfhs", prosit);
   }, [prosit]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.addEventListener("storage", () => {
-      console.log("storage event");
       const storedProsit = localStorage.getItem("prosit");
-
       let parsedProsit = storedProsit
         ? JSON.parse(storedProsit)
         : defaultPrositValue;
       setPrositState(parsedProsit);
-      // ...
     });
   }, []);
 
   useEffect(() => {
-    console.log("scrolling to", prositState.currentAnchor);
     if (typeof window !== "undefined")
-      console.log(window.document.getElementById(prositState.currentAnchor));
-    window.document.getElementById(prositState.currentAnchor)?.scrollIntoView({
-      block: "start",
-      behavior: "smooth",
-    });
+      window.document
+        .getElementById(prositState.currentAnchor)
+        ?.scrollIntoView({
+          block: "start",
+          behavior: "smooth",
+        });
   }, [prositState.currentAnchor]);
 
   return (
     <div className="h-full w-full flex flex-col gap-6">
       <Title order={1}>Prosit : {prositState.titre}</Title>
-      <div
+      <Box
         id="informations"
-        className={twMerge(
-          "flex flex-col gap-6 rounded-xl",
-          prositState.currentAnchor === "informations" ? "bg-red-200" : "",
-        )}
+        className={twMerge("flex flex-col gap-6 rounded-xl")}
+        bg={prositState.currentAnchor === "informations" ? "blue.1" : undefined}
+        c={prositState.currentAnchor === "informations" ? "blue.9" : undefined}
       >
         <PresentationElement
           titre={"Contexte :"}
@@ -68,15 +63,18 @@ export default function Visualisation() {
               : "opacity-100",
           )}
         />
-      </div>
+      </Box>
       <div className="flex flex-col gap-9 w-full h-full whitespace-break-spaces overflow-hidden">
         <PresentationElement
           anchor="motsClefs"
           titre={"Mots-clefs"}
           valeurs={prositState.motsCles}
+          bg={prositState.currentAnchor === "motsClefs" ? "blue.1" : undefined}
+          color={
+            prositState.currentAnchor === "motsClefs" ? "blue.9" : undefined
+          }
           className={twMerge(
             prositState.motsCles.length === 0 ? "opacity-0" : "opacity-100",
-            prositState.currentAnchor === "motsClefs" ? "bg-red-200" : "",
           )}
         ></PresentationElement>
         <PresentationElement
@@ -85,8 +83,13 @@ export default function Visualisation() {
           valeurs={prositState.contraintes}
           className={twMerge(
             prositState.contraintes.length === 0 ? "opacity-0" : "opacity-100",
-            prositState.currentAnchor === "contraintes" ? "bg-red-200" : "",
           )}
+          bg={
+            prositState.currentAnchor === "contraintes" ? "blue.1" : undefined
+          }
+          color={
+            prositState.currentAnchor === "contraintes" ? "blue.9" : undefined
+          }
         ></PresentationElement>
         <PresentationElement
           anchor="problematiques"
@@ -96,8 +99,17 @@ export default function Visualisation() {
             prositState.problematiques.length === 0
               ? "opacity-0"
               : "opacity-100",
-            prositState.currentAnchor === "problematiques" ? "bg-red-200" : "",
           )}
+          bg={
+            prositState.currentAnchor === "problematiques"
+              ? "blue.1"
+              : undefined
+          }
+          color={
+            prositState.currentAnchor === "problematiques"
+              ? "blue.9"
+              : undefined
+          }
         ></PresentationElement>
         <PresentationElement
           anchor="pistesDeSolution"
@@ -107,10 +119,17 @@ export default function Visualisation() {
             prositState.pistesDeSolutions.length === 0
               ? "opacity-0"
               : "opacity-100",
-            prositState.currentAnchor === "pistesDeSolution"
-              ? "bg-red-200"
-              : "",
           )}
+          bg={
+            prositState.currentAnchor === "pistesDeSolution"
+              ? "blue.1"
+              : undefined
+          }
+          color={
+            prositState.currentAnchor === "pistesDeSolution"
+              ? "blue.9"
+              : undefined
+          }
         ></PresentationElement>
         <PresentationElement
           anchor="livrables"
@@ -118,8 +137,11 @@ export default function Visualisation() {
           valeurs={prositState.livrables}
           className={twMerge(
             prositState.livrables.length === 0 ? "opacity-0" : "opacity-100",
-            prositState.currentAnchor === "livrables" ? "bg-red-200" : "",
           )}
+          bg={prositState.currentAnchor === "livrables" ? "blue.1" : undefined}
+          color={
+            prositState.currentAnchor === "livrables" ? "blue.9" : undefined
+          }
         ></PresentationElement>
         <PresentationElement
           anchor="planDAction"
@@ -128,8 +150,13 @@ export default function Visualisation() {
           valeurs={prositState.planDAction.map((value) => value.content)}
           className={twMerge(
             prositState.planDAction.length === 0 ? "opacity-0" : "opacity-100",
-            prositState.currentAnchor === "planDAction" ? "bg-red-200" : "",
           )}
+          bg={
+            prositState.currentAnchor === "planDAction" ? "blue.1" : undefined
+          }
+          color={
+            prositState.currentAnchor === "planDAction" ? "blue.9" : undefined
+          }
         ></PresentationElement>
       </div>
     </div>

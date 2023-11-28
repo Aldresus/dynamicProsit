@@ -6,8 +6,9 @@ export const globalHotKeys: (router: AppRouterInstance) => HotkeyItem[] = (
 ) => [
   ["alt+shift+a", () => router.push("/")],
   ["alt+shift+z", () => router.push("/mots-clefs")],
-  ["alt+shift+e", () => router.push("/problematiques")],
-  ["alt+shift+r", () => router.push("/pistes-de-solution")],
-  ["alt+shift+t", () => router.push("/livrables")],
-  ["alt+shift+y", () => router.push("/plan-d-action")],
+  ["alt+shift+e", () => router.push("/contraintes")],
+  ["alt+shift+r", () => router.push("/problematiques")],
+  ["alt+shift+t", () => router.push("/pistes-de-solution")],
+  ["alt+shift+y", () => router.push("/livrables")],
+  ["alt+shift+u", () => router.push("/plan-d-action")],
 ];

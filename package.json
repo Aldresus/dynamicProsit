@@ -1,6 +1,6 @@
 {
   "name": "dynamicprosit",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -17,6 +17,8 @@
     "@mantine/hooks": "^7.2.2",
     "@mantine/modals": "^7.2.2",
     "@mantine/spotlight": "^7.2.2",
+    "@tauri-apps/api": "^1.5.1",
+    "clsx": "^2.0.0",
     "docxtemplater": "^3.42.1",
     "file-saver": "^2.0.5",
     "lucide-react": "^0.292.0",

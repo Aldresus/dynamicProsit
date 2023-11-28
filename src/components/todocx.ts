@@ -22,7 +22,6 @@ export const todocx = (prosit: Prosit) => {
       .loadZip(zip)
       .setOptions({ paragraphLoop: true, linebreaks: true });
     // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
-    console.log(prosit);
     doc.render({
       titre: prosit.titre,
       motsCles: prosit.motsCles,
@@ -33,6 +32,11 @@ export const todocx = (prosit: Prosit) => {
       generalisation: prosit.generalisation,
       pistesDeSolutions: prosit.pistesDeSolutions,
       planDAction: prosit.planDAction.map((etape) => etape.content),
+      lien: prosit.lien,
+      animateur: prosit.animateur,
+      secretaire: prosit.secretaire,
+      gestionnaire: prosit.gestionnaire,
+      scribe: prosit.scribe,
     });
     const blob = doc.getZip().generate({
       type: "blob",
