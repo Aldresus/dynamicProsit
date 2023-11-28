@@ -55,12 +55,12 @@
     },
     "windows": [
       {
-        "fullscreen": false,
         "maximized": true,
         "height": 800,
         "resizable": true,
         "title": "DynamicPrositX",
-        "width": 800
+        "width": 800,
+        "decorations": false
       }
     ]
   }

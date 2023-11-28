@@ -42,7 +42,7 @@ export default function FormLayout({
   const pathname = usePathname();
   const router = useRouter();
   const { prosit, setProsit, clearProsit } = useContext(PrositContext);
-  const [presentationWindow, setPresentationWindow] = useState<Window | null>();
+  const [presentationWindow, setPresentationWindow] = useState<any | null>();
   const { toggleColorScheme } = useMantineColorScheme();
 
   useEffect(() => {
@@ -191,15 +191,28 @@ export default function FormLayout({
               <Tooltip bg="blue" c="white" label="Ouvrir la présentation">
                 <Button
                   color="blue"
-                  onClick={() => {
-                    if (
-                      !presentationWindow ||
-                      (typeof window !== "undefined" &&
-                        presentationWindow?.closed)
-                    ) {
+                  onClick={async () => {
+                    if (typeof window === "undefined") return;
+
+                    if (!presentationWindow || presentationWindow?.closed) {
                       let finalpath = window.location.href.split("/");
                       finalpath.pop();
                       finalpath.push("presentation");
+
+                      // @ts-ignore
+                      if (window.__TAURI__) {
+                        const WebviewWindow = (
+                          await import("@tauri-apps/api/window")
+                        ).WebviewWindow;
+                        setPresentationWindow(
+                          new WebviewWindow("Présentation", {
+                            decorations: false,
+                            url: finalpath.join("/"),
+                          }),
+                        );
+                        return;
+                      }
+
                       setPresentationWindow(
                         window.open(
                           finalpath.join("/"),
