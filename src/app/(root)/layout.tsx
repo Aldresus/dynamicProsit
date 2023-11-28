@@ -273,23 +273,29 @@ export default function FormLayout({
               <div>
                 <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>e</Kbd>
               </div>
-              page problematiques
+              page contraintes
             </div>
             <div>
               <div>
                 <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>r</Kbd>
               </div>
-              page pistes de solution
+              page problematiques
             </div>
             <div>
               <div>
                 <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>t</Kbd>
               </div>
-              page livrables
+              page pistes de solution
             </div>
             <div>
               <div>
                 <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>y</Kbd>
+              </div>
+              page livrables
+            </div>
+            <div>
+              <div>
+                <Kbd>alt</Kbd> + <Kbd>shift</Kbd> + <Kbd>u</Kbd>
               </div>
               page plan d&apos;action
             </div>
