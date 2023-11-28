@@ -204,7 +204,7 @@ export default function FormLayout({
                         window.open(
                           finalpath.join("/"),
                           "_blank",
-                          "popup=true",
+                          "popup=true,status=no,location=no,toolbar=no,menubar=no",
                         ),
                       );
                     }
