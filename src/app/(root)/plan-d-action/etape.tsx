@@ -38,7 +38,7 @@ export default function EtapeSortable(props: EtapeProps) {
       ref={setNodeRef}
       style={style}
       onDoubleClick={() => {
-        setEditMode(!editMode);
+        setEditMode(true);
         editEtape(editValue);
       }}
     >

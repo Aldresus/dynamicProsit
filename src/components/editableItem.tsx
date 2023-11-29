@@ -26,7 +26,7 @@ export default function EditableItem({
         },
       )}
       onDoubleClick={() => {
-        setEditMode(!editMode);
+        setEditMode(true);
         onEdit(editValue);
       }}
     >
