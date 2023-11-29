@@ -6,6 +6,7 @@ import PrositContext from "@/components/prositContext";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { globalHotKeys } from "@/components/globalHotKeys";
+import EditableItemList from "@/components/editableItemList";
 
 export default function Problematiques() {
   const { prosit, setProsit } = useContext(PrositContext);
@@ -72,37 +73,19 @@ export default function Problematiques() {
         </Button>
       </form>
 
-      <div className="px-6">
-        {problematiques.map((value, index) => (
-          <div className="group flex items-center gap-1" key={value + index}>
-            <Title order={3}>- {value}</Title>
-            <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
-              <Button
-                variant="transparent"
-                size="compact-md"
-                color="red"
-                onClick={() => {
-                  const temp = [...prosit.problematiques];
-                  temp.splice(index, 1);
-                  setProsit({ ...prosit, problematiques: [...temp] });
-                }}
-              >
-                Supprimer
-              </Button>
-              <Button
-                onClick={() => {
-                  const temp = [...prosit.problematiques];
-                  setProblematique(temp.splice(index, 1)[0]);
-                  setProsit({ ...prosit, problematiques: [...temp] });
-                }}
-                size="compact-md"
-              >
-                Editer
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
+      <EditableItemList
+        items={problematiques}
+        onEdit={(index) => {
+          const temp = [...prosit.problematiques];
+          setProblematique(temp.splice(index, 1)[0]);
+          setProsit({ ...prosit, problematiques: [...temp] });
+        }}
+        onDelete={(index) => {
+          const temp = [...prosit.problematiques];
+          temp.splice(index, 1);
+          setProsit({ ...prosit, problematiques: [...temp] });
+        }}
+      />
     </div>
   );
 }

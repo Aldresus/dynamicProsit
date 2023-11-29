@@ -6,6 +6,7 @@ import PrositContext from "@/components/prositContext";
 import { useRouter } from "next/navigation";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { globalHotKeys } from "@/components/globalHotKeys";
+import EditableItemList from "@/components/editableItemList";
 
 export default function MotsClefs() {
   const { prosit, setProsit } = useContext(PrositContext);
@@ -74,43 +75,25 @@ export default function MotsClefs() {
         </Button>
       </form>
 
-      <div className="px-6">
-        {keywords.map((value, index) => (
-          <div className="group flex items-center gap-2" key={value + index}>
-            <Title order={3}>- {value}</Title>
-            <div className="flex group gap-1 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
-              <Button
-                variant="transparent"
-                size="compact-md"
-                color="red"
-                onClick={() => {
-                  const temp = [...prosit.motsCles];
-                  temp.splice(index, 1);
-                  setProsit({
-                    ...prosit,
-                    motsCles: [...temp],
-                  });
-                }}
-              >
-                Supprimer
-              </Button>
-              <Button
-                onClick={() => {
-                  const temp = [...prosit.motsCles];
-                  setKeyword(temp.splice(index, 1)[0]);
-                  setProsit({
-                    ...prosit,
-                    motsCles: [...temp],
-                  });
-                }}
-                size="compact-md"
-              >
-                Editer
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
+      <EditableItemList
+        items={keywords}
+        onEdit={(index) => {
+          const temp = [...prosit.motsCles];
+          setKeyword(temp.splice(index, 1)[0]);
+          setProsit({
+            ...prosit,
+            motsCles: [...temp],
+          });
+        }}
+        onDelete={(index) => {
+          const temp = [...prosit.motsCles];
+          temp.splice(index, 1);
+          setProsit({
+            ...prosit,
+            motsCles: [...temp],
+          });
+        }}
+      />
     </div>
   );
 }
