@@ -75,16 +75,15 @@ export default function Livrables() {
       </form>
 
       <EditableItemList
-        className="px-6"
         items={livrables}
+        onEdit={(newValue, index) => {
+          const temp = [...prosit.livrables];
+          temp[index] = newValue;
+          setProsit({ ...prosit, livrables: [...temp] });
+        }}
         onDelete={(index) => {
           const temp = [...prosit.livrables];
           temp.splice(index, 1);
-          setProsit({ ...prosit, livrables: [...temp] });
-        }}
-        onEdit={(index) => {
-          const temp = [...prosit.livrables];
-          setLivrable(temp.splice(index, 1)[0]);
           setProsit({ ...prosit, livrables: [...temp] });
         }}
       />

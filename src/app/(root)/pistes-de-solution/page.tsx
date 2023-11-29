@@ -76,13 +76,10 @@ export default function Pistes() {
 
       <EditableItemList
         items={pistesDeSolutions}
-        onEdit={(index) => {
+        onEdit={(newValue, index) => {
           const temp = [...prosit.pistesDeSolutions];
-          setPisteDeSolution(temp.splice(index, 1)[0]);
-          setProsit({
-            ...prosit,
-            pistesDeSolutions: [...temp],
-          });
+          temp[index] = newValue;
+          setProsit({ ...prosit, pistesDeSolutions: [...temp] });
         }}
         onDelete={(index) => {
           const temp = [...prosit.pistesDeSolutions];

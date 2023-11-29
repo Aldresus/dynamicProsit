@@ -23,6 +23,7 @@ import PrositContext from "@/components/prositContext";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { globalHotKeys } from "@/components/globalHotKeys";
+import { Kbd, Text } from "@mantine/core";
 
 export default function Problematiques() {
   const { prosit, setProsit } = useContext(PrositContext);
@@ -86,10 +87,10 @@ export default function Problematiques() {
     return newSteps;
   };
 
-  const editEtape = (index: number) => {
+  const editEtape = (newValue: string, index: number) => {
     //fixme
     let temp = [...prosit.planDAction];
-    setEtape(temp.splice(index - 1, 1)[0]);
+    temp[index].content = newValue;
     temp = reorganizeSteps(temp);
     setProsit({
       ...prosit,
@@ -176,14 +177,22 @@ export default function Problematiques() {
           items={etapes.map((etape) => etape.etapeNo)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="px-6 w-full flex flex-col gap-1">
+          <div className="w-full flex flex-col gap-1">
+            <div className="flex gap-3 mb-3">
+              <Text c="dimmed" size="sm">
+                <Kbd>double clic</Kbd> pour éditer la ligne
+              </Text>
+              <Text c="dimmed" size="sm">
+                <Kbd>entrer</Kbd> pour valider
+              </Text>
+            </div>
             {/*todo avoir des sous truc jor 1. a. b. c. */}
-            {etapes.map((value) => (
+            {etapes.map((value, index) => (
               <EtapeSortable
                 key={value.etapeNo + value.content}
                 value={value}
                 deleteEtape={deleteEtape}
-                editEtape={editEtape}
+                editEtape={(newValue: string) => editEtape(newValue, index)}
               />
             ))}
           </div>

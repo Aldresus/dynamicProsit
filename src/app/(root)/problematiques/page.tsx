@@ -75,9 +75,9 @@ export default function Problematiques() {
 
       <EditableItemList
         items={problematiques}
-        onEdit={(index) => {
+        onEdit={(newValue, index) => {
           const temp = [...prosit.problematiques];
-          setProblematique(temp.splice(index, 1)[0]);
+          temp[index] = newValue;
           setProsit({ ...prosit, problematiques: [...temp] });
         }}
         onDelete={(index) => {

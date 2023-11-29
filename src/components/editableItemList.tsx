@@ -1,10 +1,11 @@
 import React from "react";
-import { Button, Title } from "@mantine/core";
 import clsx from "clsx";
+import EditableItem from "@/components/editableItem";
+import { Kbd, Text } from "@mantine/core";
 
 interface ListCrudProps extends React.HTMLAttributes<HTMLDivElement> {
   items: string[];
-  onEdit: (index: number) => void;
+  onEdit: (newValue: string, index: number) => void;
   onDelete: (index: number) => void;
 }
 
@@ -14,31 +15,30 @@ export const EditableItemList = React.forwardRef<HTMLDivElement, ListCrudProps>(
     ref,
   ) => {
     return (
-      <div className={clsx("", className)} {...props} ref={ref}>
+      <div className={clsx("w-full", className)} {...props} ref={ref}>
+        <div className="flex gap-3 mb-3">
+          <Text c="dimmed" size="sm">
+            <Kbd>double clic</Kbd> pour éditer la ligne
+          </Text>
+          <Text c="dimmed" size="sm">
+            <Kbd>entrer</Kbd> pour valider
+          </Text>
+        </div>
+
         {items.map((value, index) => (
-          <div className="group flex items-center gap-1" key={value + index}>
-            <Title order={3}>- {value}</Title>
-            <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
-              <Button
-                variant="transparent"
-                size="compact-md"
-                color="red"
-                onClick={() => {
-                  onDelete(index);
-                }}
-              >
-                Supprimer
-              </Button>
-              <Button
-                onClick={() => {
-                  onEdit(index);
-                }}
-                size="compact-md"
-              >
-                Editer
-              </Button>
-            </div>
-          </div>
+          <EditableItem
+            key={value + index}
+            value={value}
+            onEdit={(value: string) => {
+              onEdit(value, index);
+            }}
+            onDelete={
+              () => {
+                onDelete(index);
+              }
+              // onDelete(index)
+            }
+          />
         ))}
       </div>
     );

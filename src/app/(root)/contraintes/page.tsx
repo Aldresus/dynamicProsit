@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Textarea, Title } from "@mantine/core";
+import { Button, Textarea, Title, Text } from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
 import PrositContext from "@/components/prositContext";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
@@ -74,12 +74,11 @@ export default function Contraintes() {
           Ajouter la contrainte
         </Button>
       </form>
-
       <EditableItemList
         items={contraintes}
-        onEdit={(index) => {
+        onEdit={(newValue, index) => {
           const temp = [...prosit.contraintes];
-          temp.splice(index, 1);
+          temp[index] = newValue;
           setProsit({ ...prosit, contraintes: [...temp] });
         }}
         onDelete={(index) => {

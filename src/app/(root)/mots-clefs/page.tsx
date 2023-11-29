@@ -77,13 +77,10 @@ export default function MotsClefs() {
 
       <EditableItemList
         items={keywords}
-        onEdit={(index) => {
+        onEdit={(newValue, index) => {
           const temp = [...prosit.motsCles];
-          setKeyword(temp.splice(index, 1)[0]);
-          setProsit({
-            ...prosit,
-            motsCles: [...temp],
-          });
+          temp[index] = newValue;
+          setProsit({ ...prosit, motsCles: [...temp] });
         }}
         onDelete={(index) => {
           const temp = [...prosit.motsCles];
