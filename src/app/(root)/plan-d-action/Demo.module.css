@@ -1,6 +1,6 @@
 .bgInput {
     @mixin light {
-        color: var(--mantine-color-blue-0);
+        background: var(--mantine-color-blue-0);
     }
 
     @mixin dark {
