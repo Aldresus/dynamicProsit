@@ -313,13 +313,13 @@ export default function FormLayout({
             </div>
             <div>
               <div>
-                <Kbd>ctrl</Kbd> + <Kbd>enter</Kbd>
+                <Kbd>ctrl</Kbd> + <Kbd>entrer</Kbd>
               </div>
               pour passer à la page suivante
             </div>
             <div>
               <div>
-                <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>enter</Kbd>
+                <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>entrer</Kbd>
               </div>
               pour passer à la page precedente
             </div>

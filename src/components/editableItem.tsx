@@ -75,17 +75,6 @@ export default function EditableItem({
         >
           Supprimer
         </Button>
-        {!editMode ? (
-          <Button
-            onClick={() => {
-              onEdit("test");
-              setEditMode(true);
-            }}
-            size="compact-md"
-          >
-            Editer
-          </Button>
-        ) : null}
       </div>
     </Box>
   );

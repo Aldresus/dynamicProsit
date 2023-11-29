@@ -88,9 +88,6 @@ export default function EtapeSortable(props: EtapeProps) {
         >
           Supprimer
         </Button>
-        <Button onClick={() => setEditMode(true)} size="compact-md">
-          Editer
-        </Button>
       </div>
     </Box>
   );
