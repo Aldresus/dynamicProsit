@@ -84,7 +84,7 @@ export default function MotsClefs() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...prosit.motsCles];
+                  const temp = [...prosit.motsCles];
                   temp.splice(index, 1);
                   setProsit({
                     ...prosit,
@@ -96,7 +96,7 @@ export default function MotsClefs() {
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...prosit.motsCles];
+                  const temp = [...prosit.motsCles];
                   setKeyword(temp.splice(index, 1)[0]);
                   setProsit({
                     ...prosit,

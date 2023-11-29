@@ -83,7 +83,7 @@ export default function Contraintes() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...prosit.contraintes];
+                  const temp = [...prosit.contraintes];
                   temp.splice(index, 1);
                   setProsit({ ...prosit, contraintes: [...temp] });
                 }}
@@ -92,7 +92,7 @@ export default function Contraintes() {
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...prosit.contraintes];
+                  const temp = [...prosit.contraintes];
                   setContrainte(temp.splice(index, 1)[0]);
                   setProsit({ ...prosit, contraintes: [...temp] });
                 }}

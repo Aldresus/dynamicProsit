@@ -60,7 +60,7 @@ export default function Problematiques() {
   ]);
 
   const planHandler = () => {
-    let finalEtape = {
+    const finalEtape = {
       etapeNo: prosit.planDAction.length + 1,
       content: etape.content,
     };
@@ -76,13 +76,13 @@ export default function Problematiques() {
   };
 
   const reorganizeSteps = (steps: Etape[]) => {
-    let newSteps = [] as Etape[];
+    const newSteps = [] as Etape[];
     let i = 1;
-    steps.forEach((step) => {
+    for (const step of steps) {
       step.etapeNo = i;
       newSteps.push(step);
       i++;
-    });
+    }
     return newSteps;
   };
 
@@ -118,7 +118,7 @@ export default function Problematiques() {
         .indexOf(active.id as number);
       const newIndex = steps
         .map((etape) => etape.etapeNo)
-        .indexOf(over!.id as number);
+        .indexOf(over?.id as number);
 
       steps = arrayMove(steps, oldIndex, newIndex);
       steps = reorganizeSteps(steps);

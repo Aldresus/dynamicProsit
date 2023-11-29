@@ -82,7 +82,7 @@ export default function Problematiques() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...prosit.problematiques];
+                  const temp = [...prosit.problematiques];
                   temp.splice(index, 1);
                   setProsit({ ...prosit, problematiques: [...temp] });
                 }}
@@ -91,7 +91,7 @@ export default function Problematiques() {
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...prosit.problematiques];
+                  const temp = [...prosit.problematiques];
                   setProblematique(temp.splice(index, 1)[0]);
                   setProsit({ ...prosit, problematiques: [...temp] });
                 }}

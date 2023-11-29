@@ -83,7 +83,7 @@ export default function Pistes() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...prosit.pistesDeSolutions];
+                  const temp = [...prosit.pistesDeSolutions];
                   temp.splice(index, 1);
 
                   setProsit({
@@ -96,7 +96,7 @@ export default function Pistes() {
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...prosit.pistesDeSolutions];
+                  const temp = [...prosit.pistesDeSolutions];
                   setPisteDeSolution(temp.splice(index, 1)[0]);
                   setProsit({
                     ...prosit,

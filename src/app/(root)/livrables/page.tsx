@@ -83,7 +83,7 @@ export default function Livrables() {
                 size="compact-md"
                 color="red"
                 onClick={() => {
-                  let temp = [...prosit.livrables];
+                  const temp = [...prosit.livrables];
                   temp.splice(index, 1);
                   setProsit({ ...prosit, livrables: [...temp] });
                 }}
@@ -92,7 +92,7 @@ export default function Livrables() {
               </Button>
               <Button
                 onClick={() => {
-                  let temp = [...prosit.livrables];
+                  const temp = [...prosit.livrables];
                   setLivrable(temp.splice(index, 1)[0]);
                   setProsit({ ...prosit, livrables: [...temp] });
                 }}

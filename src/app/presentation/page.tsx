@@ -19,7 +19,7 @@ export default function Visualisation() {
     if (typeof window === "undefined") return;
     window.addEventListener("storage", () => {
       const storedProsit = localStorage.getItem("prosit");
-      let parsedProsit = storedProsit
+      const parsedProsit = storedProsit
         ? JSON.parse(storedProsit)
         : defaultPrositValue;
       setPrositState(parsedProsit);
@@ -76,7 +76,7 @@ export default function Visualisation() {
           className={twMerge(
             prositState.motsCles.length === 0 ? "opacity-0" : "opacity-100",
           )}
-        ></PresentationElement>
+        />
         <PresentationElement
           anchor="contraintes"
           titre={"Contraintes"}
@@ -90,7 +90,7 @@ export default function Visualisation() {
           color={
             prositState.currentAnchor === "contraintes" ? "blue.9" : undefined
           }
-        ></PresentationElement>
+        />
         <PresentationElement
           anchor="problematiques"
           titre={"Problematiques"}
@@ -110,7 +110,7 @@ export default function Visualisation() {
               ? "blue.9"
               : undefined
           }
-        ></PresentationElement>
+        />
         <PresentationElement
           anchor="pistesDeSolution"
           titre={"Pistes de solution"}
@@ -130,7 +130,7 @@ export default function Visualisation() {
               ? "blue.9"
               : undefined
           }
-        ></PresentationElement>
+        />
         <PresentationElement
           anchor="livrables"
           titre={"Livrables"}
@@ -142,7 +142,7 @@ export default function Visualisation() {
           color={
             prositState.currentAnchor === "livrables" ? "blue.9" : undefined
           }
-        ></PresentationElement>
+        />
         <PresentationElement
           anchor="planDAction"
           ordered
@@ -157,7 +157,7 @@ export default function Visualisation() {
           color={
             prositState.currentAnchor === "planDAction" ? "blue.9" : undefined
           }
-        ></PresentationElement>
+        />
       </div>
     </div>
   );
