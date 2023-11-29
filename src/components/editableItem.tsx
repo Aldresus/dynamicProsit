@@ -1,6 +1,7 @@
 import { Box, Button, Title } from "@mantine/core";
 import React from "react";
 import clsx from "clsx";
+import classes from "@/app/(root)/plan-d-action/Demo.module.css";
 
 interface EditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   value: string;
@@ -19,10 +20,11 @@ export default function EditableItem({
   return (
     <Box
       className={clsx(
-        "group w-full flex items-center justify-between gap-1",
-        {},
+        "group w-full flex items-center justify-between gap-1 rounded",
+        {
+          [classes.bgInput]: editMode,
+        },
       )}
-      bg={editMode ? "blue.0" : "transparent"}
       onDoubleClick={() => {
         setEditMode(!editMode);
         onEdit(editValue);
@@ -41,10 +43,9 @@ export default function EditableItem({
             <div>-</div>
 
             <input
-              className="border-none flex-1 focus:outline-none m-0 p-0"
-              style={{
-                background: "var(--mantine-colors-blue-0)",
-              }}
+              className={clsx("border-none flex-1 focus:outline-none m-0 p-0", {
+                [classes.bgInput]: editMode,
+              })}
               // biome-ignore lint/a11y/noAutofocus: <explanation>
               autoFocus
               value={editValue}

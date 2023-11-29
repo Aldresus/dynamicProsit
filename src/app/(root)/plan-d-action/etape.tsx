@@ -5,6 +5,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { Etape } from "@/types/etape";
 import { GripVertical } from "lucide-react";
 import React from "react";
+import classes from "./Demo.module.css";
+import clsx from "clsx";
 
 interface EtapeProps extends React.HTMLAttributes<HTMLDivElement> {
   value: Etape;
@@ -27,10 +29,14 @@ export default function EtapeSortable(props: EtapeProps) {
 
   return (
     <Box
-      className="group flex items-center justify-between w-full"
+      className={clsx(
+        "group flex items-center justify-between w-full rounded",
+        {
+          [classes.bgInput]: editMode,
+        },
+      )}
       ref={setNodeRef}
       style={style}
-      bg={editMode ? "blue.0" : "transparent"}
       onDoubleClick={() => {
         setEditMode(!editMode);
         editEtape(editValue);
@@ -57,10 +63,10 @@ export default function EtapeSortable(props: EtapeProps) {
           >
             <Title order={3} className="flex">
               <input
-                className="border-none flex-1 focus:outline-none m-0 p-0 backdrop-opacity-10"
-                style={{
-                  background: "var(--mantine-colors-blue-0)",
-                }}
+                className={clsx(
+                  "border-none flex-1 focus:outline-none m-0 p-0",
+                  classes.bgInput,
+                )}
                 // biome-ignore lint/a11y/noAutofocus: <explanation>
                 autoFocus
                 value={editValue}

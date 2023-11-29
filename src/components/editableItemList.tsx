@@ -25,21 +25,23 @@ export const EditableItemList = React.forwardRef<HTMLDivElement, ListCrudProps>(
           </Text>
         </div>
 
-        {items.map((value, index) => (
-          <EditableItem
-            key={value + index}
-            value={value}
-            onEdit={(value: string) => {
-              onEdit(value, index);
-            }}
-            onDelete={
-              () => {
-                onDelete(index);
+        <div className="flex flex-col gap-1">
+          {items.map((value, index) => (
+            <EditableItem
+              key={value + index}
+              value={value}
+              onEdit={(value: string) => {
+                onEdit(value, index);
+              }}
+              onDelete={
+                () => {
+                  onDelete(index);
+                }
+                // onDelete(index)
               }
-              // onDelete(index)
-            }
-          />
-        ))}
+            />
+          ))}
+        </div>
       </div>
     );
   },
