@@ -72,7 +72,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider defaultColorScheme="dark" theme={theme}>
+        <MantineProvider defaultColorScheme="light" theme={theme}>
           <PrositContext.Provider value={{ prosit, setProsit, clearProsit }}>
             {isTauriContext ? (
               <div

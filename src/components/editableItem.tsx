@@ -25,6 +25,7 @@ export default function EditableItem({
       bg={editMode ? "blue.0" : "transparent"}
       onDoubleClick={() => {
         setEditMode(!editMode);
+        onEdit(editValue);
       }}
     >
       {editMode ? (

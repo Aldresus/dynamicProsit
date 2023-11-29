@@ -33,6 +33,7 @@ export default function EtapeSortable(props: EtapeProps) {
       bg={editMode ? "blue.0" : "transparent"}
       onDoubleClick={() => {
         setEditMode(!editMode);
+        editEtape(editValue);
       }}
     >
       <div className="flex gap-2 flex-1 items-center">
@@ -56,7 +57,7 @@ export default function EtapeSortable(props: EtapeProps) {
           >
             <Title order={3} className="flex">
               <input
-                className="border-none flex-1 focus:outline-none m-0 p-0"
+                className="border-none flex-1 focus:outline-none m-0 p-0 backdrop-opacity-10"
                 style={{
                   background: "var(--mantine-colors-blue-0)",
                 }}
