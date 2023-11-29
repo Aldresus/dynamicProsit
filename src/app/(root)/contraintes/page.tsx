@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Textarea, Title, Text } from "@mantine/core";
+import { Button, Textarea, Title } from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
 import PrositContext from "@/components/prositContext";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
