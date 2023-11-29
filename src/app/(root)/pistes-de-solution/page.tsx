@@ -6,6 +6,7 @@ import PrositContext from "@/components/prositContext";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { globalHotKeys } from "@/components/globalHotKeys";
+import EditableItemList from "@/components/editableItemList";
 
 export default function Pistes() {
   const { prosit, setProsit } = useContext(PrositContext);
@@ -73,44 +74,23 @@ export default function Pistes() {
         </Button>
       </form>
 
-      <div className="px-6">
-        {pistesDeSolutions.map((value, index) => (
-          <div className="group flex items-center gap-1" key={value + index}>
-            <Title order={3}>- {value}</Title>
-            <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
-              <Button
-                variant="transparent"
-                size="compact-md"
-                color="red"
-                onClick={() => {
-                  let temp = [...prosit.pistesDeSolutions];
-                  temp.splice(index, 1);
+      <EditableItemList
+        items={pistesDeSolutions}
+        onEdit={(newValue, index) => {
+          const temp = [...prosit.pistesDeSolutions];
+          temp[index] = newValue;
+          setProsit({ ...prosit, pistesDeSolutions: [...temp] });
+        }}
+        onDelete={(index) => {
+          const temp = [...prosit.pistesDeSolutions];
+          temp.splice(index, 1);
 
-                  setProsit({
-                    ...prosit,
-                    pistesDeSolutions: [...temp],
-                  });
-                }}
-              >
-                Supprimer
-              </Button>
-              <Button
-                onClick={() => {
-                  let temp = [...prosit.pistesDeSolutions];
-                  setPisteDeSolution(temp.splice(index, 1)[0]);
-                  setProsit({
-                    ...prosit,
-                    pistesDeSolutions: [...temp],
-                  });
-                }}
-                size="compact-md"
-              >
-                Editer
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
+          setProsit({
+            ...prosit,
+            pistesDeSolutions: [...temp],
+          });
+        }}
+      />
     </div>
   );
 }

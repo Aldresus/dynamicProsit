@@ -37,9 +37,9 @@ const PresentationElement = React.forwardRef<
           className,
         )}
       >
-        <a id={`${anchor}`}>
-          <Title order={2}>{titre}</Title>
-        </a>
+        <Title id={`${anchor}`} order={2}>
+          {titre}
+        </Title>
         {typeof valeurs === "string" ? (
           <Text size="xl" px="md">
             {valeurs}

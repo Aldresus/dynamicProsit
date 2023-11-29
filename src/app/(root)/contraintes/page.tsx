@@ -6,6 +6,7 @@ import PrositContext from "@/components/prositContext";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { globalHotKeys } from "@/components/globalHotKeys";
+import EditableItemList from "@/components/editableItemList";
 
 export default function Contraintes() {
   const { prosit, setProsit } = useContext(PrositContext);
@@ -41,6 +42,7 @@ export default function Contraintes() {
 
   return (
     <div className="h-full flex flex-col gap-9 py-3">
+      {/*  maybe refacto l'input*/}
       <Title order={2}>Contraintes</Title>
 
       <form
@@ -72,38 +74,19 @@ export default function Contraintes() {
           Ajouter la contrainte
         </Button>
       </form>
-
-      <div className="px-6">
-        {contraintes.map((value, index) => (
-          <div className="group flex items-center gap-1" key={value + index}>
-            <Title order={3}>- {value}</Title>
-            <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
-              <Button
-                variant="transparent"
-                size="compact-md"
-                color="red"
-                onClick={() => {
-                  let temp = [...prosit.contraintes];
-                  temp.splice(index, 1);
-                  setProsit({ ...prosit, contraintes: [...temp] });
-                }}
-              >
-                Supprimer
-              </Button>
-              <Button
-                onClick={() => {
-                  let temp = [...prosit.contraintes];
-                  setContrainte(temp.splice(index, 1)[0]);
-                  setProsit({ ...prosit, contraintes: [...temp] });
-                }}
-                size="compact-md"
-              >
-                Editer
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
+      <EditableItemList
+        items={contraintes}
+        onEdit={(newValue, index) => {
+          const temp = [...prosit.contraintes];
+          temp[index] = newValue;
+          setProsit({ ...prosit, contraintes: [...temp] });
+        }}
+        onDelete={(index) => {
+          const temp = [...prosit.contraintes];
+          setContrainte(temp.splice(index, 1)[0]);
+          setProsit({ ...prosit, contraintes: [...temp] });
+        }}
+      />
     </div>
   );
 }

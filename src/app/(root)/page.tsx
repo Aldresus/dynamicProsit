@@ -20,7 +20,7 @@ export default function Home() {
 
   useHotkeys(pageHotkeys);
 
-  let hotkeys = getHotkeyHandler([...globalHotKeys(router), ...pageHotkeys]);
+  const hotkeys = getHotkeyHandler([...globalHotKeys(router), ...pageHotkeys]);
 
   //todo add a call to action so the user know that the presentation mode exist
 

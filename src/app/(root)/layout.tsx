@@ -119,8 +119,7 @@ export default function FormLayout({
               onClick={() => {
                 navigate("informations");
               }}
-            ></NavLink>
-
+            />
             <NavLink
               label="Mots clefs"
               leftSection={<KeyRound size="1rem" />}
@@ -195,7 +194,7 @@ export default function FormLayout({
                     if (typeof window === "undefined") return;
 
                     if (!presentationWindow || presentationWindow?.closed) {
-                      let finalpath = window.location.href.split("/");
+                      const finalpath = window.location.href.split("/");
                       finalpath.pop();
                       finalpath.push("presentation");
 
@@ -314,13 +313,13 @@ export default function FormLayout({
             </div>
             <div>
               <div>
-                <Kbd>ctrl</Kbd> + <Kbd>enter</Kbd>
+                <Kbd>ctrl</Kbd> + <Kbd>entrer</Kbd>
               </div>
               pour passer à la page suivante
             </div>
             <div>
               <div>
-                <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>enter</Kbd>
+                <Kbd>ctrl</Kbd> + <Kbd>shift</Kbd> + <Kbd>entrer</Kbd>
               </div>
               pour passer à la page precedente
             </div>

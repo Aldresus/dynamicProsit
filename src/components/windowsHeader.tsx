@@ -3,6 +3,7 @@ import { Maximize2, Minus, X } from "lucide-react";
 import clsx from "clsx";
 import { ActionIcon } from "@mantine/core";
 
+// biome-ignore lint/suspicious/noEmptyInterface: empty interface is used to extend HTMLAttributes
 interface WindowsHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function WindowsHeader({

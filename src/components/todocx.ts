@@ -4,7 +4,7 @@ import { saveAs } from "file-saver";
 import { Prosit } from "@/types/prosit";
 let PizZipUtils: any = null;
 if (typeof window !== "undefined") {
-  import("pizzip/utils/index.js").then(function (r) {
+  import("pizzip/utils/index.js").then((r) => {
     PizZipUtils = r;
   });
 }
@@ -13,7 +13,7 @@ function loadFile(url: string, callback: (error: any, content: any) => void) {
   PizZipUtils.getBinaryContent(url, callback);
 }
 export const todocx = (prosit: Prosit) => {
-  loadFile("/template.docx", function (error, content) {
+  loadFile("/template.docx", (error, content) => {
     if (error) {
       throw error;
     }

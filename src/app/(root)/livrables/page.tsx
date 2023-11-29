@@ -6,6 +6,7 @@ import PrositContext from "@/components/prositContext";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { globalHotKeys } from "@/components/globalHotKeys";
+import EditableItemList from "@/components/editableItemList";
 
 export default function Livrables() {
   const { prosit, setProsit } = useContext(PrositContext);
@@ -73,37 +74,19 @@ export default function Livrables() {
         </Button>
       </form>
 
-      <div className="px-6">
-        {livrables.map((value, index) => (
-          <div className="group flex items-center gap-1" key={value + index}>
-            <Title order={3}>- {value}</Title>
-            <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
-              <Button
-                variant="transparent"
-                size="compact-md"
-                color="red"
-                onClick={() => {
-                  let temp = [...prosit.livrables];
-                  temp.splice(index, 1);
-                  setProsit({ ...prosit, livrables: [...temp] });
-                }}
-              >
-                Supprimer
-              </Button>
-              <Button
-                onClick={() => {
-                  let temp = [...prosit.livrables];
-                  setLivrable(temp.splice(index, 1)[0]);
-                  setProsit({ ...prosit, livrables: [...temp] });
-                }}
-                size="compact-md"
-              >
-                Editer
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
+      <EditableItemList
+        items={livrables}
+        onEdit={(newValue, index) => {
+          const temp = [...prosit.livrables];
+          temp[index] = newValue;
+          setProsit({ ...prosit, livrables: [...temp] });
+        }}
+        onDelete={(index) => {
+          const temp = [...prosit.livrables];
+          temp.splice(index, 1);
+          setProsit({ ...prosit, livrables: [...temp] });
+        }}
+      />
     </div>
   );
 }

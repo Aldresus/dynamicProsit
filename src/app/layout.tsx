@@ -27,12 +27,12 @@ export default function RootLayout({
 
     const storedProsit = localStorage.getItem("prosit");
 
-    let parsedProsit = storedProsit
+    const parsedProsit = storedProsit
       ? JSON.parse(storedProsit)
       : defaultPrositValue;
 
-    Object.keys(defaultPrositValue).forEach((key) => {
-      if (!parsedProsit.hasOwnProperty(key)) {
+    for (const key of Object.keys(defaultPrositValue)) {
+      if (!Object.prototype.hasOwnProperty.call(parsedProsit, key)) {
         parsedProsit[key] = defaultPrositValue[key as keyof Prosit];
       } else if (
         typeof parsedProsit[key] !==
@@ -40,7 +40,7 @@ export default function RootLayout({
       ) {
         parsedProsit[key] = defaultPrositValue[key as keyof Prosit];
       }
-    });
+    }
 
     return parsedProsit;
   });
@@ -77,7 +77,7 @@ export default function RootLayout({
             {isTauriContext ? (
               <div
                 className="flex justify-end fixed top-0 left-0 right-0"
-                data-tauri-drag-region
+                data-tauri-drag-region={true}
               >
                 <WindowsHeader className="m-3" />
               </div>
