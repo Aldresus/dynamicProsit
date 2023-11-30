@@ -53,6 +53,7 @@ export default function Livrables() {
 				className="flex gap-2 items-end"
 			>
 				<Textarea
+					name="livrable"
 					onKeyDown={hotkeys}
 					className="flex-1"
 					autoFocus
@@ -76,6 +77,7 @@ export default function Livrables() {
 			</form>
 
 			<EditableItemList
+				id={"livrables"}
 				items={livrables}
 				onEdit={(newValue, index) => {
 					const temp = [...prosit.livrables];

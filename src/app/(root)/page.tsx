@@ -36,6 +36,7 @@ export default function Home() {
 			<Title order={2}>Informations</Title>
 			<div className="flex flex-col gap-2">
 				<TextInput
+					name="titre"
 					autoFocus
 					required
 					label="Titre"
@@ -51,6 +52,7 @@ export default function Home() {
 					onKeyDown={hotkeys}
 				/>
 				<TextInput
+					name="lien"
 					type="url"
 					label="Lien vers le prosit"
 					placeholder="https://hugochampy.fr"
@@ -66,6 +68,7 @@ export default function Home() {
 					onKeyDown={hotkeys}
 				/>
 				<TextInput
+					name="generalisation"
 					required
 					label="Généralisation"
 					placeholder="pasteurisation, vol"
@@ -80,6 +83,7 @@ export default function Home() {
 					onKeyDown={hotkeys}
 				/>
 				<Textarea
+					name="contexte"
 					required
 					label="Contexte"
 					placeholder="Quelqu'un à volé mon fromage, je dois faire un algorithme en python pour savoir qui est le voleur"
@@ -97,6 +101,7 @@ export default function Home() {
 			<div className="flex flex-col gap-2">
 				<div className="flex gap-3">
 					<TextInput
+						name="animateur"
 						className="flex-1"
 						label="Animateur"
 						placeholder="Pierre"
@@ -111,6 +116,7 @@ export default function Home() {
 						onKeyDown={hotkeys}
 					/>
 					<TextInput
+						name="scribe"
 						className="flex-1"
 						label="Scribe"
 						placeholder="Paul"
@@ -127,6 +133,7 @@ export default function Home() {
 				</div>
 				<div className="flex gap-3">
 					<TextInput
+						name="gestionnaire"
 						className="flex-1"
 						label="Gestionnaire"
 						placeholder="Jacques"
@@ -141,6 +148,7 @@ export default function Home() {
 						onKeyDown={hotkeys}
 					/>
 					<TextInput
+						name="secretaire"
 						className="flex-1"
 						label="Secrétaire"
 						placeholder="Jeanne, elle est où Jeanne ?"

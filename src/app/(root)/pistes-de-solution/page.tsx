@@ -53,6 +53,7 @@ export default function Pistes() {
 				className="flex gap-2 items-end"
 			>
 				<Textarea
+					name="pisteDeSolution"
 					onKeyDown={hotkeys}
 					className="flex-1"
 					autoFocus
@@ -76,6 +77,7 @@ export default function Pistes() {
 			</form>
 
 			<EditableItemList
+				id={"pistesDeSolutions"}
 				items={pistesDeSolutions}
 				onEdit={(newValue, index) => {
 					const temp = [...prosit.pistesDeSolutions];

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
@@ -36,6 +37,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "cypress": "^13.6.0",
     "eslint": "^8",
     "eslint-config-next": "14.0.3",
     "postcss": "^8.4.31",

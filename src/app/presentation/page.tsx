@@ -38,7 +38,7 @@ export default function Visualisation() {
 
 	return (
 		<div className="h-full w-full flex flex-col gap-6">
-			<Title order={1}>Prosit : {prositState.titre}</Title>
+			<Title order={1} id="titreProsit">Prosit : {prositState.titre}</Title>
 			<Box
 				id="informations"
 				className={twMerge("flex flex-col gap-6 rounded-xl")}

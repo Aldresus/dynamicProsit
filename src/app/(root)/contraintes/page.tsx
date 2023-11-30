@@ -54,6 +54,7 @@ export default function Contraintes() {
 				className="flex gap-2 items-end"
 			>
 				<Textarea
+					name="contrainte"
 					onKeyDown={hotkeys}
 					className="flex-1"
 					autoFocus
@@ -75,7 +76,7 @@ export default function Contraintes() {
 					Ajouter la contrainte
 				</Button>
 			</form>
-			<EditableItemList
+			<EditableItemList id={"contraintes"}
 				items={contraintes}
 				onEdit={(newValue, index) => {
 					const temp = [...prosit.contraintes];

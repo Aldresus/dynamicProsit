@@ -54,6 +54,7 @@ export default function MotsClefs() {
 				className="flex gap-2 items-end"
 			>
 				<Textarea
+					name="motClef"
 					onKeyDown={hotkeys}
 					className="flex-1"
 					autoFocus
@@ -77,6 +78,7 @@ export default function MotsClefs() {
 			</form>
 
 			<EditableItemList
+				id={"motsCles"}
 				items={keywords}
 				onEdit={(newValue, index) => {
 					const temp = [...prosit.motsCles];

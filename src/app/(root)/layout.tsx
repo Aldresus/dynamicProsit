@@ -191,6 +191,7 @@ export default function FormLayout({
 							</Button>
 							<Tooltip bg="blue" c="white" label="Ouvrir la présentation">
 								<Button
+									id="presentationMode"
 									color="blue"
 									onClick={async () => {
 										if (typeof window === "undefined") return;
