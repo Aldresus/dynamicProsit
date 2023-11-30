@@ -2,13 +2,13 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 import { HotkeyItem } from "@mantine/hooks";
 
 export const globalHotKeys: (router: AppRouterInstance) => HotkeyItem[] = (
-  router,
+	router,
 ) => [
-  ["alt+shift+a", () => router.push("/")],
-  ["alt+shift+z", () => router.push("/mots-clefs")],
-  ["alt+shift+e", () => router.push("/contraintes")],
-  ["alt+shift+r", () => router.push("/problematiques")],
-  ["alt+shift+t", () => router.push("/pistes-de-solution")],
-  ["alt+shift+y", () => router.push("/livrables")],
-  ["alt+shift+u", () => router.push("/plan-d-action")],
+	["alt+shift+a", () => router.push("/")],
+	["alt+shift+z", () => router.push("/mots-clefs")],
+	["alt+shift+e", () => router.push("/contraintes")],
+	["alt+shift+r", () => router.push("/problematiques")],
+	["alt+shift+t", () => router.push("/pistes-de-solution")],
+	["alt+shift+y", () => router.push("/livrables")],
+	["alt+shift+u", () => router.push("/plan-d-action")],
 ];

@@ -1,4 +1,4 @@
 export interface Etape {
-  etapeNo: number;
-  content: string;
+	etapeNo: number;
+	content: string;
 }
