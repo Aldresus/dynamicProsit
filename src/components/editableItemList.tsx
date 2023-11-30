@@ -12,13 +12,24 @@ interface ListCrudProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const EditableItemList = React.forwardRef<HTMLDivElement, ListCrudProps>(
 	(
-		{ children, items, onEdit, onDelete, className, id, ...props }: ListCrudProps,
+		{
+			children,
+			items,
+			onEdit,
+			onDelete,
+			className,
+			id,
+			...props
+		}: ListCrudProps,
 		ref,
 	) => {
 		return (
-			<div className={clsx("w-full", className)} id={
-				`editable-item-list-wrapper-${id}`
-			} {...props} ref={ref}>
+			<div
+				className={clsx("w-full", className)}
+				id={`editable-item-list-wrapper-${id}`}
+				{...props}
+				ref={ref}
+			>
 				<div className="flex gap-3 mb-3">
 					<Text c="dimmed" size="sm">
 						<Kbd>double clic</Kbd> pour éditer la ligne
@@ -28,9 +39,7 @@ export const EditableItemList = React.forwardRef<HTMLDivElement, ListCrudProps>(
 					</Text>
 				</div>
 
-				<div className="flex flex-col gap-1" id={
-					`editable-item-list-${id}`
-				}>
+				<div className="flex flex-col gap-1" id={`editable-item-list-${id}`}>
 					{items.map((value, index) => (
 						<EditableItem
 							key={value + index}

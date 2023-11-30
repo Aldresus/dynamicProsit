@@ -42,15 +42,16 @@ const PresentationElement = React.forwardRef<
 					{titre}
 				</Title>
 				{typeof valeurs === "string" ? (
-					<Text size="xl" px="md" id={
-						`texte-${anchor}`
-					}>
+					<Text size="xl" px="md" id={`texte-${anchor}`}>
 						{valeurs}
 					</Text>
 				) : (
-					<List type={ordered ? "ordered" : "unordered"} size="xl" withPadding id={
-						`liste-${anchor}`
-					}>
+					<List
+						type={ordered ? "ordered" : "unordered"}
+						size="xl"
+						withPadding
+						id={`liste-${anchor}`}
+					>
 						{valeurs.map((valeur, i) => (
 							<List.Item key={valeur + i}>{valeur}</List.Item>
 						))}

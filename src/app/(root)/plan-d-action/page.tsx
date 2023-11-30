@@ -179,9 +179,10 @@ export default function Problematiques() {
 					items={etapes.map((etape) => etape.etapeNo)}
 					strategy={verticalListSortingStrategy}
 				>
-					<div className="w-full flex flex-col gap-1" id={
-						"editable-item-list-wrapper-plan-d-action"
-					}>
+					<div
+						className="w-full flex flex-col gap-1"
+						id={"editable-item-list-wrapper-plan-d-action"}
+					>
 						<div className="flex gap-3 mb-3">
 							<Text c="dimmed" size="sm">
 								<Kbd>double clic</Kbd> pour éditer la ligne
@@ -191,17 +192,16 @@ export default function Problematiques() {
 							</Text>
 						</div>
 						{/*todo avoir des sous truc jor 1. a. b. c. */}
-						<div id={
-							"editable-item-list-plan-d-action"
-						}>
-						{etapes.map((value, index) => (
-							<EtapeSortable
-								key={value.etapeNo + value.content}
-								value={value}
-								deleteEtape={deleteEtape}
-								editEtape={(newValue: string) => editEtape(newValue, index)}
-							/>
-						))}</div>
+						<div id={"editable-item-list-plan-d-action"}>
+							{etapes.map((value, index) => (
+								<EtapeSortable
+									key={value.etapeNo + value.content}
+									value={value}
+									deleteEtape={deleteEtape}
+									editEtape={(newValue: string) => editEtape(newValue, index)}
+								/>
+							))}
+						</div>
 					</div>
 				</SortableContext>
 			</DndContext>

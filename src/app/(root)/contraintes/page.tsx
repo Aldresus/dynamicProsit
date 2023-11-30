@@ -76,7 +76,8 @@ export default function Contraintes() {
 					Ajouter la contrainte
 				</Button>
 			</form>
-			<EditableItemList id={"contraintes"}
+			<EditableItemList
+				id={"contraintes"}
 				items={contraintes}
 				onEdit={(newValue, index) => {
 					const temp = [...prosit.contraintes];
