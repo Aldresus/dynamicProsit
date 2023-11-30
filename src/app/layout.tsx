@@ -1,15 +1,15 @@
 "use client";
-import "./globals.css";
 import "@mantine/core/styles.css";
+import "./globals.css";
 
-import { ColorSchemeScript, MantineProvider, createTheme } from "@mantine/core";
-import React, { useEffect, useState } from "react";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
-import { Prosit } from "@/types/prosit";
-import { Sparkles } from "lucide-react";
 import WindowsHeader from "@/components/windowsHeader";
+import { Prosit } from "@/types/prosit";
+import { ColorSchemeScript, MantineProvider, createTheme } from "@mantine/core";
 import { open } from "@tauri-apps/api/shell";
+import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 export default function RootLayout({
 	children,
@@ -69,9 +69,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<head>
-				<title>
-					DynamicPrositX
-				</title>
+				<title>DynamicPrositX</title>
 				<ColorSchemeScript />
 			</head>
 			<body>

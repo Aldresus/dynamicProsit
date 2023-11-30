@@ -1,12 +1,12 @@
 "use client";
 
-import { Button, Textarea, Title } from "@mantine/core";
-import React, { useContext, useEffect, useState } from "react";
-import PrositContext from "@/components/prositContext";
-import { useRouter } from "next/navigation";
-import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { globalHotKeys } from "@/components/globalHotKeys";
 import EditableItemList from "@/components/editableItemList";
+import { globalHotKeys } from "@/components/globalHotKeys";
+import PrositContext from "@/components/prositContext";
+import { Button, Textarea, Title } from "@mantine/core";
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
+import React, { useContext, useEffect, useState } from "react";
 
 export default function MotsClefs() {
 	const { prosit, setProsit } = useContext(PrositContext);

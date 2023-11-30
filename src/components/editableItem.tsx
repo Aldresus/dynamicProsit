@@ -1,7 +1,7 @@
-import { Button, Title } from "@mantine/core";
-import React from "react";
-import clsx from "clsx";
 import classes from "@/app/(root)/plan-d-action/Demo.module.css";
+import { Button, Title } from "@mantine/core";
+import clsx from "clsx";
+import React from "react";
 
 interface EditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
 	value: string;

@@ -1,12 +1,12 @@
 "use client";
-import { Box, Button, Text, Title } from "@mantine/core";
+import { Etape } from "@/types/etape";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Etape } from "@/types/etape";
+import { Box, Button, Text, Title } from "@mantine/core";
+import clsx from "clsx";
 import { GripVertical } from "lucide-react";
 import React from "react";
 import classes from "./Demo.module.css";
-import clsx from "clsx";
 
 interface EtapeProps extends React.HTMLAttributes<HTMLDivElement> {
 	value: Etape;

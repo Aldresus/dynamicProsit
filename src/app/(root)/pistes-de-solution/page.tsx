@@ -1,12 +1,12 @@
 "use client";
 
-import { Button, Textarea, Title } from "@mantine/core";
-import React, { useContext, useEffect, useState } from "react";
+import EditableItemList from "@/components/editableItemList";
+import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
+import { Button, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
-import { globalHotKeys } from "@/components/globalHotKeys";
-import EditableItemList from "@/components/editableItemList";
+import React, { useContext, useEffect, useState } from "react";
 
 export default function Pistes() {
 	const { prosit, setProsit } = useContext(PrositContext);
@@ -18,6 +18,7 @@ export default function Pistes() {
 		setPistesDeSolutions(prosit.pistesDeSolutions);
 	}, [prosit]);
 
+	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
 		["ctrl+enter", () => router.push("/livrables")],
 		["ctrl+shift+enter", () => router.push("/problematiques")],

@@ -1,10 +1,10 @@
 "use client";
 
-import { Box, Title } from "@mantine/core";
-import React, { useContext, useEffect, useState } from "react";
+import PresentationElement from "@/app/presentation/presentationElement";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import { Prosit } from "@/types/prosit";
-import PresentationElement from "@/app/presentation/presentationElement";
+import { Box, Title } from "@mantine/core";
+import React, { useContext, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export default function Visualisation() {

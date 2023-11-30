@@ -1,6 +1,6 @@
 "use client";
 
-import { createTheme, MantineProvider } from "@mantine/core";
+import { MantineProvider, createTheme } from "@mantine/core";
 
 export default function RootLayout({
 	children,

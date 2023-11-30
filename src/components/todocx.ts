@@ -1,7 +1,8 @@
-import Docxtemplater from "docxtemplater";
-import PizZip from "pizzip";
-import { saveAs } from "file-saver";
 import { Prosit } from "@/types/prosit";
+import Docxtemplater from "docxtemplater";
+import { saveAs } from "file-saver";
+import PizZip from "pizzip";
+// biome-ignore lint/suspicious/noExplicitAny: any is required for dynamic import
 let PizZipUtils: any = null;
 if (typeof window !== "undefined") {
 	import("pizzip/utils/index.js").then((r) => {
@@ -9,6 +10,7 @@ if (typeof window !== "undefined") {
 	});
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: the lib doesn't specify the type
 function loadFile(url: string, callback: (error: any, content: any) => void) {
 	PizZipUtils.getBinaryContent(url, callback);
 }

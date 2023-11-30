@@ -1,5 +1,5 @@
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { HotkeyItem } from "@mantine/hooks";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const globalHotKeys: (router: AppRouterInstance) => HotkeyItem[] = (
 	router,

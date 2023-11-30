@@ -1,7 +1,7 @@
-import React from "react";
-import clsx from "clsx";
 import EditableItem from "@/components/editableItem";
 import { Kbd, Text } from "@mantine/core";
+import clsx from "clsx";
+import React from "react";
 
 interface ListCrudProps extends React.HTMLAttributes<HTMLDivElement> {
 	items: string[];

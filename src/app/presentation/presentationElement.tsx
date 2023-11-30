@@ -1,5 +1,5 @@
-import React from "react";
 import { Box, List, MantineColor, Text, Title } from "@mantine/core";
+import React from "react";
 import { twMerge } from "tailwind-merge";
 
 interface PresentationElementProps {

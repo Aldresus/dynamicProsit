@@ -1,29 +1,29 @@
 "use client";
 
-import { Button, Textarea, Title } from "@mantine/core";
-import React, { useContext, useEffect, useState } from "react";
+import EtapeSortable from "@/app/(root)/plan-d-action/etape";
+import { globalHotKeys } from "@/components/globalHotKeys";
+import PrositContext from "@/components/prositContext";
+import { Etape } from "@/types/etape";
 import {
-	closestCenter,
 	DndContext,
 	DragEndEvent,
 	KeyboardSensor,
 	PointerSensor,
+	closestCenter,
 	useSensor,
 	useSensors,
 } from "@dnd-kit/core";
 import {
-	arrayMove,
 	SortableContext,
+	arrayMove,
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import EtapeSortable from "@/app/(root)/plan-d-action/etape";
-import { Etape } from "@/types/etape";
-import PrositContext from "@/components/prositContext";
+import { Button, Textarea, Title } from "@mantine/core";
+import { Kbd, Text } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
-import { globalHotKeys } from "@/components/globalHotKeys";
-import { Kbd, Text } from "@mantine/core";
+import React, { useContext, useEffect, useState } from "react";
 
 export default function Problematiques() {
 	const { prosit, setProsit } = useContext(PrositContext);

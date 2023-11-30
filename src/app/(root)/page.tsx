@@ -1,12 +1,12 @@
 "use client";
 
-import { Textarea, TextInput, Title } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
 import { Prosit } from "@/types/prosit";
+import { TextInput, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { globalHotKeys } from "@/components/globalHotKeys";
+import { useRouter } from "next/navigation";
+import { useContext } from "react";
 
 export default function Home() {
 	const router = useRouter();
@@ -14,7 +14,7 @@ export default function Home() {
 	const { prosit, setProsit } = useContext(PrositContext);
 
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
-const pageHotkeys: any[] = [
+	const pageHotkeys: any[] = [
 		["ctrl+enter", () => router.push("/mots-clefs")],
 		["ctrl+shift+enter", () => router.push("/plan-d-action")],
 	];

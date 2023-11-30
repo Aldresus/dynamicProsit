@@ -1,5 +1,8 @@
 "use client";
 
+import { globalHotKeys } from "@/components/globalHotKeys";
+import PrositContext from "@/components/prositContext";
+import { todocx } from "@/components/todocx";
 import {
 	AppShell,
 	Button,
@@ -12,7 +15,7 @@ import {
 	useMantineColorScheme,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import React, { useContext, useEffect, useState } from "react";
+import clsx from "clsx";
 import {
 	AlertCircle,
 	AreaChart,
@@ -26,11 +29,8 @@ import {
 	Sun,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { globalHotKeys } from "@/components/globalHotKeys";
-import { todocx } from "@/components/todocx";
-import PrositContext from "@/components/prositContext";
+import React, { useContext, useEffect, useState } from "react";
 import classes from "./Demo.module.css";
-import clsx from "clsx";
 
 export default function FormLayout({
 	children,
