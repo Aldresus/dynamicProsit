@@ -5,7 +5,8 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
+            disallow: '/presentation',
         },
-        sitemap: 'https://hugochampy.fr/sitemap.xml',
+        sitemap: 'https://prosit.hugochampy.fr/sitemap.xml',
     }
 }
