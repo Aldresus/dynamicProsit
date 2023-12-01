@@ -71,6 +71,11 @@ export default function RootLayout({
 			<head>
 				<title>DynamicPrositX</title>
 				<ColorSchemeScript />
+				<meta property="og:image" content="<generated>" />
+				<meta property="og:image:alt" content="About Acme" />
+				<meta property="og:image:type" content="image/png" />
+				<meta property="og:image:width" content="1200" />
+				<meta property="og:image:height" content="630" />
 			</head>
 			<body>
 				<MantineProvider defaultColorScheme="light" theme={theme}>
