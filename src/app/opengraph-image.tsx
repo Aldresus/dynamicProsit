@@ -38,7 +38,7 @@ export default async function Image() {
             padding: "1rem",
           }}
         >
-          Hugo
+          DynamicPrositX
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="3rem"
@@ -59,15 +59,6 @@ export default async function Image() {
             <path d="M3 5h4" />
             <path d="M17 19h4" />
           </svg>
-        </span>
-        <span
-          style={{
-            color: "#353945",
-            fontSize: "2.5rem",
-            fontWeight: 400,
-          }}
-        >
-          Full stack developer
         </span>
       </div>
     ),
