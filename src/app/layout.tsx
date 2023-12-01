@@ -81,7 +81,6 @@ export default function RootLayout({
 				<meta name="twitter:image:alt" content="DynamicPrositX" />
 				<meta name="twitter:image:width" content="1200" />
 				<meta name="twitter:image:height" content="630" />
-
 			</head>
 			<body>
 				<MantineProvider defaultColorScheme="light" theme={theme}>
