@@ -35,7 +35,6 @@ export default async function Image() {
 					padding: "1rem",
 				}}
 			>
-				DynamicPrositX
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="3rem"
