@@ -70,17 +70,31 @@ export default function RootLayout({
 		<html lang="en">
 			<head>
 				<title>DynamicPrositX</title>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<meta charSet="utf-8" />
+				<meta
+					name="description"
+					content={
+						"Une interface intuitive et efficace pour accompagner vos prosits."
+					}
+				/>
 				<ColorSchemeScript />
+				<meta property="og:title" content="DynamicPrositX" />
 				<meta property="og:image" content="/opengraph-image" />
 				<meta property="og:image:alt" content="DynamicPrositX" />
 				<meta property="og:image:type" content="image/png" />
-				<meta property="og:image:width" content="1200" />
-				<meta property="og:image:height" content="630" />
+				<meta property="og:url" content="https://prosit.hugochampy.fr" />
 
+				<meta name="twitter:card" content="summary_large_image" />
+				<meta name="twitter:site" content="@Aldresus" />
 				<meta name="twitter:image" content="/twitter-image" />
-				<meta name="twitter:image:alt" content="DynamicPrositX" />
-				<meta name="twitter:image:width" content="1200" />
-				<meta name="twitter:image:height" content="630" />
+				<meta name="twitter:title" content="DynamicPrositX" />
+				<meta
+					name="twitter:description"
+					content={
+						"Une interface intuitive et efficace pour accompagner vos prosits."
+					}
+				/>
 			</head>
 			<body>
 				<MantineProvider defaultColorScheme="light" theme={theme}>
