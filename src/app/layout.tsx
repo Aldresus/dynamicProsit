@@ -78,6 +78,13 @@ export default function RootLayout({
 						"Une interface intuitive et efficace pour accompagner vos prosits."
 					}
 				/>
+
+				<meta
+					name="keywords"
+					content="prosit, prosits, dynamic, prositx, dynamicprositx, prositx, dynamicp, x, dynamicprosit"
+				/>
+				<meta name="author" content="Hugo Champy" />
+
 				<ColorSchemeScript />
 				<meta property="og:title" content="DynamicPrositX" />
 				<meta property="og:image" content="/opengraph-image" />
