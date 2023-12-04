@@ -5,7 +5,12 @@ import "./globals.css";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import WindowsHeader from "@/components/windowsHeader";
 import { Prosit } from "@/types/prosit";
-import { ColorSchemeScript, MantineProvider, createTheme } from "@mantine/core";
+import {
+	ColorSchemeScript,
+	MantineProvider,
+	Text,
+	createTheme, Title,
+} from "@mantine/core";
 import { open } from "@tauri-apps/api/shell";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -124,7 +129,16 @@ export default function RootLayout({
 								className="fixed stroke-[hsl(211,95%,63%)] z-[10000] right-0 bottom-0 m-3 cursor-pointer"
 							/>
 						</div>
-						{children}
+						<div className="hidden lg:block">{children}</div>
+						<div className="lg:hidden h-full flex flex-col justify-center gap-3 items-center px-9">
+							<Title order={2}>Ce site ne sert à rien sur mobile</Title>
+							<Text>
+								Tu ne vas quand même pas présenter tes prosits sur ton ✨<b>téléphone</b>✨ ?
+							</Text>
+							<Text c="dimmed">
+								Quelle idée...
+							</Text>
+						</div>
 					</PrositContext.Provider>
 				</MantineProvider>
 			</body>
