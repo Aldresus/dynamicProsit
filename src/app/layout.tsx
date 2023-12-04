@@ -9,7 +9,8 @@ import {
 	ColorSchemeScript,
 	MantineProvider,
 	Text,
-	createTheme, Title,
+	Title,
+	createTheme,
 } from "@mantine/core";
 import { open } from "@tauri-apps/api/shell";
 import { Sparkles } from "lucide-react";
@@ -133,11 +134,10 @@ export default function RootLayout({
 						<div className="lg:hidden h-full flex flex-col justify-center gap-3 items-center px-9">
 							<Title order={2}>Ce site ne sert à rien sur mobile</Title>
 							<Text>
-								Tu ne vas quand même pas présenter tes prosits sur ton ✨<b>téléphone</b>✨ ?
+								Tu ne vas quand même pas présenter tes prosits sur ton ✨
+								<b>téléphone</b>✨ ?
 							</Text>
-							<Text c="dimmed">
-								Quelle idée...
-							</Text>
+							<Text c="dimmed">Quelle idée...</Text>
 						</div>
 					</PrositContext.Provider>
 				</MantineProvider>
