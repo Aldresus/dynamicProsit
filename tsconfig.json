@@ -23,6 +23,6 @@
     }
   },
   "include": [
-    "next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "editorjs.d.ts"],
   "exclude": ["node_modules"]
 }
