@@ -1,6 +1,6 @@
 "use client";
 
-import EtapeSortable from "@/app/(root)/plan-d-action/etape";
+import EtapeSortable from "@/app/(seo)/(root)/plan-d-action/etape";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
 import { Etape } from "@/types/etape";
