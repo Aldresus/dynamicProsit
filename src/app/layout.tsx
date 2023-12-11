@@ -1,5 +1,5 @@
-import { Metadata } from "next";
 import { ColorSchemeScript } from "@mantine/core";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
 	title: "DynamicPrositX",
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
 		"dynamicprosit",
 		"cesi",
 		"outil prosit",
-        "dynamic prosit",
-        "prosit dynamique",
-        "prosit dynamic",
+		"dynamic prosit",
+		"prosit dynamique",
+		"prosit dynamic",
 	],
 	authors: [
 		{

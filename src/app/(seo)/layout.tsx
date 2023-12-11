@@ -5,12 +5,7 @@ import "./globals.css";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import WindowsHeader from "@/components/windowsHeader";
 import { Prosit } from "@/types/prosit";
-import {
-	MantineProvider,
-	Text,
-	Title,
-	createTheme,
-} from "@mantine/core";
+import { MantineProvider, Text, Title, createTheme } from "@mantine/core";
 import { open } from "@tauri-apps/api/shell";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -73,37 +68,37 @@ export default function RootLayout({
 
 	return (
 		<body>
-				<MantineProvider defaultColorScheme="light" theme={theme}>
-					<PrositContext.Provider value={{ prosit, setProsit, clearProsit }}>
-						{isTauriContext ? (
-							<div
-								className="flex justify-end fixed top-0 left-0 right-0"
-								data-tauri-drag-region={true}
-							>
-								<WindowsHeader className="m-3" />
-							</div>
-						) : null}
-						<div>
-							<Sparkles
-								onClick={async () => {
-									if (isTauriContext) await open("https://hugochampy.fr");
-									else router.push("https://hugochampy.fr");
-								}}
-								size={30}
-								className="fixed stroke-[hsl(211,95%,63%)] z-[10000] right-0 bottom-0 m-3 cursor-pointer"
-							/>
+			<MantineProvider defaultColorScheme="light" theme={theme}>
+				<PrositContext.Provider value={{ prosit, setProsit, clearProsit }}>
+					{isTauriContext ? (
+						<div
+							className="flex justify-end fixed top-0 left-0 right-0"
+							data-tauri-drag-region={true}
+						>
+							<WindowsHeader className="m-3" />
 						</div>
-						<div className="hidden lg:block">{children}</div>
-						<div className="lg:hidden h-full flex flex-col justify-center gap-3 items-center px-9">
-							<Title order={2}>Ce site ne sert à rien sur mobile</Title>
-							<Text>
-								Tu ne vas quand même pas présenter tes prosits sur ton ✨
-								<b>téléphone</b>✨ ?
-							</Text>
-							<Text c="dimmed">Quelle idée...</Text>
-						</div>
-					</PrositContext.Provider>
-				</MantineProvider>
-			</body>
+					) : null}
+					<div>
+						<Sparkles
+							onClick={async () => {
+								if (isTauriContext) await open("https://hugochampy.fr");
+								else router.push("https://hugochampy.fr");
+							}}
+							size={30}
+							className="fixed stroke-[hsl(211,95%,63%)] z-[10000] right-0 bottom-0 m-3 cursor-pointer"
+						/>
+					</div>
+					<div className="hidden lg:block">{children}</div>
+					<div className="lg:hidden h-full flex flex-col justify-center gap-3 items-center px-9">
+						<Title order={2}>Ce site ne sert à rien sur mobile</Title>
+						<Text>
+							Tu ne vas quand même pas présenter tes prosits sur ton ✨
+							<b>téléphone</b>✨ ?
+						</Text>
+						<Text c="dimmed">Quelle idée...</Text>
+					</div>
+				</PrositContext.Provider>
+			</MantineProvider>
+		</body>
 	);
 }
