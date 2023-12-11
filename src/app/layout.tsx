@@ -2,7 +2,7 @@ import { ColorSchemeScript } from "@mantine/core";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "DynamicPrositX",
+	title: "DynamicPrositX, l'outil pour vos prosits réussis !",
 	description:
 		"Une interface intuitive et efficace pour accompagner vos prosits. Enfin un outil pour vous aider à faire vos prosits !",
 	keywords: [
