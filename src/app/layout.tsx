@@ -4,7 +4,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
 	title: "DynamicPrositX",
 	description:
-		"Une interface intuitive et efficace pour accompagner vos prosits.",
+		"Une interface intuitive et efficace pour accompagner vos prosits. Enfin un outil pour vous aider à faire vos prosits !",
 	keywords: [
 		"prosit",
 		"prosits",
