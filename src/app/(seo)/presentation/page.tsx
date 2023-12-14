@@ -1,6 +1,6 @@
 "use client";
 
-import PresentationElement from "@/app/presentation/presentationElement";
+import PresentationElement from "@/app/(seo)/presentation/presentationElement";
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import { Prosit } from "@/types/prosit";
 import { Box, Title } from "@mantine/core";
