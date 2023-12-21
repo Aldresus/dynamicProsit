@@ -6,13 +6,7 @@ export default function robots(): MetadataRoute.Robots {
 			userAgent: "*",
 			allow: "/",
 			disallow: [
-				"/presentation",
-				"/mots-clefs",
-				"/contraintes",
-				"/problematiques",
-				"/pistes-de-solution",
-				"/livrables",
-				"/plan-d-action",
+				"/presentation"
 			],
 		},
 		sitemap: "https://prosit.hugochampy.fr/sitemap.xml",
