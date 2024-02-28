@@ -65,7 +65,7 @@ export default function SortableItem({
               />
             )}
           </Text>
-          {index && (
+          {index !== undefined && (
             <Title order={3} pr="sm">
               {index + 1}.
             </Title>
