@@ -267,7 +267,7 @@ export default function FormLayout({
 						size="md"
 						className="absolute right-0 top-0 p-9"
 					/>
-					<div className="md:px-20">{children}</div>
+					<div className="mt-12 mx-auto md:px-20 md:min-w-[20rem] md:w-2/3 max-w-4xl">{children}</div>
 				</AppShell.Main>
 
 				<AppShell.Aside p="md" className="flex flex-col gap-3 overflow-auto">
