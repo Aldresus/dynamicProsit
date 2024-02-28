@@ -1,21 +1,30 @@
-import { Etape } from "@/types/etape";
+import { OrderedItem } from "@/types/orderedItem";
 
 export interface Prosit {
-	currentAnchor: string;
+  currentAnchor: string;
 
-	titre: string;
-	lien: string;
-	generalisation: string;
-	contexte: string;
-	animateur: string;
-	gestionnaire: string;
-	scribe: string;
-	secretaire: string;
+  titre: string;
+  lien: string;
+  generalisation: string;
+  contexte: string;
+  animateur: string;
+  gestionnaire: string;
+  scribe: string;
+  secretaire: string;
 
-	problematiques: string[];
-	planDAction: Etape[];
-	pistesDeSolutions: string[];
-	livrables: string[];
-	motsCles: string[];
-	contraintes: string[];
+  problematiques: OrderedItem[];
+  planDAction: OrderedItem[];
+  pistesDeSolutions: OrderedItem[];
+  livrables: OrderedItem[];
+  motsCles: OrderedItem[];
+  contraintes: OrderedItem[];
+}
+
+export enum PrositKeys {
+  PROBLEMATIQUES = "problematiques",
+  PLAN_D_ACTION = "planDAction",
+  PISTES_DE_SOLUTIONS = "pistesDeSolutions",
+  LIVRABLES = "livrables",
+  MOTS_CLES = "motsCles",
+  CONTRAINTES = "contraintes",
 }

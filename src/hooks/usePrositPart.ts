@@ -1,0 +1,94 @@
+"use client";
+import { useState } from "react";
+import { OrderedItem } from "@/types/orderedItem";
+import { arrayMove } from "@dnd-kit/sortable";
+import { Prosit, PrositKeys } from "@/types/prosit";
+
+interface UsePrositPartProps {
+  prosit: Prosit;
+  setProsit: (prosit: Prosit) => void;
+  key: PrositKeys;
+}
+
+const usePrositPart = ({ prosit, setProsit, key }: UsePrositPartProps) => {
+  const [items, setValues] = useState<OrderedItem[]>(
+    prosit[key] as OrderedItem[],
+    // we know that the value is an array of OrderedItem because of the enum
+  );
+  const [workingItem, setWorkingItem] = useState<OrderedItem>({
+    content: "",
+    id: "",
+  });
+
+  const idHandler = (content: string) => {
+    // remove any unwanted characters
+    const clearedContent = content.replace(/[^a-zA-Z0-9 ]/g, "");
+    let id = `${key.toLowerCase()}_${clearedContent.split(" ").join("_").toLowerCase()}`;
+    items.forEach((step) => {
+      if (step.id === id) {
+        id = idHandler(`${content}_2`); // Recursive call to handle duplicates
+      }
+    });
+    return id;
+  };
+
+  const findIndex = (id: string) => items.findIndex((item) => item.id === id);
+
+  const addItem = () => {
+    console.log("addItem", key, typeof key, workingItem);
+    const finalItem: OrderedItem = {
+      id: idHandler(workingItem.content),
+      content: workingItem.content,
+    };
+    setProsit({
+      ...prosit,
+      [key]: [...items, finalItem],
+    });
+    setValues([...items, finalItem]);
+    setWorkingItem({ content: "", id: "" });
+  };
+
+  const editItem = (newValue: string, id: string) => {
+    let temp = [...items];
+    const index = findIndex(id);
+    temp[index].content = newValue;
+    //todo add checks for empty string
+    setValues(temp);
+  };
+
+  const deleteItem = (id: string) => {
+    let temp = [...items];
+    const index = findIndex(id);
+    temp.splice(index, 1);
+    setValues(temp);
+  };
+
+  // Assuming DragEndEvent type is known and correctly imported
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    console.log(active, over);
+
+    if (active.id !== over?.id) {
+      let newItems = items;
+
+      const oldIndex = newItems.findIndex((item) => item.id === active.id);
+      const newIndex = newItems.findIndex((item) => item.id === over?.id);
+
+      newItems = arrayMove(items, oldIndex, newIndex);
+
+      setValues(newItems);
+    }
+  };
+
+  return {
+    workingItem,
+    setWorkingItem,
+    items,
+    addItem,
+    editItem,
+    deleteItem,
+    handleDragEnd,
+  };
+};
+
+export default usePrositPart;
