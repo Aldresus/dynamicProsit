@@ -5,7 +5,9 @@ import PrositContext from "@/components/prositContext";
 import { todocx } from "@/components/todocx";
 import {
 	AppShell,
+	Burger,
 	Button,
+	Collapse,
 	Kbd,
 	Modal,
 	NavLink,
@@ -38,6 +40,7 @@ export default function FormLayout({
 	children: React.ReactNode;
 }) {
 	const [opened, { toggle }] = useDisclosure();
+	const [openSec, { toggle: ToggleSec }] = useDisclosure();
 	const [modalopened, { open, close }] = useDisclosure(false);
 	const pathname = usePathname();
 	const router = useRouter();
@@ -97,7 +100,8 @@ export default function FormLayout({
 				// header={{ height: 60 }}
 				navbar={{
 					width: 300,
-					breakpoint: "sm",
+					breakpoint: "md",
+					collapsed: { mobile: !openSec, desktop: false },
 				}}
 				aside={{
 					width: 300,
@@ -106,12 +110,19 @@ export default function FormLayout({
 				}}
 				padding="md"
 			>
-				<AppShell.Navbar p="md" className="flex flex-col gap-9 ">
-					<Title order={1} lh={1}>
-						Les prosits là,
-						<div className="font-light"> super</div>
-					</Title>
-
+				<AppShell.Navbar p="md" className="flex flex-col gap-6 ">
+					<div className="flex justify-between items-center">
+						<Title order={1} lh={1}>
+							Les prosits là,
+							<div className="font-light"> super</div>
+						</Title>
+						<Burger
+							opened={openSec}
+							onClick={ToggleSec}
+							hiddenFrom="md"
+							size="md"
+						/>
+					</div>
 					<div className="flex flex-col justify-center flex-1 gap-3">
 						<NavLink
 							active={pathname === "/"}
@@ -249,7 +260,14 @@ export default function FormLayout({
 				</AppShell.Navbar>
 
 				<AppShell.Main>
-					<div className="px-20">{children}</div>
+					<Burger
+						opened={openSec}
+						onClick={ToggleSec}
+						hiddenFrom="md"
+						size="md"
+						className="absolute right-0 top-0 p-9"
+					/>
+					<div className="md:px-20">{children}</div>
 				</AppShell.Main>
 
 				<AppShell.Aside p="md" className="flex flex-col gap-3 overflow-auto">

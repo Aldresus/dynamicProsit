@@ -91,6 +91,9 @@ export default function Home() {
 							contexte: event.target.value,
 						} as Prosit);
 					}}
+					autosize
+					minRows={2}
+					maxRows={6}
 					onKeyDown={hotkeys}
 				/>
 			</div>

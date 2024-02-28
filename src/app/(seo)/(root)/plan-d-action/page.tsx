@@ -62,6 +62,7 @@ export default function Problematiques() {
 	]);
 
 	const planHandler = () => {
+		if (etape.content.trim() === "") return;
 		const finalEtape = {
 			etapeNo: prosit.planDAction.length + 1,
 			content: etape.content,
