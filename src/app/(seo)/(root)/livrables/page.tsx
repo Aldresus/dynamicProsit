@@ -34,7 +34,7 @@ export default function Livrables() {
 		...pageHotkeys,
 	]);
 	const livrableHandler = () => {
-		if (livrable === "") return;
+		if (livrable.trim() === "") return;
 		setProsit({
 			...prosit,
 			livrables: [...prosit.livrables, livrable],

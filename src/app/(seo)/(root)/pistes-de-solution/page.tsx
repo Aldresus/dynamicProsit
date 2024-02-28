@@ -34,7 +34,7 @@ export default function Pistes() {
 	]);
 
 	const pisteHandler = () => {
-		if (pisteDeSolution === "") return;
+		if (pisteDeSolution.trim() === "") return;
 		setProsit({
 			...prosit,
 			pistesDeSolutions: [...prosit.pistesDeSolutions, pisteDeSolution],

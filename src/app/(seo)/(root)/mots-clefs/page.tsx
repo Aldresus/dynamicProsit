@@ -35,7 +35,7 @@ export default function MotsClefs() {
 	]);
 
 	const keywordHandler = () => {
-		if (keyword === "") return;
+		if (keyword.trim() === "") return;
 		setProsit({
 			...prosit,
 			motsCles: [...prosit.motsCles, keyword],

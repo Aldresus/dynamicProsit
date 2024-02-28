@@ -34,7 +34,7 @@ export default function Contraintes() {
 		...pageHotkeys,
 	]);
 	const contrainteHandler = () => {
-		if (contrainte === "") return;
+		if (contrainte.trim() === "") return;
 		setProsit({
 			...prosit,
 			contraintes: [...prosit.contraintes, contrainte],
