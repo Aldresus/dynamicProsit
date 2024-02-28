@@ -34,6 +34,7 @@ export default function Pistes() {
 	]);
 
 	const pisteHandler = () => {
+		if (pisteDeSolution === "") return;
 		setProsit({
 			...prosit,
 			pistesDeSolutions: [...prosit.pistesDeSolutions, pisteDeSolution],

@@ -34,6 +34,7 @@ export default function Problematiques() {
 	]);
 
 	const problematiqueHandler = () => {
+		if (problematique === "") return;
 		setProsit({
 			...prosit,
 			problematiques: [...prosit.problematiques, problematique],

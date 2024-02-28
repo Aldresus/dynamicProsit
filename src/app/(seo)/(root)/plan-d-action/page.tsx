@@ -67,6 +67,7 @@ export default function Problematiques() {
 			content: etape.content,
 		};
 
+		if (etape.content === "") return;
 		setProsit({
 			...prosit,
 			planDAction: [...prosit.planDAction, finalEtape],
