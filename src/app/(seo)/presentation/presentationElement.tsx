@@ -32,6 +32,7 @@ const PresentationElement = React.forwardRef<
 			<Box
 				bg={bg}
 				c={color}
+				fw="500"
 				className={twMerge(
 					"p-1 px-3 rounded-xl transition-all duration-200 ",
 					className,
@@ -42,7 +43,7 @@ const PresentationElement = React.forwardRef<
 					{titre}
 				</Title>
 				{typeof valeurs === "string" ? (
-					<Text size="xl" px="md">
+					<Text size="xl" px="md" fw="500">
 						{valeurs}
 					</Text>
 				) : (
