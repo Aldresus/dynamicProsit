@@ -26,7 +26,7 @@ export default function Visualisation() {
   //
   useEffect(() => {
     // Function to handle the storage event
-    const handleStorageChange = (event) => {
+    const handleStorageChange = (event: StorageEvent) => {
       if (event.key === "prosit") {
         const storedProsit = event.newValue; // Direct access to the updated value
         const parsedProsit = storedProsit
