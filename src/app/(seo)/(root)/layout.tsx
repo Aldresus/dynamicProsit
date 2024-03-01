@@ -16,7 +16,7 @@ import {
 	Tooltip,
 	useMantineColorScheme,
 } from "@mantine/core";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useDisclosure, useHotkeys, useToggle } from "@mantine/hooks";
 import clsx from "clsx";
 import {
 	AlertCircle,
@@ -39,7 +39,7 @@ export default function FormLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const [opened, { toggle }] = useDisclosure();
+	const [display, toggle] = useToggle(["absolute", "hidden"]);
 	const [openNav, { toggle: ToggleNav }] = useDisclosure();
 	const [modalopened, { open, close }] = useDisclosure(false);
 	const pathname = usePathname();
@@ -106,7 +106,7 @@ export default function FormLayout({
 				aside={{
 					width: 300,
 					breakpoint: "sm",
-					collapsed: { mobile: !opened, desktop: !opened },
+					// collapsed: { mobile: !opened, desktop: !opened },
 				}}
 				padding="md"
 			>
@@ -190,8 +190,8 @@ export default function FormLayout({
 							}}
 						/>
 
-						<Button fullWidth onClick={toggle} variant="light">
-							{!opened ? "Afficher" : "Masquer"} l&apos;aide
+						<Button fullWidth onClick={() => toggle()} variant="light">
+							{display === "hidden" ? "Afficher" : "Masquer"} l&apos;aide
 						</Button>
 					</div>
 
@@ -272,7 +272,7 @@ export default function FormLayout({
 					</div>
 				</AppShell.Main>
 
-				<AppShell.Aside p="md" className="flex flex-col gap-3 overflow-auto">
+				<AppShell.Aside p="md" className={`gap-3 overflow-auto ${display}`}>
 					<Title order={2}>Aide</Title>
 					<Title order={3}>Vue de présentation</Title>
 					<Text>
