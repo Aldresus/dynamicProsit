@@ -40,7 +40,7 @@ export default function FormLayout({
 	children: React.ReactNode;
 }) {
 	const [opened, { toggle }] = useDisclosure();
-	const [openSec, { toggle: ToggleSec }] = useDisclosure();
+	const [openNav, { toggle: ToggleNav }] = useDisclosure();
 	const [modalopened, { open, close }] = useDisclosure(false);
 	const pathname = usePathname();
 	const router = useRouter();
@@ -101,7 +101,7 @@ export default function FormLayout({
 				navbar={{
 					width: 300,
 					breakpoint: "md",
-					collapsed: { mobile: !openSec, desktop: false },
+					collapsed: { mobile: !openNav, desktop: false },
 				}}
 				aside={{
 					width: 300,
@@ -117,8 +117,8 @@ export default function FormLayout({
 							<div className="font-light"> super</div>
 						</Title>
 						<Burger
-							opened={openSec}
-							onClick={ToggleSec}
+							opened={openNav}
+							onClick={ToggleNav}
 							hiddenFrom="md"
 							size="md"
 						/>
@@ -261,13 +261,15 @@ export default function FormLayout({
 
 				<AppShell.Main>
 					<Burger
-						opened={openSec}
-						onClick={ToggleSec}
+						opened={openNav}
+						onClick={ToggleNav}
 						hiddenFrom="md"
 						size="md"
 						className="absolute right-0 top-0 p-9"
 					/>
-					<div className="mt-12 mx-auto md:px-20 md:min-w-[20rem] md:w-2/3 max-w-4xl">{children}</div>
+					<div className="mt-12 mx-auto md:px-20 md:min-w-[20rem] md:w-2/3 max-w-4xl">
+						{children}
+					</div>
 				</AppShell.Main>
 
 				<AppShell.Aside p="md" className="flex flex-col gap-3 overflow-auto">
