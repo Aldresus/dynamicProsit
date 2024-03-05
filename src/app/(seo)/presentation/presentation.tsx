@@ -5,33 +5,41 @@ import { twMerge } from "tailwind-merge";
 
 interface PresentationProps extends React.HTMLAttributes<HTMLDivElement> {
   prosit: Prosit;
-  closable?: boolean;
+  anchor?: boolean;
 }
 
 export default function Presentation({
   prosit,
-  closable = false,
+  anchor = false,
   ...props
 }: PresentationProps) {
   return (
     <Box {...props}>
       <div className="h-full w-full flex flex-col gap-6 overflow-y-scroll overflow-x-hidden ">
         <Box
-          id="informations"
+          id={anchor ? "informations" : undefined}
           className={twMerge("flex flex-col gap-6 rounded-xl")}
-          bg={prosit.currentAnchor === "informations" ? "blue.1" : undefined}
-          c={prosit.currentAnchor === "informations" ? "blue.9" : undefined}
+          bg={
+            anchor && prosit.currentAnchor === "informations"
+              ? "blue.1"
+              : undefined
+          }
+          c={
+            anchor && prosit.currentAnchor === "informations"
+              ? "blue.9"
+              : undefined
+          }
         >
           <PresentationElement
             titre={"Contexte :"}
-            anchor="contexte"
+            anchor={anchor ? "contexte" : undefined}
             valeurs={prosit.contexte}
             className={twMerge(
               prosit.contexte.length === 0 ? "opacity-0" : "opacity-100",
             )}
           />
           <PresentationElement
-            anchor="generalisation"
+            anchor={anchor ? "generalisation" : undefined}
             titre={"Generalisation :"}
             valeurs={prosit.generalisation}
             className={twMerge(
@@ -45,25 +53,35 @@ export default function Presentation({
             className="w-full whitespace-break-spaces overflow-hidden"
           >
             <PresentationElement
-              anchor="motsClefs"
+              anchor={anchor ? "motsClefs" : undefined}
               titre={"Mots-clefs"}
               valeurs={prosit.motsCles}
-              bg={prosit.currentAnchor === "motsClefs" ? "blue.1" : undefined}
+              bg={
+                anchor && prosit.currentAnchor === "motsClefs"
+                  ? "blue.1"
+                  : undefined
+              }
               color={
-                prosit.currentAnchor === "motsClefs" ? "blue.9" : undefined
+                anchor && prosit.currentAnchor === "motsClefs"
+                  ? "blue.9"
+                  : undefined
               }
               className={twMerge(
                 prosit.motsCles.length === 0 ? "opacity-0" : "opacity-100",
               )}
             />
             <PresentationElement
-              anchor="contraintes"
+              anchor={anchor ? "contraintes" : undefined}
               titre={"Contraintes"}
               valeurs={prosit.contraintes}
               className={twMerge(
                 prosit.contraintes.length === 0 ? "opacity-0" : "opacity-100",
               )}
-              bg={prosit.currentAnchor === "contraintes" ? "blue.1" : undefined}
+              bg={
+                anchor && prosit.currentAnchor === "contraintes"
+                  ? "blue.1"
+                  : undefined
+              }
               color={
                 prosit.currentAnchor === "contraintes" ? "blue.9" : undefined
               }
@@ -71,7 +89,7 @@ export default function Presentation({
           </Stack>
           <Stack>
             <PresentationElement
-              anchor="problematiques"
+              anchor={anchor ? "problematiques" : undefined}
               titre={"Problematiques"}
               valeurs={prosit.problematiques}
               className={twMerge(
@@ -87,7 +105,7 @@ export default function Presentation({
               }
             />
             <PresentationElement
-              anchor="pistesDeSolution"
+              anchor={anchor ? "pistesDeSolution" : undefined}
               titre={"Pistes de solution"}
               valeurs={prosit.pistesDeSolutions}
               className={twMerge(
@@ -107,7 +125,7 @@ export default function Presentation({
               }
             />
             <PresentationElement
-              anchor="livrables"
+              anchor={anchor ? "livrables" : undefined}
               titre={"Livrables"}
               valeurs={prosit.livrables}
               className={twMerge(
@@ -119,7 +137,7 @@ export default function Presentation({
               }
             />
             <PresentationElement
-              anchor="planDAction"
+              anchor={anchor ? "planDAction" : undefined}
               ordered
               titre={"Plan d'action :"}
               valeurs={prosit.planDAction.map((value) => value.content)}

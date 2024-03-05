@@ -3,7 +3,7 @@ import React from "react";
 import { twMerge } from "tailwind-merge";
 
 interface PresentationElementProps {
-  anchor: string;
+  anchor?: string;
   titre: string;
   valeurs: string[] | string;
   ordered?: boolean;
@@ -22,7 +22,7 @@ const PresentationElement = React.forwardRef<
       valeurs,
       color,
       bg = "transparent",
-      anchor,
+      anchor = "",
       className,
       ordered = false,
     },
@@ -39,11 +39,9 @@ const PresentationElement = React.forwardRef<
         )}
         ref={ref}
       >
-        <Title id={`${anchor}`} order={1}>
-          {titre}
-        </Title>
+        <Title order={1}>{titre}</Title>
         {typeof valeurs === "string" ? (
-          <Text size="xl" px="md" fw="500" opacity={0.8}>
+          <Text id={`${anchor}`} size="xl" px="md" fw="500" opacity={0.8}>
             {valeurs}
           </Text>
         ) : (
@@ -55,7 +53,11 @@ const PresentationElement = React.forwardRef<
             withPadding
           >
             {valeurs.map((valeur, i) => (
-              <List.Item className="w-11/12" key={valeur + i}>
+              <List.Item
+                id={i === valeurs.length - 1 ? `${anchor}` : undefined}
+                className="w-11/12"
+                key={valeur + i}
+              >
                 {valeur}
               </List.Item>
             ))}
