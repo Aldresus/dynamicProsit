@@ -65,7 +65,7 @@ export default function Visualisation() {
         <Title order={1}>Prosit : {prositState.titre}</Title>
 
         <div className="flex gap-2 overflow-hidden">
-          {numberOfViews < maxNumberOfViews && (
+          {numberOfViews < maxNumberOfViews && prositState.touched && (
             <div
               className="fixed flex items-center group top-0 bottom-0 right-0 p-3 cursor-pointer"
               onClick={() => {
@@ -82,7 +82,7 @@ export default function Visualisation() {
           <div className="flex overflow-auto">
             {Array.from({ length: numberOfViews }).map((_, index) => (
               <>
-                {index !== 0 && (
+                {index !== 0 && prositState.touched && (
                   <div className="flex flex-col items-center justify-center gap-3">
                     <Divider
                       mx="lg"

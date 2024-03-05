@@ -28,6 +28,8 @@ const PresentationElement = React.forwardRef<
     },
     ref,
   ) => {
+    if (valeurs.length === 0) return null;
+
     return (
       <Box
         bg={bg}
