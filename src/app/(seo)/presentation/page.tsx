@@ -50,7 +50,6 @@ export default function Visualisation() {
 
   // Effect to scroll to the anchor
   useEffect(() => {
-    console.log(prositState.currentAnchor);
     if (prositState.currentAnchor && typeof window !== "undefined") {
       const anchorElement = document.getElementById(prositState.currentAnchor);
       if (anchorElement) {
