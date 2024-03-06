@@ -1,14 +1,15 @@
+import { AnchorsKeys } from "@/types/anchors";
 import { HotkeyItem } from "@mantine/hooks";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-export const globalHotKeys: (router: AppRouterInstance) => HotkeyItem[] = (
-	router,
-) => [
-	["alt+shift+a", () => router.push("/")],
-	["alt+shift+z", () => router.push("/mots-clefs")],
-	["alt+shift+e", () => router.push("/contraintes")],
-	["alt+shift+r", () => router.push("/problematiques")],
-	["alt+shift+t", () => router.push("/pistes-de-solution")],
-	["alt+shift+y", () => router.push("/livrables")],
-	["alt+shift+u", () => router.push("/plan-d-action")],
+export const globalHotKeys: (
+  navigate: (anchor: AnchorsKeys) => void,
+) => HotkeyItem[] = (navigate: (anchor: AnchorsKeys) => void) => [
+  ["alt+shift+a", () => navigate(AnchorsKeys.INFORMATIONS)],
+  ["alt+shift+z", () => navigate(AnchorsKeys.MOTSCLEFS)],
+  ["alt+shift+e", () => navigate(AnchorsKeys.CONTRAINTES)],
+  ["alt+shift+r", () => navigate(AnchorsKeys.PROBLEMATIQUES)],
+  ["alt+shift+t", () => navigate(AnchorsKeys.PISTESDESOLUTION)],
+  ["alt+shift+y", () => navigate(AnchorsKeys.LIVRABLES)],
+  ["alt+shift+u", () => navigate(AnchorsKeys.PLANDACTION)],
 ];
