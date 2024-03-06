@@ -1,94 +1,98 @@
 "use client";
-import { useState } from "react";
 import { OrderedItem } from "@/types/orderedItem";
-import { arrayMove } from "@dnd-kit/sortable";
 import { Prosit, PrositKeys } from "@/types/prosit";
+import { arrayMove } from "@dnd-kit/sortable";
+import { useEffect, useState } from "react";
 
 interface UsePrositPartProps {
-  prosit: Prosit;
-  setProsit: (prosit: Prosit) => void;
-  key: PrositKeys;
+	prosit: Prosit;
+	setProsit: (prosit: Prosit) => void;
+	key: PrositKeys;
 }
 
 const usePrositPart = ({ prosit, setProsit, key }: UsePrositPartProps) => {
-  const [items, setValues] = useState<OrderedItem[]>(
-    prosit[key] as OrderedItem[],
-    // we know that the value is an array of OrderedItem because of the enum
-  );
-  const [workingItem, setWorkingItem] = useState<OrderedItem>({
-    content: "",
-    id: "",
-  });
+	const [items, setValues] = useState<OrderedItem[]>([]);
+	useEffect(() => {
+		setValues(prosit[key] as OrderedItem[]);
+	}, [prosit, key, setValues]);
 
-  const idHandler = (content: string) => {
-    // remove any unwanted characters
-    const clearedContent = content.replace(/[^a-zA-Z0-9 ]/g, "");
-    let id = `${key.toLowerCase()}_${clearedContent.split(" ").join("_").toLowerCase()}`;
-    items.forEach((step) => {
-      if (step.id === id) {
-        id = idHandler(`${content}_2`); // Recursive call to handle duplicates
-      }
-    });
-    return id;
-  };
+	const [workingItem, setWorkingItem] = useState<OrderedItem>({
+		content: "",
+		id: "",
+	});
 
-  const findIndex = (id: string) => items.findIndex((item) => item.id === id);
+	const idHandler = (content: string) => {
+		// remove any unwanted characters
+		const clearedContent = content.replace(/[^a-zA-Z0-9 ]/g, "");
+		let id = `${key.toLowerCase()}_${clearedContent
+			.split(" ")
+			.join("_")
+			.toLowerCase()}`;
+		items.forEach((step) => {
+			if (step.id === id) {
+				id = idHandler(`${content}_2`); // Recursive call to handle duplicates
+			}
+		});
+		return id;
+	};
 
-  const addItem = () => {
-    console.log("addItem", key, typeof key, workingItem);
-    const finalItem: OrderedItem = {
-      id: idHandler(workingItem.content),
-      content: workingItem.content,
-    };
-    setProsit({
-      ...prosit,
-      [key]: [...items, finalItem],
-    });
-    setValues([...items, finalItem]);
-    setWorkingItem({ content: "", id: "" });
-  };
+	const findIndex = (id: string) => items.findIndex((item) => item.id === id);
 
-  const editItem = (newValue: string, id: string) => {
-    let temp = [...items];
-    const index = findIndex(id);
-    temp[index].content = newValue;
-    //todo add checks for empty string
-    setValues(temp);
-  };
+	const addItem = () => {
+		console.log("addItem", key, typeof key, workingItem);
+		const finalItem: OrderedItem = {
+			id: idHandler(workingItem.content),
+			content: workingItem.content,
+		};
+		setProsit({
+			...prosit,
+			[key]: [...items, finalItem],
+		});
+		setValues([...items, finalItem]);
+		setWorkingItem({ content: "", id: "" });
+	};
 
-  const deleteItem = (id: string) => {
-    let temp = [...items];
-    const index = findIndex(id);
-    temp.splice(index, 1);
-    setValues(temp);
-  };
+	const editItem = (newValue: string, id: string) => {
+		let temp = [...items];
+		const index = findIndex(id);
+		temp[index].content = newValue;
+		//todo add checks for empty string
+		setValues(temp);
+	};
 
-  // Assuming DragEndEvent type is known and correctly imported
-  const handleDragEnd = (event: any) => {
-    const { active, over } = event;
-    console.log(active, over);
+	const deleteItem = (id: string) => {
+		let temp = [...items];
+		const index = findIndex(id);
+		temp.splice(index, 1);
+		setValues(temp);
+	};
 
-    if (active.id !== over?.id) {
-      let newItems = items;
+	// Assuming DragEndEvent type is known and correctly imported
+	const handleDragEnd = (event: any) => {
+		const { active, over } = event;
+		console.log(active, over);
 
-      const oldIndex = newItems.findIndex((item) => item.id === active.id);
-      const newIndex = newItems.findIndex((item) => item.id === over?.id);
+		if (active.id !== over?.id) {
+			let newItems = items;
 
-      newItems = arrayMove(items, oldIndex, newIndex);
+			const oldIndex = newItems.findIndex((item) => item.id === active.id);
+			const newIndex = newItems.findIndex((item) => item.id === over?.id);
 
-      setValues(newItems);
-    }
-  };
+			newItems = arrayMove(items, oldIndex, newIndex);
 
-  return {
-    workingItem,
-    setWorkingItem,
-    items,
-    addItem,
-    editItem,
-    deleteItem,
-    handleDragEnd,
-  };
+			setValues(newItems);
+		}
+	};
+
+	return {
+		workingItem,
+		setWorkingItem,
+		items,
+		addItem,
+		editItem,
+		deleteItem,
+		handleDragEnd,
+	};
 };
 
 export default usePrositPart;

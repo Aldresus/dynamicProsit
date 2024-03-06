@@ -1,4 +1,4 @@
 export interface OrderedItem {
-  id: string;
-  content: string;
+	id: string;
+	content: string;
 }
