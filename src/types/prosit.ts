@@ -3,6 +3,7 @@ import { OrderedItem } from "@/types/orderedItem";
 export interface Prosit {
 	prositVersion: number;
 	currentAnchor: string;
+	touched: boolean;
 
 	titre: string;
 	lien: string;

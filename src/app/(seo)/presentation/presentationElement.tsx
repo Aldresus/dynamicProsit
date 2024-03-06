@@ -3,7 +3,7 @@ import React from "react";
 import { twMerge } from "tailwind-merge";
 
 interface PresentationElementProps {
-	anchor: string;
+	anchor?: string;
 	title: string;
 	items: string[] | string;
 	ordered?: boolean;
@@ -22,33 +22,46 @@ const PresentationElement = React.forwardRef<
 			items,
 			color,
 			bg = "transparent",
-			anchor,
+			anchor = "",
 			className,
 			ordered = false,
 		},
 		ref,
 	) => {
+		if (items.length === 0) return null;
+
 		return (
 			<Box
 				bg={bg}
 				c={color}
+				fw="500"
 				className={twMerge(
-					"p-1 px-3 rounded-xl transition-all duration-200 ",
+					"p-1 px-3 rounded-xl transition-all duration-200",
 					className,
 				)}
 				ref={ref}
 			>
-				<Title id={`${anchor}`} order={2}>
-					{title}
-				</Title>
+				<Title order={1}>{title}</Title>
 				{typeof items === "string" ? (
-					<Text size="xl" px="md">
+					<Text id={`${anchor}`} size="xl" px="md" fw="500" opacity={0.8}>
 						{items}
 					</Text>
 				) : (
-					<List type={ordered ? "ordered" : "unordered"} size="xl" withPadding>
+					<List
+						className="w-full"
+						type={ordered ? "ordered" : "unordered"}
+						size="xl"
+						opacity={0.8}
+						withPadding
+					>
 						{items.map((item, i) => (
-							<List.Item key={item + i}>{item}</List.Item>
+							<List.Item
+								id={i === item.length - 1 ? `${anchor}` : undefined}
+								className="w-11/12"
+								key={item + i}
+							>
+								{item}
+							</List.Item>
 						))}
 					</List>
 				)}

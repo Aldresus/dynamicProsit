@@ -6,7 +6,7 @@ import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import WindowsHeader from "@/components/windowsHeader";
 import { OrderedItem } from "@/types/orderedItem";
 import { Prosit } from "@/types/prosit";
-import { MantineProvider, Text, Title, createTheme } from "@mantine/core";
+import { MantineProvider, createTheme } from "@mantine/core";
 import { open } from "@tauri-apps/api/shell";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -120,6 +120,16 @@ export default function RootLayout({
 		return parsedProsit;
 	});
 
+	const setPrositHandler = (newProsit: Prosit) => {
+		setProsit((prevProsit) => {
+			return {
+				...prevProsit,
+				...newProsit,
+				touched: true,
+			};
+		});
+	};
+
 	const clearProsit = () => {
 		setProsit(defaultPrositValue);
 	};
@@ -144,7 +154,9 @@ export default function RootLayout({
 	return (
 		<body>
 			<MantineProvider defaultColorScheme="light" theme={theme}>
-				<PrositContext.Provider value={{ prosit, setProsit, clearProsit }}>
+				<PrositContext.Provider
+					value={{ prosit, setProsit: setPrositHandler, clearProsit }}
+				>
 					{isTauriContext ? (
 						<div
 							className="flex justify-end fixed top-0 left-0 right-0"
@@ -163,15 +175,7 @@ export default function RootLayout({
 							className="fixed stroke-[hsl(211,95%,63%)] z-[10000] right-0 bottom-0 m-3 cursor-pointer"
 						/>
 					</div>
-					<div className="hidden lg:block">{children}</div>
-					<div className="lg:hidden h-full flex flex-col justify-center gap-3 items-center px-9">
-						<Title order={2}>Ce site ne sert à rien sur mobile</Title>
-						<Text>
-							Tu ne vas quand même pas présenter tes prosits sur ton ✨
-							<b>téléphone</b>✨ ?
-						</Text>
-						<Text c="dimmed">Quelle idée...</Text>
-					</div>
+					<div className="block">{children}</div>
 				</PrositContext.Provider>
 			</MantineProvider>
 		</body>

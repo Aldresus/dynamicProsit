@@ -6,6 +6,7 @@ export const defaultPrositValue: Prosit = {
 	// Provide default values
 	prositVersion: 2,
 	currentAnchor: "",
+	touched: false,
 	titre: "",
 	lien: "",
 	generalisation: "",
