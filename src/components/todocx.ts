@@ -25,20 +25,20 @@ export const todocx = (prosit: Prosit) => {
 			.setOptions({ paragraphLoop: true, linebreaks: true });
 		// render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
 		doc.render({
-			titre: prosit.titre,
+			titre: prosit.titre.trim(),
 			motsCles: prosit.motsCles,
-			contexte: prosit.contexte,
+			contexte: prosit.contexte.trim(),
 			contraintes: prosit.contraintes,
 			problematiques: prosit.problematiques,
 			livrables: prosit.livrables,
 			generalisation: prosit.generalisation,
 			pistesDeSolutions: prosit.pistesDeSolutions,
-			planDAction: prosit.planDAction.map((etape) => etape.content),
-			lien: prosit.lien,
-			animateur: prosit.animateur,
-			secretaire: prosit.secretaire,
-			gestionnaire: prosit.gestionnaire,
-			scribe: prosit.scribe,
+			planDAction: prosit.planDAction.map((etape) => etape.content.trim()),
+			lien: prosit.lien.trim(),
+			animateur: prosit.animateur.trim(),
+			secretaire: prosit.secretaire.trim(),
+			gestionnaire: prosit.gestionnaire.trim(),
+			scribe: prosit.scribe.trim(),
 		});
 		const blob = doc.getZip().generate({
 			type: "blob",
@@ -46,6 +46,6 @@ export const todocx = (prosit: Prosit) => {
 				"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 		});
 		// Output the document using Data-URI
-		saveAs(blob, `${prosit.titre.replaceAll(" ", "_")}.docx`);
+		saveAs(blob, `PA-${prosit.titre.trim().replaceAll(" ", "_")}.docx`);
 	});
 };
