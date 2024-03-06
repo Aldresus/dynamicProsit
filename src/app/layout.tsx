@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 		siteName: "DynamicPrositX",
 		images: [
 			{
-				url: "/opengraph-image",
+				url: "https://prosit.hugochampy.fr/opengraph-image",
 				alt: "DynamicPrositX",
 				type: "image/png",
 			},
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 			"Une interface intuitive et efficace pour accompagner vos prosits.",
 		images: [
 			{
-				url: "/twitter-image",
+				url: "https://prosit.hugochampy.fr/twitter-image",
 				alt: "DynamicPrositX",
 			},
 		],
@@ -56,11 +56,7 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function SEOLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default function SEOLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en">
 			<head>

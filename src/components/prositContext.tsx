@@ -5,6 +5,7 @@ import { createContext } from "react";
 export const defaultPrositValue: Prosit = {
 	// Provide default values
 	currentAnchor: "",
+	touched: false,
 	titre: "",
 	lien: "",
 	generalisation: "",

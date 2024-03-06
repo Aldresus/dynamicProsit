@@ -3,6 +3,8 @@
 import EtapeSortable from "@/app/(seo)/(root)/plan-d-action/etape";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
+import useNavigator from "@/hooks/useNavigator";
+import { AnchorsKeys } from "@/types/anchors";
 import { Etape } from "@/types/etape";
 import {
 	DndContext,
@@ -19,10 +21,8 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Button, Textarea, Title } from "@mantine/core";
-import { Kbd, Text } from "@mantine/core";
+import { Button, Kbd, Text, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function Problematiques() {
@@ -32,12 +32,11 @@ export default function Problematiques() {
 		content: "",
 	});
 	const [etapes, setEtapes] = useState<Etape[]>([]);
+	const { navigate } = useNavigator({ prosit, setProsit });
 
 	useEffect(() => {
 		setEtapes(prosit.planDAction);
 	}, [prosit]);
-
-	const router = useRouter();
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -48,8 +47,8 @@ export default function Problematiques() {
 
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
-		["ctrl+enter", () => router.push("/")],
-		["ctrl+shift+enter", () => router.push("/livrables")],
+		["ctrl+enter", () => navigate(AnchorsKeys.INFORMATIONS)],
+		["ctrl+shift+enter", () => navigate(AnchorsKeys.LIVRABLES)],
 	];
 
 	useHotkeys(pageHotkeys);
@@ -57,7 +56,7 @@ export default function Problematiques() {
 	const hotkeys = getHotkeyHandler([
 		["enter", () => planHandler()],
 		["shift+enter", () => planHandler()],
-		...globalHotKeys(router),
+		...globalHotKeys(navigate),
 		...pageHotkeys,
 	]);
 

@@ -3,11 +3,12 @@
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
 import { todocx } from "@/components/todocx";
+import useNavigator from "@/hooks/useNavigator";
+import { AnchorsKeys } from "@/types/anchors";
 import {
 	AppShell,
 	Burger,
 	Button,
-	Collapse,
 	Kbd,
 	Modal,
 	NavLink,
@@ -31,7 +32,7 @@ import {
 	Sun,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import classes from "./Demo.module.css";
 
 export default function FormLayout({
@@ -45,33 +46,19 @@ export default function FormLayout({
 	const pathname = usePathname();
 	const router = useRouter();
 	const { prosit, setProsit, clearProsit } = useContext(PrositContext);
+	const { navigate, setAnchor } = useNavigator({ prosit, setProsit });
+
 	// maybe find a better way to type this
 	// biome-ignore lint/suspicious/noExplicitAny: the type of presentationWindow is too complex tobe typed
 	const [presentationWindow, setPresentationWindow] = useState<any | null>();
 	const { toggleColorScheme } = useMantineColorScheme();
 
-	useEffect(() => {
-		router.prefetch("/mots-clefs");
-		router.prefetch("/contraintes");
-		router.prefetch("/problematiques");
-		router.prefetch("/pistes-de-solution");
-		router.prefetch("/livrables");
-		router.prefetch("/plan-d-action");
-	}, [router]);
-
 	useHotkeys([
 		["f1", () => toggle()],
 		["ctrl+s", () => todocx(prosit)],
 		["ctrl+alt+l", () => toggleColorScheme()],
-		...globalHotKeys(router),
+		...globalHotKeys(navigate),
 	]);
-
-	const navigate = (anchor: string) => {
-		setProsit({
-			...prosit,
-			currentAnchor: anchor,
-		});
-	};
 
 	return (
 		<div>
@@ -130,7 +117,7 @@ export default function FormLayout({
 							leftSection={<Info size="1rem" />}
 							href={"/"}
 							onClick={() => {
-								navigate("informations");
+								setAnchor(AnchorsKeys.INFORMATIONS);
 							}}
 						/>
 						<NavLink
@@ -139,7 +126,7 @@ export default function FormLayout({
 							href={"/mots-clefs"}
 							active={pathname === "/mots-clefs"}
 							onClick={() => {
-								navigate("motsClefs");
+								setAnchor(AnchorsKeys.MOTSCLEFS);
 							}}
 						/>
 
@@ -149,7 +136,7 @@ export default function FormLayout({
 							href={"/contraintes"}
 							active={pathname === "/contraintes"}
 							onClick={() => {
-								navigate("contraintes");
+								setAnchor(AnchorsKeys.CONTRAINTES);
 							}}
 						/>
 
@@ -159,7 +146,7 @@ export default function FormLayout({
 							href={"/problematiques"}
 							active={pathname === "/problematiques"}
 							onClick={() => {
-								navigate("problematiques");
+								setAnchor(AnchorsKeys.PROBLEMATIQUES);
 							}}
 						/>
 						<NavLink
@@ -168,7 +155,7 @@ export default function FormLayout({
 							href={"/pistes-de-solution"}
 							active={pathname === "/pistes-de-solution"}
 							onClick={() => {
-								navigate("pistesDeSolution");
+								setAnchor(AnchorsKeys.PISTESDESOLUTION);
 							}}
 						/>
 						<NavLink
@@ -177,7 +164,7 @@ export default function FormLayout({
 							href={"/livrables"}
 							active={pathname === "/livrables"}
 							onClick={() => {
-								navigate("livrables");
+								setAnchor(AnchorsKeys.LIVRABLES);
 							}}
 						/>
 						<NavLink
@@ -186,7 +173,7 @@ export default function FormLayout({
 							href={"/plan-d-action"}
 							active={pathname === "/plan-d-action"}
 							onClick={() => {
-								navigate("planDAction");
+								setAnchor(AnchorsKeys.PLANDACTION);
 							}}
 						/>
 
@@ -267,7 +254,9 @@ export default function FormLayout({
 						size="md"
 						className="absolute right-0 top-0 p-9"
 					/>
-					<div className="mt-12 mx-auto md:px-20 md:min-w-[20rem] md:w-2/3 max-w-4xl">{children}</div>
+					<div className="mt-12 mx-auto md:px-20 md:min-w-[20rem] md:w-2/3 max-w-4xl">
+						{children}
+					</div>
 				</AppShell.Main>
 
 				<AppShell.Aside p="md" className="flex flex-col gap-3 overflow-auto">

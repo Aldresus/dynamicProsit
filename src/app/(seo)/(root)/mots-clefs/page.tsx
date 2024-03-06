@@ -3,26 +3,26 @@
 import EditableItemList from "@/components/editableItemList";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
+import useNavigator from "@/hooks/useNavigator";
+import { AnchorsKeys } from "@/types/anchors";
 import { Button, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function MotsClefs() {
 	const { prosit, setProsit } = useContext(PrositContext);
 	const [keyword, setKeyword] = useState("");
 	const [keywords, setKeywords] = useState<string[]>([]);
+	const { navigate } = useNavigator({ prosit, setProsit });
 
 	useEffect(() => {
 		setKeywords(prosit.motsCles);
 	}, [prosit]);
 
-	const router = useRouter();
-
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
-		["ctrl+enter", () => router.push("/contraintes")],
-		["ctrl+shift+enter", () => router.push("/")],
+		["ctrl+enter", () => navigate(AnchorsKeys.CONTRAINTES)],
+		["ctrl+shift+enter", () => navigate(AnchorsKeys.INFORMATIONS)],
 	];
 
 	useHotkeys(pageHotkeys);
@@ -30,7 +30,7 @@ export default function MotsClefs() {
 	const hotkeys = getHotkeyHandler([
 		["enter", () => keywordHandler()],
 		["shift+enter", () => keywordHandler()],
-		...globalHotKeys(router),
+		...globalHotKeys(navigate),
 		...pageHotkeys,
 	]);
 

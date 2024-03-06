@@ -3,26 +3,29 @@
 import EditableItemList from "@/components/editableItemList";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
+import useNavigator from "@/hooks/useNavigator";
+import { AnchorsKeys } from "@/types/anchors";
 import { Button, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function Livrables() {
 	const { prosit, setProsit } = useContext(PrositContext);
 	const [livrables, setLivrables] = useState<string[]>([]);
 	const [livrable, setLivrable] = useState("");
+	const { navigate } = useNavigator({
+		prosit,
+		setProsit,
+	});
 
 	useEffect(() => {
 		setLivrables(prosit.livrables);
 	}, [prosit]);
 
-	const router = useRouter();
-
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
-		["ctrl+enter", () => router.push("/plan-d-action")],
-		["ctrl+shift+enter", () => router.push("/pistes-de-solution")],
+		["ctrl+enter", () => navigate(AnchorsKeys.PLANDACTION)],
+		["ctrl+shift+enter", () => navigate(AnchorsKeys.PISTESDESOLUTION)],
 	];
 
 	useHotkeys(pageHotkeys);
@@ -30,7 +33,7 @@ export default function Livrables() {
 	const hotkeys = getHotkeyHandler([
 		["enter", () => livrableHandler()],
 		["shift+enter", () => livrableHandler()],
-		...globalHotKeys(router),
+		...globalHotKeys(navigate),
 		...pageHotkeys,
 	]);
 	const livrableHandler = () => {

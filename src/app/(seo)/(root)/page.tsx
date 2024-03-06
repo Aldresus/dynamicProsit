@@ -2,26 +2,28 @@
 
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
+import useNavigator from "@/hooks/useNavigator";
+import { AnchorsKeys } from "@/types/anchors";
 import { Prosit } from "@/types/prosit";
 import { TextInput, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
 import { useContext } from "react";
 
 export default function Home() {
-	const router = useRouter();
-
 	const { prosit, setProsit } = useContext(PrositContext);
-
+	const { navigate } = useNavigator({ prosit, setProsit });
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
-		["ctrl+enter", () => router.push("/mots-clefs")],
-		["ctrl+shift+enter", () => router.push("/plan-d-action")],
+		["ctrl+enter", () => navigate(AnchorsKeys.MOTSCLEFS)],
+		["ctrl+shift+enter", () => navigate(AnchorsKeys.PLANDACTION)],
 	];
 
 	useHotkeys(pageHotkeys);
 
-	const hotkeys = getHotkeyHandler([...globalHotKeys(router), ...pageHotkeys]);
+	const hotkeys = getHotkeyHandler([
+		...globalHotKeys(navigate),
+		...pageHotkeys,
+	]);
 
 	//todo add a call to action so the user know that the presentation mode exist
 
@@ -29,7 +31,7 @@ export default function Home() {
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				router.push("/mots-clefs");
+				navigate(AnchorsKeys.MOTSCLEFS);
 			}}
 			className="h-full flex flex-col gap-9 py-3"
 		>

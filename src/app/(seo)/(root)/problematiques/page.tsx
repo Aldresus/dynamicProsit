@@ -3,16 +3,20 @@
 import EditableItemList from "@/components/editableItemList";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
+import useNavigator from "@/hooks/useNavigator";
+import { AnchorsKeys } from "@/types/anchors";
 import { Button, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function Problematiques() {
 	const { prosit, setProsit } = useContext(PrositContext);
 	const [problematique, setProblematique] = useState("");
 	const [problematiques, setProblematiques] = useState<string[]>([]);
-	const router = useRouter();
+	const { navigate } = useNavigator({
+		prosit,
+		setProsit,
+	});
 
 	useEffect(() => {
 		setProblematiques(prosit.problematiques);
@@ -20,8 +24,8 @@ export default function Problematiques() {
 
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
-		["ctrl+enter", () => router.push("/pistes-de-solution")],
-		["ctrl+shift+enter", () => router.push("/contraintes")],
+		["ctrl+enter", () => navigate(AnchorsKeys.PISTESDESOLUTION)],
+		["ctrl+shift+enter", () => navigate(AnchorsKeys.CONTRAINTES)],
 	];
 
 	useHotkeys(pageHotkeys);
@@ -29,7 +33,7 @@ export default function Problematiques() {
 	const hotkeys = getHotkeyHandler([
 		["enter", () => problematiqueHandler()],
 		["shift+enter", () => problematiqueHandler()],
-		...globalHotKeys(router),
+		...globalHotKeys(navigate),
 		...pageHotkeys,
 	]);
 

@@ -2,6 +2,7 @@ import { Etape } from "@/types/etape";
 
 export interface Prosit {
 	currentAnchor: string;
+	touched: boolean;
 
 	titre: string;
 	lien: string;

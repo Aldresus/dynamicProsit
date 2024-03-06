@@ -45,6 +45,16 @@ export default function RootLayout({
 		return parsedProsit;
 	});
 
+	const setPrositHandler = (newProsit: Prosit) => {
+		setProsit((prevProsit) => {
+			return {
+				...prevProsit,
+				...newProsit,
+				touched: true,
+			};
+		});
+	};
+
 	const clearProsit = () => {
 		setProsit(defaultPrositValue);
 	};
@@ -69,7 +79,9 @@ export default function RootLayout({
 	return (
 		<body>
 			<MantineProvider defaultColorScheme="light" theme={theme}>
-				<PrositContext.Provider value={{ prosit, setProsit, clearProsit }}>
+				<PrositContext.Provider
+					value={{ prosit, setProsit: setPrositHandler, clearProsit }}
+				>
 					{isTauriContext ? (
 						<div
 							className="flex justify-end fixed top-0 left-0 right-0"
