@@ -72,12 +72,13 @@ export default function MotsClefs() {
           event.preventDefault();
           addItem();
         }}
-        className="flex gap-2 items-end"
+        className="flex flex-col gap-2 items-end"
       >
         <Textarea
           onKeyDown={hotkeys}
           className="flex-1"
           autoFocus
+          w="100%"
           label="Mot clef"
           placeholder="fromage"
           value={workingItem.content}
@@ -89,6 +90,7 @@ export default function MotsClefs() {
           }}
         />
         <Button
+          w="40%"
           type="submit"
           onClick={(event) => {
             event.preventDefault();

@@ -72,12 +72,13 @@ export default function PlanDAction() {
           event.preventDefault();
           addItem();
         }}
-        className="flex gap-2 items-end"
+        className="flex flex-col gap-2 items-end"
       >
         <Textarea
           onKeyDown={hotkeys}
           className="flex-1"
           autoFocus
+          w="100%"
           label="Etape du plan d'action"
           placeholder="Etudier le fromage"
           value={workingItem.content}
@@ -89,6 +90,7 @@ export default function PlanDAction() {
           }}
         />
         <Button
+          w="40%"
           type="submit"
           onClick={(event) => {
             event.preventDefault();

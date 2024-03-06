@@ -76,11 +76,12 @@ export default function Livrables() {
           event.preventDefault();
           addItem();
         }}
-        className="flex gap-2 items-end"
+        className="flex flex-col gap-2 items-end"
       >
         <Textarea
           onKeyDown={hotkeys}
           className="flex-1"
+          w="100%"
           autoFocus
           label="Livrable"
           placeholder="Un rapport de 10 pages sur le voleur de fromage, son histoire, ses motivations, et comment il a fait pour voler le fromage"
@@ -93,6 +94,7 @@ export default function Livrables() {
           }}
         />
         <Button
+          w="40%"
           type="submit"
           onClick={(event) => {
             event.preventDefault();

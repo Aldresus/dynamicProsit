@@ -74,12 +74,13 @@ export default function Contraintes() {
           event.preventDefault();
           addItem();
         }}
-        className="flex gap-2 items-end"
+        className="flex flex-col gap-2 items-end"
       >
         <Textarea
           onKeyDown={hotkeys}
           className="flex-1"
           autoFocus
+          w="100%"
           label="Contrainte"
           placeholder="Le fromage doit être retrouvé avant de pourrir"
           value={workingItem.content}
@@ -91,6 +92,7 @@ export default function Contraintes() {
           }}
         />
         <Button
+          w="40%"
           type="submit"
           onClick={(event) => {
             event.preventDefault();
