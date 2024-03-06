@@ -9,22 +9,14 @@ import { Plus, X } from "lucide-react";
 
 export default function Visualisation() {
   const { prosit } = useContext(PrositContext);
-  const [prositState, setPrositState] = useState<Prosit>(prosit);
+  const [prositState, setPrositState] = useState<Prosit>(defaultPrositValue);
   const [numberOfViews, setNumberOfViews] = useState(1);
 
   const maxNumberOfViews = 2;
 
-  // useEffect(() => {
-  //   if (typeof window === "undefined") return;
-  //   window.addEventListener("storage", () => {
-  //     const storedProsit = localStorage.getItem("prosit");
-  //     const parsedProsit = storedProsit
-  //       ? JSON.parse(storedProsit)
-  //       : defaultPrositValue;
-  //   });
-  // }, []);
-  //
   useEffect(() => {
+    setPrositState(prosit);
+
     // Function to handle the storage event
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === "prosit") {
