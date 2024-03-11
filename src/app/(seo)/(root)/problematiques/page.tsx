@@ -54,7 +54,7 @@ export default function Contraintes() {
 
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
-		["ctrl+enter", () => navigate(AnchorsKeys.PISTESDESOLUTION)],
+		["ctrl+enter", () => navigate(AnchorsKeys.PISTES_DE_SOLUTION)],
 		["ctrl+shift+enter", () => navigate(AnchorsKeys.CONTRAINTES)],
 	];
 

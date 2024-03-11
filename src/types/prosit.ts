@@ -1,8 +1,9 @@
 import { OrderedItem } from "@/types/orderedItem";
+import { AnchorsKeys } from "./anchors";
 
 export interface Prosit {
 	prositVersion: number;
-	currentAnchor: string;
+	currentAnchor: AnchorsKeys;
 	touched: boolean;
 
 	titre: string;

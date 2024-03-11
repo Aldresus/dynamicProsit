@@ -54,8 +54,8 @@ export default function Livrables() {
 
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
-		["ctrl+enter", () => navigate(AnchorsKeys.PLANDACTION)],
-		["ctrl+shift+enter", () => navigate(AnchorsKeys.PISTESDESOLUTION)],
+		["ctrl+enter", () => navigate(AnchorsKeys.PLAN_D_ACTION)],
+		["ctrl+shift+enter", () => navigate(AnchorsKeys.PISTES_DE_SOLUTION)],
 	];
 
 	useHotkeys(pageHotkeys);

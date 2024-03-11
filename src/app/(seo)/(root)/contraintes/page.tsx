@@ -53,7 +53,7 @@ export default function Contraintes() {
 	const pageHotkeys: any[] = [
 		["ctrl+enter", () => navigate(AnchorsKeys.PROBLEMATIQUES)],
 
-		["ctrl+shift+enter", () => navigate(AnchorsKeys.MOTSCLEFS)],
+		["ctrl+shift+enter", () => navigate(AnchorsKeys.MOTS_CLEFS)],
 	];
 
 	useHotkeys(pageHotkeys);

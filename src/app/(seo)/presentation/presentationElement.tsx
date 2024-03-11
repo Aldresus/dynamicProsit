@@ -56,7 +56,7 @@ const PresentationElement = React.forwardRef<
 					>
 						{items.map((item, i) => (
 							<List.Item
-								id={i === item.length - 1 ? `${anchor}` : undefined}
+								id={i === items.length - 1 ? anchor : undefined}
 								className="w-11/12"
 								key={item + i}
 							>

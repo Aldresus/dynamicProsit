@@ -125,7 +125,7 @@ export default function FormLayout({
 							href={"/mots-clefs"}
 							active={pathname === "/mots-clefs"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.MOTSCLEFS);
+								setAnchor(AnchorsKeys.MOTS_CLEFS);
 							}}
 						/>
 
@@ -154,7 +154,7 @@ export default function FormLayout({
 							href={"/pistes-de-solution"}
 							active={pathname === "/pistes-de-solution"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.PISTESDESOLUTION);
+								setAnchor(AnchorsKeys.PISTES_DE_SOLUTION);
 							}}
 						/>
 						<NavLink
@@ -172,7 +172,7 @@ export default function FormLayout({
 							href={"/plan-d-action"}
 							active={pathname === "/plan-d-action"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.PLANDACTION);
+								setAnchor(AnchorsKeys.PLAN_D_ACTION);
 							}}
 						/>
 

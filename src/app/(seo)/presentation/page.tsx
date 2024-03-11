@@ -6,6 +6,7 @@ import { ActionIcon, Divider, Title, Tooltip } from "@mantine/core";
 import { Plus, X } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import Presentation from "./presentation";
+import { Anchors } from "@/types/anchors";
 
 export default function Visualisation() {
 	const { prosit } = useContext(PrositContext);
@@ -45,7 +46,10 @@ export default function Visualisation() {
 	// Effect to scroll to the anchor
 	useEffect(() => {
 		if (prositState.currentAnchor && typeof window !== "undefined") {
-			const anchorElement = document.getElementById(prositState.currentAnchor);
+			console.log(Anchors[prositState.currentAnchor]);
+			const anchorElement = document.getElementById(
+				Anchors[prositState.currentAnchor],
+			);
 			if (anchorElement) {
 				anchorElement.scrollIntoView({ behavior: "smooth", block: "end" });
 			}
@@ -59,14 +63,15 @@ export default function Visualisation() {
 
 				<div className="flex gap-2 overflow-hidden">
 					{numberOfViews < maxNumberOfViews && prositState.touched && (
-						<div
-							className="fixed flex items-center group top-0 bottom-0 right-0 p-3 cursor-pointer"
-							onClick={() => {
-								if (numberOfViews >= maxNumberOfViews) return;
-								setNumberOfViews((prev) => prev + 1);
-							}}
-						>
-							<ActionIcon size="xl" variant="subtle">
+						<div className="fixed flex items-center group top-0 bottom-0 right-0 p-3">
+							<ActionIcon
+								onClick={() => {
+									if (numberOfViews >= maxNumberOfViews) return;
+									setNumberOfViews((prev) => prev + 1);
+								}}
+								size="xl"
+								variant="subtle"
+							>
 								<Plus size={40} />
 							</ActionIcon>
 						</div>
