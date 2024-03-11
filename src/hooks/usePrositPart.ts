@@ -41,7 +41,6 @@ const usePrositPart = ({ prosit, setProsit, key }: UsePrositPartProps) => {
 	const findIndex = (id: string) => items.findIndex((item) => item.id === id);
 
 	const addItem = () => {
-		console.log("addItem", key, typeof key, workingItem);
 		if (!workingItem.content) return;
 
 		const finalItem: OrderedItem = {

@@ -51,16 +51,14 @@ export default function RootLayout({
 			}
 		}
 
-		console.log(parsedProsit);
-
 		if (parsedProsit.prositVersion !== defaultPrositValue.prositVersion) {
-			console.log("Prosit version mismatch, setting to default");
+			console.log("Prosit version mismatch, trying to convert data...");
 
 			if (parsedProsit.prositVersion === 1) {
 				// V1 prosit data format, all the prosit array items should be of type OrderedItem
 				// We need to convert them to the new format
 				const lightIDHandler = (content: string) => {
-					let clearedContent = content.replace(/[^a-zA-Z0-9 ]/g, "");
+					const clearedContent = content.replace(/[^a-zA-Z0-9 ]/g, "");
 					return clearedContent.split(" ").join("_");
 				};
 
@@ -105,10 +103,15 @@ export default function RootLayout({
 				);
 
 				parsedProsit.planDAction = parsedProsit.planDAction.map(
-					(planDAction: any, i: number) =>
+					(
+						planDAction: {
+							content: string;
+							etapeNo: number;
+						},
+						i: number,
+					) =>
 						({
-							content: planDAction.content as string,
-
+							content: planDAction.content as unknown,
 							id: `planDAction_${lightIDHandler(planDAction.content)}_${i}`,
 						}) as OrderedItem,
 				);

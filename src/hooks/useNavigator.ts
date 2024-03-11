@@ -10,13 +10,13 @@ interface UseNavigatorProps {
 function useNavigator({ prosit, setProsit }: UseNavigatorProps) {
 	const router = useRouter();
 
-	const navigate = (anchor: AnchorsKeys)=> {
+	const navigate = (anchor: AnchorsKeys) => {
 		router.push(`/${AnchorsURL[anchor]}`);
 		setProsit({
 			...prosit,
 			currentAnchor: Anchors[anchor],
 		});
-	}
+	};
 
 	const setAnchor = (anchor: AnchorsKeys) => {
 		setProsit({
