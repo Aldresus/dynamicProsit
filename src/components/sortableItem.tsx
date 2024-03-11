@@ -83,7 +83,6 @@ export default function SortableItem({
           <Textarea
             fw="500"
             variant="unstyled"
-            resize="none"
             p={0}
             readOnly={!editMode}
             autosize
