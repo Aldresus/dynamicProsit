@@ -93,16 +93,23 @@ export default function Contraintes() {
             });
           }}
         />
-        <Button
-          w="40%"
-          type="submit"
-          onClick={(event) => {
-            event.preventDefault();
-            addItem();
-          }}
-        >
-          Ajouter la problématique
-        </Button>
+        <div className="w-full flex justify-between items-start">
+          <div className="flex flex-col justify-between">
+            <Text c="dimmed">
+              <Kbd>double clic</Kbd> pour éditer la ligne
+            </Text>
+          </div>
+          <Button
+            w="40%"
+            type="submit"
+            onClick={(event) => {
+              event.preventDefault();
+              addItem();
+            }}
+          >
+            Ajouter la problématique
+          </Button>
+        </div>
       </form>
 
       <DndContext
@@ -114,15 +121,7 @@ export default function Contraintes() {
           items={items.map((item) => item.id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="w-full flex flex-col gap-1">
-            <div className="flex gap-3 mb-3">
-              <Text c="dimmed" size="sm">
-                <Kbd>double clic</Kbd> pour éditer la ligne
-              </Text>
-              <Text c="dimmed" size="sm">
-                <Kbd>entrer</Kbd> pour valider
-              </Text>
-            </div>
+          <div className="w-full flex flex-col">
             {/*todo avoir des sous truc jor 1. a. b. c. */}
             {items.map((value) => (
               <SortableItem
