@@ -11,6 +11,7 @@ import { open } from "@tauri-apps/api/shell";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { AnchorsKeys } from "@/types/anchors";
 
 export default function RootLayout({
 	children,
@@ -120,6 +121,7 @@ export default function RootLayout({
 			}
 		}
 
+		parsedProsit.currentAnchor = AnchorsKeys.INFORMATIONS;
 		return parsedProsit;
 	});
 
