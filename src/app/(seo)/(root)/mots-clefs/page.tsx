@@ -1,23 +1,52 @@
 "use client";
 
-import EditableItemList from "@/components/editableItemList";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
+import SortableItem from "@/components/sortableItem";
 import useNavigator from "@/hooks/useNavigator";
+import usePrositPart from "@/hooks/usePrositPart";
 import { AnchorsKeys } from "@/types/anchors";
-import { Button, Textarea, Title } from "@mantine/core";
+import { PrositKeys } from "@/types/prosit";
+import {
+	DndContext,
+	KeyboardSensor,
+	PointerSensor,
+	closestCenter,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
+import {
+	SortableContext,
+	sortableKeyboardCoordinates,
+	verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { Button, Kbd, Text, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function MotsClefs() {
 	const { prosit, setProsit } = useContext(PrositContext);
-	const [keyword, setKeyword] = useState("");
-	const [keywords, setKeywords] = useState<string[]>([]);
-	const { navigate } = useNavigator({ prosit, setProsit });
+	const {
+		addItem,
+		deleteItem,
+		editItem,
+		handleDragEnd,
+		items,
+		setWorkingItem,
+		workingItem,
+	} = usePrositPart({
+		prosit: prosit,
+		setProsit,
+		key: PrositKeys.MOTS_CLES,
+	});
 
-	useEffect(() => {
-		setKeywords(prosit.motsCles);
-	}, [prosit]);
+	const sensors = useSensors(
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		}),
+	);
+	const { navigate } = useNavigator({ prosit, setProsit });
 
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
@@ -28,71 +57,81 @@ export default function MotsClefs() {
 	useHotkeys(pageHotkeys);
 
 	const hotkeys = getHotkeyHandler([
-		["enter", () => keywordHandler()],
-		["shift+enter", () => keywordHandler()],
+		["enter", () => addItem()],
+		["shift+enter", () => addItem()],
 		...globalHotKeys(navigate),
 		...pageHotkeys,
 	]);
 
-	const keywordHandler = () => {
-		if (keyword.trim() === "") return;
-		setProsit({
-			...prosit,
-			motsCles: [...prosit.motsCles, keyword],
-		});
-		setKeyword("");
-	};
-
 	return (
 		<div className="h-full flex flex-col gap-9 py-3">
-			<Title order={2}>Mots clefs</Title>
-
 			<form
 				onSubmit={(event) => {
 					event.preventDefault();
-					keywordHandler();
+					addItem();
 				}}
-				className="flex gap-2 items-end"
+				className="flex flex-col sticky gap-2 z-10 top-0 p-2 pt-4 bg-white rounded-md w-full"
 			>
 				<Textarea
 					onKeyDown={hotkeys}
 					className="flex-1"
 					autoFocus
-					label="Mot clef"
+					w="100%"
+					label={
+						<Title order={2} className="pb-3">
+							Mots clefs
+						</Title>
+					}
 					placeholder="fromage"
-					value={keyword}
+					value={workingItem.content}
 					onInput={(event) => {
-						// @ts-ignore
-						setKeyword(event.target.value);
+						setWorkingItem({
+							...workingItem,
+							content: event.currentTarget.value,
+						});
 					}}
 				/>
-				<Button
-					type="submit"
-					onClick={(event) => {
-						event.preventDefault();
-						keywordHandler();
-					}}
-				>
-					Ajouter le mot clef
-				</Button>
+				<div className="w-full flex justify-between items-start">
+					<div className="flex flex-col justify-between">
+						<Text c="dimmed" size="sm">
+							<Kbd>double clic</Kbd> pour éditer la ligne
+						</Text>
+					</div>
+					<Button
+						w="40%"
+						type="submit"
+						onClick={(event) => {
+							event.preventDefault();
+							addItem();
+						}}
+					>
+						Ajouter le mot clef
+					</Button>
+				</div>
 			</form>
 
-			<EditableItemList
-				items={keywords}
-				onEdit={(newValue, index) => {
-					const temp = [...prosit.motsCles];
-					temp[index] = newValue;
-					setProsit({ ...prosit, motsCles: [...temp] });
-				}}
-				onDelete={(index) => {
-					const temp = [...prosit.motsCles];
-					temp.splice(index, 1);
-					setProsit({
-						...prosit,
-						motsCles: [...temp],
-					});
-				}}
-			/>
+			<DndContext
+				sensors={sensors}
+				collisionDetection={closestCenter}
+				onDragEnd={handleDragEnd}
+			>
+				<SortableContext
+					items={items.map((item) => item.id)}
+					strategy={verticalListSortingStrategy}
+				>
+					<div className="w-full flex flex-col">
+						{/*todo avoir des sous truc jor 1. a. b. c. */}
+						{items.map((value) => (
+							<SortableItem
+								key={value.id}
+								value={value}
+								deleteItem={() => deleteItem(value.id)}
+								editItem={(newValue: string) => editItem(newValue, value.id)}
+							/>
+						))}
+					</div>
+				</SortableContext>
+			</DndContext>
 		</div>
 	);
 }

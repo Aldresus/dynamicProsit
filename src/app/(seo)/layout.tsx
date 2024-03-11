@@ -4,12 +4,14 @@ import "./globals.css";
 
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
 import WindowsHeader from "@/components/windowsHeader";
+import { OrderedItem } from "@/types/orderedItem";
 import { Prosit } from "@/types/prosit";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { open } from "@tauri-apps/api/shell";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { AnchorsKeys } from "@/types/anchors";
 
 export default function RootLayout({
 	children,
@@ -31,7 +33,15 @@ export default function RootLayout({
 			? JSON.parse(storedProsit)
 			: defaultPrositValue;
 
+		if (!parsedProsit.prositVersion) {
+			console.log(
+				"Prosit version not found, setting to the oldest version available",
+			);
+			parsedProsit.prositVersion = 1;
+		}
+
 		for (const key of Object.keys(defaultPrositValue)) {
+			if (key === "prositVersion") continue;
 			if (!Object.prototype.hasOwnProperty.call(parsedProsit, key)) {
 				parsedProsit[key] = defaultPrositValue[key as keyof Prosit];
 			} else if (
@@ -42,6 +52,76 @@ export default function RootLayout({
 			}
 		}
 
+		if (parsedProsit.prositVersion !== defaultPrositValue.prositVersion) {
+			console.log("Prosit version mismatch, trying to convert data...");
+
+			if (parsedProsit.prositVersion === 1) {
+				// V1 prosit data format, all the prosit array items should be of type OrderedItem
+				// We need to convert them to the new format
+				const lightIDHandler = (content: string) => {
+					const clearedContent = content.replace(/[^a-zA-Z0-9 ]/g, "");
+					return clearedContent.split(" ").join("_");
+				};
+
+				parsedProsit.contraintes = parsedProsit.contraintes.map(
+					(contrainte: string, i: number) =>
+						({
+							content: contrainte as string,
+							id: `contraintes_${lightIDHandler(contrainte)}_${i}`,
+						}) as OrderedItem,
+				);
+
+				parsedProsit.livrables = parsedProsit.livrables.map(
+					(livrable: string, i: number) =>
+						({
+							content: livrable as string,
+							id: `livrables_${lightIDHandler(livrable)}_${i}`,
+						}) as OrderedItem,
+				);
+
+				parsedProsit.motsCles = parsedProsit.motsCles.map(
+					(motClef: string, i: number) =>
+						({
+							content: motClef as string,
+							id: `motsCles_${lightIDHandler(motClef)}_${i}`,
+						}) as OrderedItem,
+				);
+
+				parsedProsit.pistesDeSolutions = parsedProsit.pistesDeSolutions.map(
+					(pisteDeSolution: string, i: number) =>
+						({
+							content: pisteDeSolution as string,
+							id: `pistesDeSolutions_${lightIDHandler(pisteDeSolution)}_${i}`,
+						}) as OrderedItem,
+				);
+
+				parsedProsit.problematiques = parsedProsit.problematiques.map(
+					(problematique: string, i: number) =>
+						({
+							content: problematique as string,
+							id: `problematiques_${lightIDHandler(problematique)}_${i}`,
+						}) as OrderedItem,
+				);
+
+				parsedProsit.planDAction = parsedProsit.planDAction.map(
+					(
+						planDAction: {
+							content: string;
+							etapeNo: number;
+						},
+						i: number,
+					) =>
+						({
+							content: planDAction.content as unknown,
+							id: `planDAction_${lightIDHandler(planDAction.content)}_${i}`,
+						}) as OrderedItem,
+				);
+
+				parsedProsit.prositVersion = 2;
+			}
+		}
+
+		parsedProsit.currentAnchor = AnchorsKeys.INFORMATIONS;
 		return parsedProsit;
 	});
 

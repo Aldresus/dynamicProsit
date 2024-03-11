@@ -1,97 +1,141 @@
 "use client";
 
-import EditableItemList from "@/components/editableItemList";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
+import SortableItem from "@/components/sortableItem";
 import useNavigator from "@/hooks/useNavigator";
+import usePrositPart from "@/hooks/usePrositPart";
 import { AnchorsKeys } from "@/types/anchors";
-import { Button, Textarea, Title } from "@mantine/core";
+import { PrositKeys } from "@/types/prosit";
+import {
+	DndContext,
+	KeyboardSensor,
+	PointerSensor,
+	closestCenter,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
+import {
+	SortableContext,
+	sortableKeyboardCoordinates,
+	verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { Button, Kbd, Text, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import React, { useContext, useEffect, useState } from "react";
 
-export default function Problematiques() {
+export default function Contraintes() {
 	const { prosit, setProsit } = useContext(PrositContext);
-	const [problematique, setProblematique] = useState("");
-	const [problematiques, setProblematiques] = useState<string[]>([]);
+	const {
+		addItem,
+		deleteItem,
+		editItem,
+		handleDragEnd,
+		items,
+		setWorkingItem,
+		workingItem,
+	} = usePrositPart({
+		prosit: prosit,
+		setProsit,
+		key: PrositKeys.PROBLEMATIQUES,
+	});
+
 	const { navigate } = useNavigator({
 		prosit,
 		setProsit,
 	});
 
-	useEffect(() => {
-		setProblematiques(prosit.problematiques);
-	}, [prosit]);
+	const sensors = useSensors(
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		}),
+	);
 
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
-		["ctrl+enter", () => navigate(AnchorsKeys.PISTESDESOLUTION)],
+		["ctrl+enter", () => navigate(AnchorsKeys.PISTES_DE_SOLUTION)],
 		["ctrl+shift+enter", () => navigate(AnchorsKeys.CONTRAINTES)],
 	];
 
 	useHotkeys(pageHotkeys);
 
 	const hotkeys = getHotkeyHandler([
-		["enter", () => problematiqueHandler()],
-		["shift+enter", () => problematiqueHandler()],
+		["enter", () => addItem()],
+		["shift+enter", () => addItem()],
 		...globalHotKeys(navigate),
 		...pageHotkeys,
 	]);
 
-	const problematiqueHandler = () => {
-		if (problematique.trim() === "") return;
-		setProsit({
-			...prosit,
-			problematiques: [...prosit.problematiques, problematique],
-		});
-		setProblematique("");
-	};
-
 	return (
 		<div className="h-full flex flex-col gap-9 py-3">
-			<Title order={2}>Problématiques</Title>
 			<form
 				onSubmit={(event) => {
 					event.preventDefault();
-					problematiqueHandler();
+					addItem();
 				}}
-				className="flex gap-2 items-end"
+				className="flex flex-col sticky gap-2 z-10 top-0 p-2 pt-4 bg-white rounded-md w-full"
 			>
 				<Textarea
 					onKeyDown={hotkeys}
 					className="flex-1"
 					autoFocus
-					label="Problématique"
+					w="100%"
+					label={
+						<Title order={2} className="pb-3">
+							Problématiques
+						</Title>
+					}
 					placeholder="Comment trouver le voleur de fromage ?"
-					value={problematique}
+					value={workingItem.content}
 					onInput={(event) => {
-						// @ts-ignore
-						setProblematique(event.target.value);
+						setWorkingItem({
+							...workingItem,
+							content: event.currentTarget.value,
+						});
 					}}
 				/>
-				<Button
-					type="submit"
-					onClick={(event) => {
-						event.preventDefault();
-						problematiqueHandler();
-					}}
-				>
-					Ajouter la problématique
-				</Button>
+				<div className="w-full flex justify-between items-start">
+					<div className="flex flex-col justify-between">
+						<Text c="dimmed" size="sm">
+							<Kbd>double clic</Kbd> pour éditer la ligne
+						</Text>
+					</div>
+					<Button
+						w="40%"
+						type="submit"
+						onClick={(event) => {
+							event.preventDefault();
+							addItem();
+						}}
+					>
+						Ajouter la problématique
+					</Button>
+				</div>
 			</form>
 
-			<EditableItemList
-				items={problematiques}
-				onEdit={(newValue, index) => {
-					const temp = [...prosit.problematiques];
-					temp[index] = newValue;
-					setProsit({ ...prosit, problematiques: [...temp] });
-				}}
-				onDelete={(index) => {
-					const temp = [...prosit.problematiques];
-					temp.splice(index, 1);
-					setProsit({ ...prosit, problematiques: [...temp] });
-				}}
-			/>
+			<DndContext
+				sensors={sensors}
+				collisionDetection={closestCenter}
+				onDragEnd={handleDragEnd}
+			>
+				<SortableContext
+					items={items.map((item) => item.id)}
+					strategy={verticalListSortingStrategy}
+				>
+					<div className="w-full flex flex-col">
+						{/*todo avoir des sous truc jor 1. a. b. c. */}
+						{items.map((value) => (
+							<SortableItem
+								key={value.id}
+								value={value}
+								deleteItem={() => deleteItem(value.id)}
+								editItem={(newValue: string) => editItem(newValue, value.id)}
+							/>
+						))}
+					</div>
+				</SortableContext>
+			</DndContext>
 		</div>
 	);
 }

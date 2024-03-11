@@ -1,10 +1,11 @@
 "use client";
 
+import classes from "@/app/Demo.module.css";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
 import { todocx } from "@/components/todocx";
 import useNavigator from "@/hooks/useNavigator";
-import { AnchorsKeys } from "@/types/anchors";
+import { AnchorsKeys, AnchorsLabels } from "@/types/anchors";
 import {
 	AppShell,
 	Burger,
@@ -22,6 +23,8 @@ import clsx from "clsx";
 import {
 	AlertCircle,
 	AreaChart,
+	ArrowLeft,
+	ArrowRight,
 	HelpCircle,
 	Info,
 	KeyRound,
@@ -32,8 +35,7 @@ import {
 	Sun,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useContext, useState } from "react";
-import classes from "./Demo.module.css";
+import React, { useContext, useEffect, useState } from "react";
 
 export default function FormLayout({
 	children,
@@ -44,9 +46,12 @@ export default function FormLayout({
 	const [openSec, { toggle: ToggleSec }] = useDisclosure();
 	const [modalopened, { open, close }] = useDisclosure(false);
 	const pathname = usePathname();
-	const router = useRouter();
 	const { prosit, setProsit, clearProsit } = useContext(PrositContext);
-	const { navigate, setAnchor } = useNavigator({ prosit, setProsit });
+	const { navigate, setAnchor, next, previous, nextAnchor, previousAnchor } =
+		useNavigator({
+			prosit,
+			setProsit,
+		});
 
 	// maybe find a better way to type this
 	// biome-ignore lint/suspicious/noExplicitAny: the type of presentationWindow is too complex tobe typed
@@ -126,7 +131,7 @@ export default function FormLayout({
 							href={"/mots-clefs"}
 							active={pathname === "/mots-clefs"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.MOTSCLEFS);
+								setAnchor(AnchorsKeys.MOTS_CLEFS);
 							}}
 						/>
 
@@ -155,7 +160,7 @@ export default function FormLayout({
 							href={"/pistes-de-solution"}
 							active={pathname === "/pistes-de-solution"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.PISTESDESOLUTION);
+								setAnchor(AnchorsKeys.PISTES_DE_SOLUTION);
 							}}
 						/>
 						<NavLink
@@ -173,7 +178,7 @@ export default function FormLayout({
 							href={"/plan-d-action"}
 							active={pathname === "/plan-d-action"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.PLANDACTION);
+								setAnchor(AnchorsKeys.PLAN_D_ACTION);
 							}}
 						/>
 
@@ -200,9 +205,9 @@ export default function FormLayout({
 
 											// @ts-ignore
 											if (window.__TAURI__) {
-												const WebviewWindow = (
-													await import("@tauri-apps/api/window")
-												).WebviewWindow;
+												const { WebviewWindow } = await import(
+													"@tauri-apps/api/window"
+												);
 												setPresentationWindow(
 													new WebviewWindow("Présentation", {
 														decorations: false,
@@ -254,8 +259,27 @@ export default function FormLayout({
 						size="md"
 						className="absolute right-0 top-0 p-9"
 					/>
-					<div className="mt-12 mx-auto md:px-20 md:min-w-[20rem] md:w-2/3 max-w-4xl">
+					<div className="flex justify-between">
+						<Button
+							leftSection={<ArrowLeft />}
+							variant="transparent"
+							onClick={previous}
+						>
+							{AnchorsLabels[previousAnchor]}
+						</Button>
+
+						<Button
+							rightSection={<ArrowRight />}
+							variant="transparent"
+							onClick={next}
+						>
+							{AnchorsLabels[nextAnchor]}
+						</Button>
+					</div>
+					<div className="mt-6 mx-auto md:px-20 md:min-w-[20rem] md:w-2/3 max-w-4xl">
 						{children}
+						{/* <div className="absolute top-0 right-0 m-9">Suivant</div>
+						<div className="absolute top-0 left-0 m-9">Retour</div> */}
 					</div>
 				</AppShell.Main>
 

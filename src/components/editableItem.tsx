@@ -1,4 +1,4 @@
-import classes from "@/app/(seo)/(root)/plan-d-action/Demo.module.css";
+import classes from "@/app/Demo.module.css";
 import { Button, Title } from "@mantine/core";
 import clsx from "clsx";
 import React from "react";

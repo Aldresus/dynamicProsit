@@ -4,8 +4,8 @@ import { twMerge } from "tailwind-merge";
 
 interface PresentationElementProps {
 	anchor?: string;
-	titre: string;
-	valeurs: string[] | string;
+	title: string;
+	items: string[] | string;
 	ordered?: boolean;
 	className?: string;
 	bg?: MantineColor;
@@ -18,8 +18,8 @@ const PresentationElement = React.forwardRef<
 >(
 	(
 		{
-			titre,
-			valeurs,
+			title,
+			items,
 			color,
 			bg = "transparent",
 			anchor = "",
@@ -28,7 +28,7 @@ const PresentationElement = React.forwardRef<
 		},
 		ref,
 	) => {
-		if (valeurs.length === 0) return null;
+		if (items.length === 0) return null;
 
 		return (
 			<Box
@@ -41,10 +41,10 @@ const PresentationElement = React.forwardRef<
 				)}
 				ref={ref}
 			>
-				<Title order={1}>{titre}</Title>
-				{typeof valeurs === "string" ? (
+				<Title order={1}>{title}</Title>
+				{typeof items === "string" ? (
 					<Text id={`${anchor}`} size="xl" px="md" fw="500" opacity={0.8}>
-						{valeurs}
+						{items}
 					</Text>
 				) : (
 					<List
@@ -54,13 +54,13 @@ const PresentationElement = React.forwardRef<
 						opacity={0.8}
 						withPadding
 					>
-						{valeurs.map((valeur, i) => (
+						{items.map((item, i) => (
 							<List.Item
-								id={i === valeurs.length - 1 ? `${anchor}` : undefined}
+								id={i === items.length - 1 ? anchor : undefined}
 								className="w-11/12"
-								key={valeur + i}
+								key={item + i}
 							>
-								{valeur}
+								{item}
 							</List.Item>
 						))}
 					</List>

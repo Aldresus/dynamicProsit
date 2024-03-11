@@ -14,8 +14,8 @@ export default function Home() {
 	const { navigate } = useNavigator({ prosit, setProsit });
 	// biome-ignore lint/suspicious/noExplicitAny: issue with Mantine types
 	const pageHotkeys: any[] = [
-		["ctrl+enter", () => navigate(AnchorsKeys.MOTSCLEFS)],
-		["ctrl+shift+enter", () => navigate(AnchorsKeys.PLANDACTION)],
+		["ctrl+enter", () => navigate(AnchorsKeys.MOTS_CLEFS)],
+		["ctrl+shift+enter", () => navigate(AnchorsKeys.PLAN_D_ACTION)],
 	];
 
 	useHotkeys(pageHotkeys);
@@ -31,12 +31,12 @@ export default function Home() {
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				navigate(AnchorsKeys.MOTSCLEFS);
+				navigate(AnchorsKeys.MOTS_CLEFS);
 			}}
-			className="h-full flex flex-col gap-9 py-3"
+			className="h-full flex flex-col gap-9 p-2 py-3 pt-7"
 		>
-			<Title order={2}>Informations</Title>
 			<div className="flex flex-col gap-2">
+				<Title order={2}>Informations</Title>
 				<TextInput
 					autoFocus
 					required

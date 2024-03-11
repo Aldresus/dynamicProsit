@@ -1,14 +1,14 @@
 "use client";
 
-import EtapeSortable from "@/app/(seo)/(root)/plan-d-action/etape";
 import { globalHotKeys } from "@/components/globalHotKeys";
 import PrositContext from "@/components/prositContext";
+import SortableItem from "@/components/sortableItem";
 import useNavigator from "@/hooks/useNavigator";
+import usePrositPart from "@/hooks/usePrositPart";
 import { AnchorsKeys } from "@/types/anchors";
-import { Etape } from "@/types/etape";
+import { PrositKeys } from "@/types/prosit";
 import {
 	DndContext,
-	DragEndEvent,
 	KeyboardSensor,
 	PointerSensor,
 	closestCenter,
@@ -17,7 +17,6 @@ import {
 } from "@dnd-kit/core";
 import {
 	SortableContext,
-	arrayMove,
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -25,18 +24,22 @@ import { Button, Kbd, Text, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import React, { useContext, useEffect, useState } from "react";
 
-export default function Problematiques() {
+export default function PlanDAction() {
 	const { prosit, setProsit } = useContext(PrositContext);
-	const [etape, setEtape] = useState<Etape>({
-		etapeNo: 0,
-		content: "",
+	const {
+		addItem,
+		deleteItem,
+		editItem,
+		handleDragEnd,
+		items,
+		setWorkingItem,
+		workingItem,
+	} = usePrositPart({
+		prosit: prosit,
+		setProsit,
+		key: PrositKeys.PLAN_D_ACTION,
 	});
-	const [etapes, setEtapes] = useState<Etape[]>([]);
 	const { navigate } = useNavigator({ prosit, setProsit });
-
-	useEffect(() => {
-		setEtapes(prosit.planDAction);
-	}, [prosit]);
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -54,119 +57,57 @@ export default function Problematiques() {
 	useHotkeys(pageHotkeys);
 
 	const hotkeys = getHotkeyHandler([
-		["enter", () => planHandler()],
-		["shift+enter", () => planHandler()],
+		["enter", () => addItem()],
+		["shift+enter", () => addItem()],
 		...globalHotKeys(navigate),
 		...pageHotkeys,
 	]);
 
-	const planHandler = () => {
-		if (etape.content.trim() === "") return;
-		const finalEtape = {
-			etapeNo: prosit.planDAction.length + 1,
-			content: etape.content,
-		};
-
-		setProsit({
-			...prosit,
-			planDAction: [...prosit.planDAction, finalEtape],
-		});
-		setEtape({
-			etapeNo: 0,
-			content: "",
-		});
-	};
-
-	const reorganizeSteps = (steps: Etape[]) => {
-		const newSteps = [] as Etape[];
-		let i = 1;
-		for (const step of steps) {
-			step.etapeNo = i;
-			newSteps.push(step);
-			i++;
-		}
-		return newSteps;
-	};
-
-	const editEtape = (newValue: string, index: number) => {
-		//fixme
-		let temp = [...prosit.planDAction];
-		temp[index].content = newValue;
-		temp = reorganizeSteps(temp);
-		setProsit({
-			...prosit,
-			planDAction: [...temp],
-		});
-	};
-
-	const deleteEtape = (index: number) => {
-		let temp = [...prosit.planDAction];
-		temp.splice(index - 1, 1);
-		temp = reorganizeSteps(temp);
-		setProsit({
-			...prosit,
-			planDAction: [...temp],
-		});
-	};
-
-	function handleDragEnd(event: DragEndEvent) {
-		const { active, over } = event;
-
-		if (active.id !== over?.id) {
-			let steps = prosit.planDAction;
-
-			const oldIndex = steps
-				.map((etape) => etape.etapeNo)
-				.indexOf(active.id as number);
-			const newIndex = steps
-				.map((etape) => etape.etapeNo)
-				.indexOf(over?.id as number);
-
-			steps = arrayMove(steps, oldIndex, newIndex);
-			steps = reorganizeSteps(steps);
-
-			setProsit({
-				...prosit,
-				planDAction: [...steps],
-			});
-		}
-	}
-
 	return (
 		<div className="h-full flex flex-col gap-9 py-3">
-			<Title order={2}>Plan d&apos;action</Title>
-
 			<form
 				onSubmit={(event) => {
 					event.preventDefault();
-					planHandler();
+					addItem();
 				}}
-				className="flex gap-2 items-end"
+				className="flex flex-col sticky gap-2 z-10 top-0 p-2 pt-4 bg-white rounded-md w-full"
 			>
 				<Textarea
 					onKeyDown={hotkeys}
 					className="flex-1"
 					autoFocus
-					label="Etape du plan d'action"
+					w="100%"
+					label={
+						<Title order={2} className="pb-3">
+							Plan d&apos;action
+						</Title>
+					}
 					placeholder="Etudier le fromage"
-					value={etape.content}
+					value={workingItem.content}
 					onInput={(event) => {
-						setEtape({
-							...etape,
-							// @ts-ignore
-							content: event.target.value,
+						setWorkingItem({
+							...workingItem,
+							content: event.currentTarget.value,
 						});
 					}}
 				/>
-				<Button
-					type="submit"
-					onClick={(event) => {
-						event.preventDefault();
-						planHandler();
-					}}
-				>
-					Ajouter l&apos;étape
-				</Button>
+				<div className="w-full flex justify-between items-start">
+					<div className="flex flex-col justify-between">
+						<Text c="dimmed" size="sm">
+							<Kbd>double clic</Kbd> pour éditer la ligne
+						</Text>
+					</div>
+					<Button
+						w="40%"
+						type="submit"
+						onClick={(event) => {
+							event.preventDefault();
+							addItem();
+						}}
+					>
+						Ajouter l&apos;étape
+					</Button>
+				</div>
 			</form>
 
 			<DndContext
@@ -175,25 +116,18 @@ export default function Problematiques() {
 				onDragEnd={handleDragEnd}
 			>
 				<SortableContext
-					items={etapes.map((etape) => etape.etapeNo)}
+					items={items.map((item) => item.id)}
 					strategy={verticalListSortingStrategy}
 				>
 					<div className="w-full flex flex-col gap-1">
-						<div className="flex gap-3 mb-3">
-							<Text c="dimmed" size="sm">
-								<Kbd>double clic</Kbd> pour éditer la ligne
-							</Text>
-							<Text c="dimmed" size="sm">
-								<Kbd>entrer</Kbd> pour valider
-							</Text>
-						</div>
 						{/*todo avoir des sous truc jor 1. a. b. c. */}
-						{etapes.map((value, index) => (
-							<EtapeSortable
-								key={value.etapeNo + value.content}
+						{items.map((value, index) => (
+							<SortableItem
+								index={index}
+								key={value.id}
 								value={value}
-								deleteEtape={deleteEtape}
-								editEtape={(newValue: string) => editEtape(newValue, index)}
+								deleteItem={() => deleteItem(value.id)}
+								editItem={(newValue: string) => editItem(newValue, value.id)}
 							/>
 						))}
 					</div>
