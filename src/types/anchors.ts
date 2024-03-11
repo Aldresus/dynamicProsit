@@ -28,6 +28,16 @@ export enum AnchorsURL {
 	PLAN_D_ACTION = "plan-d-action",
 }
 
+export enum AnchorsLabels {
+	INFORMATIONS = "Informations",
+	MOTS_CLEFS = "Mots clefs",
+	CONTRAINTES = "Contraintes",
+	PROBLEMATIQUES = "Problématiques",
+	PISTES_DE_SOLUTION = "Pistes de solution",
+	LIVRABLES = "Livrables",
+	PLAN_D_ACTION = "Plan d'action",
+}
+
 export const anchorsOrder = [
 	AnchorsKeys.INFORMATIONS,
 	AnchorsKeys.MOTS_CLEFS,
