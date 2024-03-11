@@ -20,9 +20,17 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Button, Kbd, Text, Textarea, Title } from "@mantine/core";
+import {
+	Button,
+	Kbd,
+	Text,
+	Textarea,
+	Title,
+} from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
+import classes from "@/app/Demo.module.css";
+import clsx from "clsx";
 
 export default function Contraintes() {
 	const { prosit, setProsit } = useContext(PrositContext);
@@ -72,7 +80,10 @@ export default function Contraintes() {
 					event.preventDefault();
 					addItem();
 				}}
-				className="flex flex-col sticky gap-2 z-10 top-0 p-2 pt-4 bg-white rounded-md w-full"
+				className={clsx(
+					"flex flex-col sticky gap-2 z-10 top-0 p-2 pt-4 rounded-md w-full",
+					[classes.inputOverlay],
+				)}
 			>
 				<Textarea
 					onKeyDown={hotkeys}

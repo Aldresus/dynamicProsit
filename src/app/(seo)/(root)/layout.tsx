@@ -120,65 +120,58 @@ export default function FormLayout({
 							active={pathname === "/"}
 							label="Informations"
 							leftSection={<Info size="1rem" />}
-							href={"/"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.INFORMATIONS);
+								navigate(AnchorsKeys.INFORMATIONS);
 							}}
 						/>
 						<NavLink
 							label="Mots clefs"
 							leftSection={<KeyRound size="1rem" />}
-							href={"/mots-clefs"}
 							active={pathname === "/mots-clefs"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.MOTS_CLEFS);
+								navigate(AnchorsKeys.MOTS_CLEFS);
 							}}
 						/>
 
 						<NavLink
 							label="Contraintes"
 							leftSection={<AlertCircle size="1rem" />}
-							href={"/contraintes"}
 							active={pathname === "/contraintes"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.CONTRAINTES);
+								navigate(AnchorsKeys.CONTRAINTES);
 							}}
 						/>
 
 						<NavLink
 							label="Problématiques"
 							leftSection={<HelpCircle size="1rem" />}
-							href={"/problematiques"}
 							active={pathname === "/problematiques"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.PROBLEMATIQUES);
+								navigate(AnchorsKeys.PROBLEMATIQUES);
 							}}
 						/>
 						<NavLink
 							label="Pistes de solution"
 							leftSection={<Lightbulb size="1rem" />}
-							href={"/pistes-de-solution"}
 							active={pathname === "/pistes-de-solution"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.PISTES_DE_SOLUTION);
+								navigate(AnchorsKeys.PISTES_DE_SOLUTION);
 							}}
 						/>
 						<NavLink
 							label="Livrables"
 							leftSection={<AreaChart size="1rem" />}
-							href={"/livrables"}
 							active={pathname === "/livrables"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.LIVRABLES);
+								navigate(AnchorsKeys.LIVRABLES);
 							}}
 						/>
 						<NavLink
 							label="Plan d'action"
 							leftSection={<MapPinned size="1rem" />}
-							href={"/plan-d-action"}
 							active={pathname === "/plan-d-action"}
 							onClick={() => {
-								setAnchor(AnchorsKeys.PLAN_D_ACTION);
+								navigate(AnchorsKeys.PLAN_D_ACTION);
 							}}
 						/>
 
