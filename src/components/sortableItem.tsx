@@ -73,7 +73,7 @@ export default function SortableItem({
 				<Group gap={1}>
 					<Text c="blue" className="flex items-center ">
 						{undraggable ? (
-							<Minus size={24} />
+							<Minus size={20} />
 						) : (
 							<GripVertical
 								className="cursor-move"
@@ -84,9 +84,9 @@ export default function SortableItem({
 						)}
 					</Text>
 					{index !== undefined && (
-						<Title order={3} pr="sm">
+						<Text w="2rem" fw={700} pr="sm" size="lg">
 							{index + 1}.
-						</Title>
+						</Text>
 					)}
 				</Group>
 				<form
@@ -97,7 +97,6 @@ export default function SortableItem({
 						editItem(editValue);
 					}}
 				>
-					{/* <Text  className="flex"> */}
 					<Textarea
 						fw="500"
 						variant="unstyled"
@@ -111,7 +110,6 @@ export default function SortableItem({
 							input: "p-1 m-0 text-base leading-1",
 							root: "p-0 m-0",
 						}}
-						// biome-ignore lint/a11y/noAutofocus: autofocus is conditionally set
 						autoFocus={editMode}
 						value={editValue}
 						onChange={(event) => {
@@ -123,28 +121,17 @@ export default function SortableItem({
 						}}
 						onKeyDown={hotkeys}
 					/>
-					{/* </Text> */}
 				</form>
 
 				<ActionIcon
 					variant="subtle"
 					onClick={() => deleteItem(value.id)}
 					color="red"
-					className="opacity-10 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100"
+					className="opacity-30 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100"
 				>
-					<Trash size={24} />
+					<Trash size={20} />
 				</ActionIcon>
 			</div>
-			{/* <div className="flex group gap-2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100">
-				<Button
-					variant="transparent"
-					size="compact-md"
-					color="red"
-					onClick={() => deleteItem(value.id)}
-				>
-					Supprimer
-				</Button>
-			</div> */}
 		</Box>
 	);
 }

@@ -81,7 +81,11 @@ export default function Contraintes() {
 					className="flex-1"
 					autoFocus
 					w="100%"
-					label={<Title order={2}>Problématiques</Title>}
+					label={
+						<Title order={2} className="pb-3">
+							Problématiques
+						</Title>
+					}
 					placeholder="Comment trouver le voleur de fromage ?"
 					value={workingItem.content}
 					onInput={(event) => {
@@ -93,7 +97,7 @@ export default function Contraintes() {
 				/>
 				<div className="w-full flex justify-between items-start">
 					<div className="flex flex-col justify-between">
-						<Text c="dimmed">
+						<Text c="dimmed" size="sm">
 							<Kbd>double clic</Kbd> pour éditer la ligne
 						</Text>
 					</div>

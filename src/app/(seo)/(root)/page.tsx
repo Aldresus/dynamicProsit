@@ -33,10 +33,10 @@ export default function Home() {
 				e.preventDefault();
 				navigate(AnchorsKeys.MOTSCLEFS);
 			}}
-			className="h-full flex flex-col gap-9 py-3"
+			className="h-full flex flex-col gap-9 p-2 py-3 pt-7"
 		>
-			<Title order={2}>Informations</Title>
 			<div className="flex flex-col gap-2">
+				<Title order={2}>Informations</Title>
 				<TextInput
 					autoFocus
 					required

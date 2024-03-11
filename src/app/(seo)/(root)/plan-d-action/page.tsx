@@ -77,7 +77,11 @@ export default function PlanDAction() {
 					className="flex-1"
 					autoFocus
 					w="100%"
-					label={<Title order={2}>Plan d&apos;action</Title>}
+					label={
+						<Title order={2} className="pb-3">
+							Plan d&apos;action
+						</Title>
+					}
 					placeholder="Etudier le fromage"
 					value={workingItem.content}
 					onInput={(event) => {
@@ -89,7 +93,7 @@ export default function PlanDAction() {
 				/>
 				<div className="w-full flex justify-between items-start">
 					<div className="flex flex-col justify-between">
-						<Text c="dimmed">
+						<Text c="dimmed" size="sm">
 							<Kbd>double clic</Kbd> pour éditer la ligne
 						</Text>
 					</div>

@@ -93,7 +93,7 @@ export default function MotsClefs() {
 				/>
 				<div className="w-full flex justify-between items-start">
 					<div className="flex flex-col justify-between">
-						<Text c="dimmed">
+						<Text c="dimmed" size="sm">
 							<Kbd>double clic</Kbd> pour éditer la ligne
 						</Text>
 					</div>
