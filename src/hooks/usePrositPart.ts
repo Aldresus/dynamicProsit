@@ -56,11 +56,19 @@ const usePrositPart = ({ prosit, setProsit, key }: UsePrositPartProps) => {
 	};
 
 	const editItem = (newValue: string, id: string) => {
+		if (!newValue) {
+			deleteItem(id);
+			return;
+		}
 		const temp = [...items];
 		const index = findIndex(id);
 		temp[index].content = newValue;
-		//todo add checks for empty string
+
 		setValues(temp);
+		setProsit({
+			...prosit,
+			[key]: temp,
+		});
 	};
 
 	const deleteItem = (id: string) => {
