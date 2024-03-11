@@ -1,11 +1,12 @@
 "use client";
+import { AnchorsKeys } from "@/types/anchors";
 import { Prosit } from "@/types/prosit";
 import { createContext } from "react";
 
 export const defaultPrositValue: Prosit = {
 	// Provide default values
 	prositVersion: 2,
-	currentAnchor: "",
+	currentAnchor: AnchorsKeys.INFORMATIONS,
 	touched: false,
 	titre: "",
 	lien: "",
