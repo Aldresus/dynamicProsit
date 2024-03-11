@@ -5,6 +5,7 @@ import { OrderedItem } from "@/types/orderedItem";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ActionIcon, Box, Group, Text, Textarea, Title } from "@mantine/core";
+import { getHotkeyHandler } from "@mantine/hooks";
 import clsx from "clsx";
 import { GripVertical, Minus, Trash } from "lucide-react";
 import React from "react";
@@ -27,6 +28,23 @@ export default function SortableItem({
 }: SortableItemProps) {
 	const [editMode, setEditMode] = React.useState(false);
 	const [editValue, setEditValue] = React.useState(value.content);
+
+	const hotkeys = getHotkeyHandler([
+		[
+			"enter",
+			() => {
+				setEditMode(false);
+				editItem(editValue);
+			},
+		],
+		[
+			"escape",
+			() => {
+				setEditMode(false);
+				setEditValue(value.content);
+			},
+		],
+	]);
 
 	const { attributes, listeners, setNodeRef, transform, transition } =
 		useSortable({ id: value.id });
@@ -93,8 +111,8 @@ export default function SortableItem({
 							input: "p-1 m-0 text-base leading-1",
 							root: "p-0 m-0",
 						}}
-						// biome-ignore lint/a11y/noAutofocus: <explanation>
-						autoFocus
+						// biome-ignore lint/a11y/noAutofocus: autofocus is conditionally set
+						autoFocus={editMode}
 						value={editValue}
 						onChange={(event) => {
 							setEditValue(event.target.value);
@@ -103,6 +121,7 @@ export default function SortableItem({
 							setEditMode(false);
 							editItem(editValue);
 						}}
+						onKeyDown={hotkeys}
 					/>
 					{/* </Text> */}
 				</form>
