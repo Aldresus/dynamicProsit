@@ -58,7 +58,7 @@ export default function Visualisation() {
 
 	return (
 		<div className="h-full w-full flex overflow-hidden">
-			<div className="flex flex-col gap-6">
+			<div className="flex w-full flex-col gap-6">
 				<Title order={1}>Prosit : {prositState.titre}</Title>
 
 				<div className="flex gap-2 overflow-hidden">
@@ -77,7 +77,7 @@ export default function Visualisation() {
 						</div>
 					)}
 
-					<div className="flex overflow-auto">
+					<div className="flex w-full overflow-auto">
 						{Array.from({ length: numberOfViews }).map((_, index) => (
 							<>
 								{index !== 0 && prositState.touched && (
@@ -113,7 +113,7 @@ export default function Visualisation() {
 								)}
 
 								<Presentation
-									className="flex-1"
+									className="flex-1 w-full"
 									prosit={prositState}
 									key={prositState.titre + index}
 									anchor={index === 0}
