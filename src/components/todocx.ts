@@ -26,19 +26,19 @@ export const todocx = (prosit: Prosit) => {
 		// render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
 		doc.render({
 			titre: prosit.titre.trim(),
-			motsCles: prosit.motsCles,
 			contexte: prosit.contexte.trim(),
-			contraintes: prosit.contraintes,
-			problematiques: prosit.problematiques,
-			livrables: prosit.livrables,
-			generalisation: prosit.generalisation,
-			pistesDeSolutions: prosit.pistesDeSolutions,
-			planDAction: prosit.planDAction.map((etape) => etape.content.trim()),
+			generalisation: prosit.generalisation.trim(),
 			lien: prosit.lien.trim(),
 			animateur: prosit.animateur.trim(),
 			secretaire: prosit.secretaire.trim(),
 			gestionnaire: prosit.gestionnaire.trim(),
 			scribe: prosit.scribe.trim(),
+			motsCles: prosit.motsCles.map((motCle) => motCle.content.trim()),
+			contraintes: prosit.contraintes.map((contrainte) => contrainte.content.trim()),
+			problematiques: prosit.problematiques.map((problematique) => problematique.content.trim()),
+			livrables: prosit.livrables.map((livrable) => livrable.content.trim()),
+			pistesDeSolutions: prosit.pistesDeSolutions.map((pisteDeSolution) => pisteDeSolution.content.trim()),
+			planDAction: prosit.planDAction.map((etape) => etape.content.trim()),
 		});
 		const blob = doc.getZip().generate({
 			type: "blob",
