@@ -95,6 +95,10 @@ const usePrositPart = ({ prosit, setProsit, key }: UsePrositPartProps) => {
 			newItems = arrayMove(items, oldIndex, newIndex);
 
 			setValues(newItems);
+			setProsit({
+				...prosit,
+				[key]: newItems,
+			});
 		}
 	};
 
