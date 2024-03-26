@@ -1,0 +1,18 @@
+.root {
+    background-color: var(
+        --notification-color,
+        var(--mantine-primary-color-filled)
+    );
+
+    &::before {
+        background-color: var(--mantine-color-white);
+    }
+}
+
+[data-mantine-color-scheme="light"],
+[data-mantine-color-scheme="dark"] .root {
+    .description,
+    .title {
+        color: var(--mantine-color-white);
+    }
+}

@@ -20,13 +20,7 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import {
-	Button,
-	Kbd,
-	Text,
-	Textarea,
-	Title,
-} from "@mantine/core";
+import { Button, Kbd, Text, Textarea, Title } from "@mantine/core";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import React, { useContext } from "react";
 import classes from "@/app/Demo.module.css";

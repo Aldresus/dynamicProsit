@@ -1,5 +1,6 @@
 "use client";
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 import "./globals.css";
 
 import PrositContext, { defaultPrositValue } from "@/components/prositContext";
@@ -12,6 +13,7 @@ import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { AnchorsKeys } from "@/types/anchors";
+import { Notifications } from "@mantine/notifications";
 
 export default function RootLayout({
 	children,
@@ -159,6 +161,7 @@ export default function RootLayout({
 	return (
 		<body>
 			<MantineProvider defaultColorScheme="light" theme={theme}>
+				<Notifications position="top-right" zIndex={1000} />
 				<PrositContext.Provider
 					value={{ prosit, setProsit: setPrositHandler, clearProsit }}
 				>
