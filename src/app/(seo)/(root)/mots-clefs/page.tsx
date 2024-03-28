@@ -36,6 +36,7 @@ export default function MotsClefs() {
 		items,
 		setWorkingItem,
 		workingItem,
+		highlightItem
 	} = usePrositPart({
 		prosit: prosit,
 		setProsit,
@@ -132,6 +133,7 @@ export default function MotsClefs() {
 								value={value}
 								deleteItem={() => deleteItem(value.id)}
 								editItem={(newValue: string) => editItem(newValue, value.id)}
+								higlightItem={() => {highlightItem(value.id)}}
 							/>
 						))}
 					</div>

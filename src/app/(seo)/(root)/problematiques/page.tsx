@@ -36,6 +36,7 @@ export default function Contraintes() {
 		items,
 		setWorkingItem,
 		workingItem,
+		highlightItem,
 	} = usePrositPart({
 		prosit: prosit,
 		setProsit,
@@ -136,6 +137,9 @@ export default function Contraintes() {
 								value={value}
 								deleteItem={() => deleteItem(value.id)}
 								editItem={(newValue: string) => editItem(newValue, value.id)}
+								higlightItem={() => {
+									highlightItem(value.id);
+								}}
 							/>
 						))}
 					</div>

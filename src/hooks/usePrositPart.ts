@@ -98,6 +98,18 @@ const usePrositPart = ({ prosit, setProsit, key }: UsePrositPartProps) => {
 		}
 	};
 
+	const highlightItem = (id: string, higlighted?: boolean) => {
+		const temp = [...items];
+		const index = findIndex(id);
+
+		temp[index].higlighted = higlighted ?? !temp[index].higlighted;
+		setValues(temp);
+		setProsit({
+			...prosit,
+			[key]: temp,
+		});
+	};
+
 	return {
 		workingItem,
 		setWorkingItem,
@@ -106,6 +118,7 @@ const usePrositPart = ({ prosit, setProsit, key }: UsePrositPartProps) => {
 		editItem,
 		deleteItem,
 		handleDragEnd,
+		highlightItem,
 	};
 };
 

@@ -4,10 +4,18 @@ import classes from "@/app/Demo.module.css";
 import { OrderedItem } from "@/types/orderedItem";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ActionIcon, Box, Group, Text, Textarea, Title } from "@mantine/core";
+import {
+	ActionIcon,
+	Box,
+	Group,
+	Highlight,
+	Text,
+	Textarea,
+	Title,
+} from "@mantine/core";
 import { getHotkeyHandler } from "@mantine/hooks";
 import clsx from "clsx";
-import { GripVertical, Minus, Trash } from "lucide-react";
+import { GripVertical, Highlighter, Minus, Trash } from "lucide-react";
 import React from "react";
 
 interface SortableItemProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,6 +23,7 @@ interface SortableItemProps extends React.HTMLAttributes<HTMLDivElement> {
 	index?: number;
 	editItem: (newValue: string) => void;
 	deleteItem: (id: string) => void;
+	higlightItem: (id: string) => void;
 	undraggable?: boolean;
 }
 
@@ -23,6 +32,7 @@ export default function SortableItem({
 	editItem,
 	value,
 	index,
+	higlightItem,
 	undraggable = false,
 	...props
 }: SortableItemProps) {
@@ -88,6 +98,14 @@ export default function SortableItem({
 							{index + 1}.
 						</Text>
 					)}
+					<ActionIcon
+						variant="transparent"
+						onClick={() => higlightItem(value.id)}
+						color="yellow"
+						className="opacity-30 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-100"
+					>
+						<Highlighter size={20} />
+					</ActionIcon>
 				</Group>
 				<form
 					className="flex-1"
@@ -107,7 +125,9 @@ export default function SortableItem({
 							[classes.bgInput]: editMode,
 						})}
 						classNames={{
-							input: "p-1 m-0 text-base leading-1",
+							input: clsx("p-1 m-0 leading-1 text-base", {
+								"font-bold bg-yellow-400 bg-opacity-70": value.higlighted,
+							}),
 							root: "p-0 m-0",
 						}}
 						autoFocus={editMode}
