@@ -53,22 +53,33 @@ d'étape sont en `Alt+Shift`, donc ils sont liés deux fois : globalement via
 
 Si le design system laissait passer Alt, la seconde liaison disparaîtrait.
 
-## Repli des URL inconnues (dépend de l'hébergeur)
+## Déploiement Vercel
 
-Le build écrit un `index.html` par route, donc les huit URL réelles marchent en
-rafraîchissement direct sur n'importe quel hébergeur statique, **sans règle de
-réécriture**. Seules les URL inconnues (`/nimportequoi`) ont besoin d'un repli
-pour atteindre le 404 de l'application plutôt que celui de l'hébergeur :
+`vercel.json` porte la configuration : pas de framework (le projet était réglé
+sur Next.js), sortie dans `dist`, install et build par bun.
 
-- **Netlify** — `public/_redirects` : `/* /index.html 200`
-- **Vercel** — `vercel.json` : `{"rewrites":[{"source":"/(.*)","destination":"/index.html"}]}`
-- **nginx** — `try_files $uri $uri/ /index.html;`
-- **Caddy / GitHub Pages** — `try_files` équivalent, ou une copie de
-  `index.html` en `404.html`
+La règle de réécriture renvoie tout vers `/index.html`. Elle ne casse pas les
+huit pages prérendues : Vercel sert d'abord les fichiers réels et n'applique les
+`rewrites` qu'ensuite, donc `/livrables` sert bien `dist/livrables/index.html`
+et seules les URL inconnues retombent sur le 404 de l'application.
 
-Rien n'a été ajouté au dépôt : l'hébergeur actuel n'est pas connu, et poser le
-mauvais fichier est pire que de ne rien poser. Une ligne à ajouter le jour du
-déploiement.
+### Le jeton GitHub Packages
+
+`@aldresus/design-system` vit sur GitHub Packages, donc `bun install` a besoin
+de `GITHUB_TOKEN` **à l'installation**, pas seulement au build. Sans lui, le
+déploiement échoue sur l'install avec un 401.
+
+À poser une fois, dans les trois environnements :
+
+```bash
+vercel env add GITHUB_TOKEN production
+vercel env add GITHUB_TOKEN preview
+vercel env add GITHUB_TOKEN development
+```
+
+Un token classique avec le seul scope `read:packages` suffit. Préférer un token
+dédié au déploiement plutôt qu'un token personnel : il expire sans prévenir et
+son périmètre est bien plus large que nécessaire.
 
 ## Carte sociale
 

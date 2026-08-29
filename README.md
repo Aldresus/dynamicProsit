@@ -64,8 +64,11 @@ l'utilisateur — donc chaque champ est vérifié au chargement.
 ## Déploiement
 
 `bun run build` produit un `dist/` entièrement statique, avec un `index.html`
-par route. N'importe quel hébergeur de fichiers convient ; voir `NOTES.md` pour
-la règle de repli des URL inconnues selon l'hébergeur.
+par route. `vercel.json` porte la configuration de déploiement.
+
+Le déploiement a besoin de `GITHUB_TOKEN` **à l'installation** — le design
+system est sur GitHub Packages — sinon `bun install` échoue en 401. Voir
+`NOTES.md`.
 
 ## Notes
 
