@@ -7,7 +7,6 @@ import {
 	Nav,
 	NavGroup,
 	NavItem,
-	Tooltip,
 	useShortcut,
 	useToast,
 } from "@aldresus/design-system";
@@ -23,6 +22,7 @@ import {
 	FileDown,
 	MonitorPlay,
 	MoonStar,
+	PanelRight,
 	Sun,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -105,87 +105,97 @@ function Shell() {
 
 	return (
 		<AppShell>
-			<AppShellSidebar>
-				<div className="flex h-full flex-col gap-6 p-4">
-					<h1 className="hcds-subheading leading-tight">
-						Les prosits là,
-						<span className="block font-normal text-fg-muted">super</span>
-					</h1>
+			{/*
+				AppShellSidebar is already a padded, scrolling flex column — an inner
+				wrapper with its own padding and `h-full` made the content taller than
+				the column it sat in, which is what put a scrollbar on the nav.
+			*/}
+			<AppShellSidebar className="gap-4 overflow-y-hidden">
+				<h1 className="hcds-subheading px-1 leading-tight">
+					Les prosits là,
+					<span className="block font-normal text-fg-muted">super</span>
+				</h1>
 
-					<Nav className="flex-1">
-						<NavGroup>
-							{STEPS.map((step) => (
-								<NavItem
-									key={step.label}
-									icon={<step.icon className="size-4" />}
-									active={slug === step.slug}
-									render={<Link {...linkProps(step)} />}
-								>
-									{step.label}
-								</NavItem>
-							))}
-						</NavGroup>
-					</Nav>
+				{/* The nav takes the squeeze so the actions below stay reachable; the
+				    column itself no longer scrolls, which used to push Exporter off
+				    the bottom on a short window. */}
+				<Nav className="hcds-scroll min-h-0 flex-1 overflow-y-auto">
+					<NavGroup>
+						{STEPS.map((step) => (
+							<NavItem
+								key={step.label}
+								icon={<step.icon className="size-4" />}
+								active={slug === step.slug}
+								render={<Link {...linkProps(step)} />}
+							>
+								{step.label}
+							</NavItem>
+						))}
+					</NavGroup>
+				</Nav>
 
-					<div className="flex flex-col gap-2">
-						<div className="flex gap-2">
-							<Button
-								className="flex-1"
-								onClick={exportDocument}
-								loading={exporting}
-							>
-								<FileDown className="size-4" />
-								Exporter en .docx
-							</Button>
-							<Tooltip content="Ouvrir la présentation">
-								<Button
-									variant="outline"
-									aria-label="Ouvrir la présentation"
-									onClick={openPresentation}
-								>
-									<MonitorPlay className="size-4" />
-								</Button>
-							</Tooltip>
-						</div>
-						<div className="flex gap-2">
-							<Button
-								className="flex-1"
-								variant="outline"
-								onClick={() => setHelpOpen((open) => !open)}
-							>
-								{helpOpen ? "Masquer" : "Afficher"} l'aide
-							</Button>
-							<Button
-								variant="outline"
-								onClick={toggle}
-								aria-label={`Passer en thème ${dark ? "clair" : "sombre"}`}
-							>
-								{dark ? (
-									<Sun className="size-4" />
-								) : (
-									<MoonStar className="size-4" />
-								)}
-							</Button>
-						</div>
-						<Button variant="ghost" onClick={() => setResetOpen(true)}>
-							Réinitialiser le prosit
+				<div className="flex flex-col gap-2">
+					<Button onClick={exportDocument} loading={exporting}>
+						<FileDown className="size-4" />
+						Exporter en .docx
+					</Button>
+					<Button variant="outline" onClick={openPresentation}>
+						<MonitorPlay className="size-4" />
+						Présentation
+					</Button>
+					<div className="flex gap-2">
+						<Button
+							className="flex-1"
+							variant="ghost"
+							onClick={() => setHelpOpen((open) => !open)}
+						>
+							<PanelRight className="size-4" />
+							Aide
+						</Button>
+						<Button
+							className="flex-1"
+							variant="ghost"
+							onClick={toggle}
+							aria-label={`Passer en thème ${dark ? "clair" : "sombre"}`}
+						>
+							{dark ? (
+								<Sun className="size-4" />
+							) : (
+								<MoonStar className="size-4" />
+							)}
+							Thème
 						</Button>
 					</div>
+					<Button
+						variant="ghost"
+						className="text-danger"
+						onClick={() => setResetOpen(true)}
+					>
+						Réinitialiser le prosit
+					</Button>
 				</div>
 			</AppShellSidebar>
 
-			<AppShellMain padding="lg" contained>
-				<div className="flex items-center justify-between">
-					<Button variant="ghost" onClick={() => goToStep(previous)}>
-						<ArrowLeft className="size-4" />
-						{previous.label}
-					</Button>
-					<Button variant="ghost" onClick={() => goToStep(next)}>
-						{next.label}
-						<ArrowRight className="size-4" />
-					</Button>
+			<AppShellMain padding="lg">
+				{/*
+					Capped at the reading measure rather than `contained`, which stops at
+					the 80rem page width — a 1091px text input is not a text input anyone
+					wants. The prev/next row sits in the same column so it lines up with
+					the fields instead of straddling the empty space beside them.
+				*/}
+				<div className="mx-auto flex w-full max-w-measure flex-col">
+					<div className="flex items-center justify-between">
+						<Button variant="ghost" onClick={() => goToStep(previous)}>
+							<ArrowLeft className="size-4" />
+							{previous.label}
+						</Button>
+						<Button variant="ghost" onClick={() => goToStep(next)}>
+							{next.label}
+							<ArrowRight className="size-4" />
+						</Button>
+					</div>
+					<Outlet />
 				</div>
-				<Outlet />
 			</AppShellMain>
 
 			{helpOpen && (

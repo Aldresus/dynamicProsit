@@ -37,6 +37,10 @@
 	--color-danger-hover: var(--hcds-danger-hover);
 	--color-danger-subtle: var(--hcds-danger-subtle);
 
+	/* `max-w-measure` — the reading width, 65ch. Lives in Tailwind's container
+	   namespace, which the design system's own build does not export either. */
+	--container-measure: var(--hcds-measure);
+
 	--radius-control: var(--hcds-radius-control);
 	--radius-panel: var(--hcds-radius-panel);
 
