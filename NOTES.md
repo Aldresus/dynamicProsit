@@ -88,3 +88,18 @@ qu'une, référencée par les deux jeux de balises.
 « Exporter ». Ils sont chargés à ce moment-là (`import()` dans
 `src/domain/docx.ts`), ce qui ramène le premier chargement à ~27 kB gzip.
 À surveiller si l'export devient utilisé au démarrage.
+
+## Fenêtre de présentation : non vérifiable dans l'aperçu
+
+Le bouton « Présentation » appelle `window.open(url, "prosit-presentation",
+"popup=yes,width=1280,height=800")` — une vraie seconde fenêtre, à poser sur le
+projecteur, pas un onglet.
+
+**Ce comportement n'a pas pu être vérifié ici.** Le panneau d'aperçu utilisé
+pendant la réécriture n'implémente pas les fenêtres multiples : il a navigué
+dans l'onglet courant au lieu d'en ouvrir une seconde. Dans un vrai navigateur,
+des `features` non vides forcent une fenêtre popup. La logique autour a été
+vérifiée avec deux onglets réels (synchronisation, surlignage, demande d'état).
+
+À confirmer d'un clic dans Chrome/Firefox. Si un navigateur ouvre malgré tout un
+onglet, tout continue de fonctionner — c'est juste moins pratique à projeter.

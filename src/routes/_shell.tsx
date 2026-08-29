@@ -25,11 +25,11 @@ import {
 	PanelRight,
 	Sun,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HelpAside } from "../components/help-aside";
 import { ResetModal } from "../components/reset-modal";
 import { exportDocx } from "../domain/docx";
-import { publish } from "../domain/sync";
+import { onStateRequest, publishState } from "../domain/sync";
 import { useProsit } from "../prosit-store";
 import { STEPS, linkProps, nextStep, previousStep } from "../sections";
 import { useGoToStep } from "../shortcuts";
@@ -54,15 +54,40 @@ function Shell() {
 	const [helpOpen, setHelpOpen] = useState(false);
 	const [resetOpen, setResetOpen] = useState(false);
 	const [exporting, setExporting] = useState(false);
+	const presentationWindow = useRef<Window | null>(null);
 	const toast = useToast();
 
-	// Reusing the same window name focuses the existing one instead of stacking popups.
+	/**
+	 * A real second window, for the projector — not a tab. Reusing one window
+	 * name means a second click focuses what is already open rather than
+	 * stacking popups, and a blocked popup says so instead of doing nothing
+	 * visible, which is the failure people report as "the button is broken".
+	 */
 	const openPresentation = () => {
-		window.open(
+		const existing = presentationWindow.current;
+		if (existing && !existing.closed) {
+			existing.focus();
+			return;
+		}
+
+		const opened = window.open(
 			"/presentation",
 			"prosit-presentation",
 			"popup=yes,width=1280,height=800",
 		);
+
+		if (!opened) {
+			toast.add({
+				type: "warning",
+				title: "La fenêtre a été bloquée",
+				description:
+					"Autorisez les fenêtres pop-up pour ce site, ou ouvrez /presentation vous-même.",
+			});
+			return;
+		}
+
+		presentationWindow.current = opened;
+		opened.focus();
 	};
 
 	const exportDocument = async () => {
@@ -84,8 +109,15 @@ function Shell() {
 
 	// The présentation window is a separate document; this is its only feed.
 	useEffect(() => {
-		publish({ prosit, section: slug });
+		publishState({ prosit, section: slug });
 	}, [prosit, slug]);
+
+	// A window opened mid-prosit asks where we are; re-subscribed per change so
+	// the answer is never a stale closure.
+	useEffect(
+		() => onStateRequest(() => publishState({ prosit, section: slug })),
+		[prosit, slug],
+	);
 
 	useShortcut("Mod+Enter", () => goToStep(nextStep(slug)));
 	useShortcut("Mod+Shift+Enter", () => goToStep(previousStep(slug)));

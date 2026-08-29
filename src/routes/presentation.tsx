@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { PresentationView, blockId } from "../components/presentation-view";
 import { type Prosit, isEmpty } from "../domain/prosit";
 import { load } from "../domain/storage";
-import { subscribe } from "../domain/sync";
+import { onState, requestState } from "../domain/sync";
 import { metaTags, pageFor } from "../seo";
 
 export const Route = createFileRoute("/presentation")({
@@ -22,14 +22,15 @@ function Presentation() {
 	const [section, setSection] = useState<string | null>(null);
 	const [split, setSplit] = useState(false);
 
-	useEffect(
-		() =>
-			subscribe((message) => {
-				setProsit(message.prosit);
-				setSection(message.section);
-			}),
-		[],
-	);
+	useEffect(() => {
+		const stop = onState((state) => {
+			setProsit(state.prosit);
+			setSection(state.section);
+		});
+		// localStorage gave us the document but not the step the form is on.
+		requestState();
+		return stop;
+	}, []);
 
 	// Follow the form: bring the step being edited into view.
 	useEffect(() => {
