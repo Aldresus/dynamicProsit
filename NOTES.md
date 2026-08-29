@@ -114,3 +114,22 @@ vérifiée avec deux onglets réels (synchronisation, surlignage, demande d'éta
 
 À confirmer d'un clic dans Chrome/Firefox. Si un navigateur ouvre malgré tout un
 onglet, tout continue de fonctionner — c'est juste moins pratique à projeter.
+
+## Annuler : un bouton, pas un toast ni Ctrl+Z
+
+Deux impasses ont conduit au bouton dans la barre latérale.
+
+**Le toast ne peut pas porter d'action.** Base UI accepte `actionProps` et
+exporte `Toast.Action`, mais le `ToastList` du design system ne rend que le
+titre, la description et la fermeture. Un `actionProps` passé à `toast.add()`
+n'aboutit nulle part. C'est pourtant là que « Annuler » devrait vivre, juste
+après la suppression qu'il annule.
+
+**`Mod+Z` casserait l'annulation native.** `useShortcut` appelle
+`preventDefault()` dès que la combinaison correspond, y compris dans un champ de
+saisie. Le lier reviendrait à supprimer le Ctrl+Z du navigateur dans tous les
+champs du formulaire — un échange perdant.
+
+L'historique ne retient que les changements structurels (ajout, édition,
+suppression, réordonnancement, réinitialisation), pas la frappe : vingt entrées
+consommées par vingt caractères n'auraient rien annulé d'utile.

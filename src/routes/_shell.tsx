@@ -24,6 +24,7 @@ import {
 	MoonStar,
 	PanelRight,
 	Sun,
+	Undo2,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { HelpAside } from "../components/help-aside";
@@ -46,7 +47,7 @@ const slugOf = (pathname: string): string | null => {
 };
 
 function Shell() {
-	const { prosit, reset } = useProsit();
+	const { prosit, reset, undo, canUndo } = useProsit();
 	const { pathname } = useLocation();
 	const slug = slugOf(pathname);
 	const goToStep = useGoToStep();
@@ -112,12 +113,14 @@ function Shell() {
 		publishState({ prosit, section: slug });
 	}, [prosit, slug]);
 
-	// A window opened mid-prosit asks where we are; re-subscribed per change so
-	// the answer is never a stale closure.
-	useEffect(
-		() => onStateRequest(() => publishState({ prosit, section: slug })),
-		[prosit, slug],
-	);
+	/*
+	 * Answering state requests must not re-subscribe as the document changes:
+	 * that opened and closed a BroadcastChannel on every keystroke. The ref
+	 * carries the latest value into a listener registered once.
+	 */
+	const latest = useRef({ prosit, section: slug });
+	latest.current = { prosit, section: slug };
+	useEffect(() => onStateRequest(() => publishState(latest.current)), []);
 
 	useShortcut("Mod+Enter", () => goToStep(nextStep(slug)));
 	useShortcut("Mod+Shift+Enter", () => goToStep(previousStep(slug)));
@@ -198,6 +201,16 @@ function Shell() {
 							Thème
 						</Button>
 					</div>
+					{/*
+						Undo belongs in the toast that reports the deletion, but the
+						design system's ToastList renders only title, description and
+						close — no Toast.Action — so actionProps would go nowhere.
+						A visible control it is.
+					*/}
+					<Button variant="ghost" onClick={undo} disabled={!canUndo}>
+						<Undo2 className="size-4" />
+						Annuler
+					</Button>
 					<Button
 						variant="ghost"
 						className="text-danger"

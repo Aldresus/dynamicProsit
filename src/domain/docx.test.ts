@@ -96,3 +96,30 @@ describe("docx export", () => {
 		expect(documentName(emptyProsit())).toBe("PA-prosit.docx");
 	});
 });
+
+describe("documentName", () => {
+	const named = (titre: string) => documentName({ ...emptyProsit(), titre });
+
+	it("strips characters a filesystem would reject", () => {
+		expect(named("Prosit 1/2")).toBe("PA-Prosit_12.docx");
+		// Note the doubled backslash: a literal one, not an escape.
+		expect(named('a\\b:c*d?e"f<g>h|i')).toBe("PA-abcdefghi.docx");
+		// A real control character is stripped along with it.
+		expect(named("a\bb")).toBe("PA-ab.docx");
+	});
+
+	it("collapses whitespace and keeps accents", () => {
+		expect(named("  Oh non   mon fromage ")).toBe("PA-Oh_non_mon_fromage.docx");
+		// The em dash is not in the allowlist; accents are.
+		expect(named("Prosit — édition")).toBe("PA-Prosit_édition.docx");
+	});
+
+	it("falls back when the title has nothing usable in it", () => {
+		expect(named("   ")).toBe("PA-prosit.docx");
+		expect(named("///")).toBe("PA-prosit.docx");
+	});
+
+	it("does not produce a hidden file", () => {
+		expect(named("...caché")).toBe("PA-caché.docx");
+	});
+});

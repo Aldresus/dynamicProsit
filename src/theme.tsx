@@ -1,5 +1,7 @@
 import { type ColorScheme, useColorScheme } from "@aldresus/design-system";
-import { type ReactNode, createContext, use } from "react";
+import { type ReactNode, createContext, use, useEffect } from "react";
+
+const STORAGE_KEY = "dynamicprosit-theme";
 
 interface Theme {
 	scheme: ColorScheme;
@@ -15,7 +17,33 @@ const Context = createContext<Theme | null>(null);
  * whatever the user chose.
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-	const { scheme, toggle } = useColorScheme("dynamicprosit-theme");
+	const { scheme, setScheme, clear } = useColorScheme(STORAGE_KEY);
+
+	/**
+	 * Each window keeps its own copy of the choice and only reads storage on
+	 * mount, so switching theme in the form left the présentation window on the
+	 * old one — permanently, and on the screen the room is looking at.
+	 *
+	 * `storage` fires in *other* windows when localStorage changes, which is
+	 * exactly this case. (The old build's cross-window bug was misusing this
+	 * same event: it hand-dispatched a bare `Event`, which carries no `key`.)
+	 */
+	useEffect(() => {
+		const onStorage = (event: StorageEvent) => {
+			if (event.key !== STORAGE_KEY) return;
+			const next = event.newValue;
+			if (next === null) clear();
+			// Guarded: writing back an identical value would bounce the event
+			// between two open windows forever.
+			else if (next !== scheme && (next === "dark" || next === "light"))
+				setScheme(next);
+		};
+		window.addEventListener("storage", onStorage);
+		return () => window.removeEventListener("storage", onStorage);
+	}, [scheme, setScheme, clear]);
+
+	const toggle = () => setScheme(scheme === "dark" ? "light" : "dark");
+
 	return <Context value={{ scheme, toggle }}>{children}</Context>;
 }
 

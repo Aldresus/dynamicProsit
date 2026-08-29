@@ -59,6 +59,37 @@ function Section() {
 		setDraft("");
 	};
 
+	/**
+	 * dnd-kit announces "Picked up draggable item <id>" by default — English, in
+	 * a French app, and reading out a UUID since ids stopped being derived from
+	 * the content. Anyone on a screen reader got a string of hex.
+	 */
+	const labelOf = (id: string | number) =>
+		items.find((item) => item.id === String(id))?.content ?? "cet élément";
+	const positionOf = (id: string | number) =>
+		items.findIndex((item) => item.id === String(id)) + 1;
+
+	const accessibility = {
+		screenReaderInstructions: {
+			draggable:
+				"Appuyez sur la barre d'espace pour saisir l'élément, les flèches pour le déplacer, la barre d'espace pour le déposer, Échap pour annuler.",
+		},
+		announcements: {
+			onDragStart: ({ active }: { active: { id: string | number } }) =>
+				`${labelOf(active.id)} saisi, position ${positionOf(active.id)} sur ${items.length}.`,
+			onDragOver: ({ over }: { over: { id: string | number } | null }) =>
+				over
+					? `Déplacé en position ${positionOf(over.id)} sur ${items.length}.`
+					: undefined,
+			onDragEnd: ({ over }: { over: { id: string | number } | null }) =>
+				over
+					? `Déposé en position ${positionOf(over.id)} sur ${items.length}.`
+					: "Déposé.",
+			onDragCancel: ({ active }: { active: { id: string | number } }) =>
+				`Déplacement de ${labelOf(active.id)} annulé.`,
+		},
+	};
+
 	const onDragEnd = ({ active, over }: DragEndEvent) => {
 		if (over)
 			setList(section.field, moveItem(items, `${active.id}`, `${over.id}`));
@@ -110,6 +141,7 @@ function Section() {
 				sensors={sensors}
 				collisionDetection={closestCenter}
 				onDragEnd={onDragEnd}
+				accessibility={accessibility}
 			>
 				<SortableContext
 					items={items.map((item) => item.id)}

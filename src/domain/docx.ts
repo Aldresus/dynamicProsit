@@ -39,8 +39,24 @@ export const templateData = (
 	planDAction: contents(prosit, "planDAction"),
 });
 
+/**
+ * An allowlist, not a list of forbidden characters: letters (accents included),
+ * digits, combining marks, spaces and `._-`. Everything else goes — path
+ * separators, the Windows-reserved set, control characters, emoji. Naming what
+ * is safe is shorter than naming everything that is not, and it cannot be
+ * outflanked by a character nobody thought of.
+ */
+const UNSAFE_IN_FILENAME = /[^\p{L}\p{N}\p{M} ._-]/gu;
+
 export const documentName = (prosit: Prosit): string => {
-	const titre = prosit.titre.trim().replaceAll(" ", "_");
+	// A prosit titled "Prosit 1/2" was producing `PA-Prosit_1/2.docx`.
+	const titre = prosit.titre
+		.trim()
+		.replace(UNSAFE_IN_FILENAME, "")
+		.replace(/\s+/g, "_")
+		// A leading dot would make it a hidden file on unix.
+		.replace(/^\.+/, "")
+		.slice(0, 80);
 	return `PA-${titre || "prosit"}.docx`;
 };
 
