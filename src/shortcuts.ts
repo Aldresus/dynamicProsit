@@ -1,7 +1,7 @@
 import { matchesShortcut, useIsMac } from "@aldresus/design-system";
 import { useNavigate } from "@tanstack/react-router";
 import type { KeyboardEvent } from "react";
-import { STEPS, type Step, pathOf } from "./sections";
+import { STEPS, type Step, linkProps } from "./sections";
 
 /**
  * `useShortcut` ignores a combo fired from inside an input unless it carries
@@ -23,11 +23,11 @@ export function useStepKeyDown(): (event: KeyboardEvent) => void {
 		);
 		if (!step) return;
 		event.preventDefault();
-		navigate({ to: pathOf(step) });
+		navigate(linkProps(step));
 	};
 }
 
 export const useGoToStep = (): ((step: Step) => void) => {
 	const navigate = useNavigate();
-	return (step: Step) => navigate({ to: pathOf(step) });
+	return (step: Step) => navigate(linkProps(step));
 };

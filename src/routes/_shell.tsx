@@ -9,6 +9,7 @@ import {
 	NavItem,
 	Tooltip,
 	useShortcut,
+	useToast,
 } from "@aldresus/design-system";
 import {
 	Link,
@@ -27,9 +28,10 @@ import {
 import { useEffect, useState } from "react";
 import { HelpAside } from "../components/help-aside";
 import { ResetModal } from "../components/reset-modal";
+import { exportDocx } from "../domain/docx";
 import { publish } from "../domain/sync";
 import { useProsit } from "../prosit-store";
-import { STEPS, nextStep, pathOf, previousStep } from "../sections";
+import { STEPS, linkProps, nextStep, previousStep } from "../sections";
 import { useGoToStep } from "../shortcuts";
 import { useTheme } from "../theme";
 
@@ -51,6 +53,25 @@ function Shell() {
 	const { scheme, toggle } = useTheme();
 	const [helpOpen, setHelpOpen] = useState(false);
 	const [resetOpen, setResetOpen] = useState(false);
+	const [exporting, setExporting] = useState(false);
+	const toast = useToast();
+
+	const exportDocument = async () => {
+		setExporting(true);
+		try {
+			await exportDocx(prosit);
+			toast.add({ type: "success", title: "Prosit exporté" });
+		} catch (error) {
+			// A broken template or a blocked download is the user's problem to see.
+			toast.add({
+				type: "danger",
+				title: "L'export a échoué",
+				description: error instanceof Error ? error.message : undefined,
+			});
+		} finally {
+			setExporting(false);
+		}
+	};
 
 	// The présentation window is a separate document; this is its only feed.
 	useEffect(() => {
@@ -59,6 +80,7 @@ function Shell() {
 
 	useShortcut("Mod+Enter", () => goToStep(nextStep(slug)));
 	useShortcut("Mod+Shift+Enter", () => goToStep(previousStep(slug)));
+	useShortcut("Mod+S", exportDocument);
 	useShortcut("Mod+Alt+L", toggle);
 	useShortcut("F1", () => setHelpOpen((open) => !open));
 
@@ -88,7 +110,7 @@ function Shell() {
 									key={step.label}
 									icon={<step.icon className="size-4" />}
 									active={slug === step.slug}
-									render={<Link to={pathOf(step)} />}
+									render={<Link {...linkProps(step)} />}
 								>
 									{step.label}
 								</NavItem>
@@ -98,7 +120,11 @@ function Shell() {
 
 					<div className="flex flex-col gap-2">
 						<div className="flex gap-2">
-							<Button className="flex-1" disabled>
+							<Button
+								className="flex-1"
+								onClick={exportDocument}
+								loading={exporting}
+							>
 								<FileDown className="size-4" />
 								Exporter en .docx
 							</Button>

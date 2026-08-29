@@ -117,6 +117,17 @@ export const findSection = (slug: string): ListSection | undefined =>
 export const pathOf = (step: Step): string =>
 	step.slug === null ? "/" : `/${step.slug}`;
 
+/**
+ * Router target for a step. The six list steps all live under one `/$section`
+ * route, so they are addressed by param rather than by path — and TanStack only
+ * type-checks `to` when it is a literal, so building the object here is what
+ * keeps a typo a compile error instead of a blank page.
+ */
+export const linkProps = (step: Step) =>
+	step.slug === null
+		? ({ to: "/" } as const)
+		: ({ to: "/$section", params: { section: step.slug } } as const);
+
 const indexOf = (slug: string | null): number =>
 	STEPS.findIndex((step) => step.slug === slug);
 
