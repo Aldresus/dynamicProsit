@@ -1,4 +1,10 @@
-import { Button, Card, CardContent, CardTitle, List } from "@aldresus/design-system";
+import {
+	Button,
+	Card,
+	CardContent,
+	CardTitle,
+	List,
+} from "@aldresus/design-system";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({

@@ -1,39 +1,40 @@
 {
-  "name": "dynamicprosit",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "lint": "biome check ."
-  },
-  "dependencies": {
-    "@aldresus/design-system": "^2.1.0",
-    "@dnd-kit/core": "^6.3.1",
-    "@dnd-kit/sortable": "^10.0.0",
-    "@dnd-kit/utilities": "^3.2.2",
-    "@tanstack/react-router": "^1.95.0",
-    "docxtemplater": "^3.50.0",
-    "file-saver": "^2.0.5",
-    "lucide-react": "^1.34.0",
-    "pizzip": "^3.1.7",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@tailwindcss/vite": "^4.3.3",
-    "@tanstack/router-plugin": "^1.95.0",
-    "@types/file-saver": "^2.0.7",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "tailwindcss": "^4.3.3",
-    "typescript": "^5.7.0",
-    "vite": "^6.0.0",
-    "vitest": "^2.1.0"
-  }
+	"name": "dynamicprosit",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc --noEmit && vite build",
+		"preview": "vite preview",
+		"test": "vitest run",
+		"lint": "biome check ."
+	},
+	"dependencies": {
+		"@aldresus/design-system": "^2.1.0",
+		"@dnd-kit/core": "^6.3.1",
+		"@dnd-kit/sortable": "^10.0.0",
+		"@dnd-kit/utilities": "^3.2.2",
+		"@tanstack/react-router": "^1.95.0",
+		"docxtemplater": "^3.50.0",
+		"file-saver": "^2.0.5",
+		"lucide-react": "^1.34.0",
+		"pizzip": "^3.1.7",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@tailwindcss/vite": "^4.3.3",
+		"@tanstack/router-plugin": "^1.95.0",
+		"@types/file-saver": "^2.0.7",
+		"@types/react": "^19.0.0",
+		"@types/react-dom": "^19.0.0",
+		"@vitejs/plugin-react": "^4.3.4",
+		"tailwindcss": "^4.3.3",
+		"typescript": "^5.7.0",
+		"vite": "^6.0.0",
+		"vitest": "^2.1.0"
+	},
+	"trustedDependencies": ["@biomejs/biome"]
 }
