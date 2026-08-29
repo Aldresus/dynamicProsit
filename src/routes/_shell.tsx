@@ -56,6 +56,15 @@ function Shell() {
 	const [exporting, setExporting] = useState(false);
 	const toast = useToast();
 
+	// Reusing the same window name focuses the existing one instead of stacking popups.
+	const openPresentation = () => {
+		window.open(
+			"/presentation",
+			"prosit-presentation",
+			"popup=yes,width=1280,height=800",
+		);
+	};
+
 	const exportDocument = async () => {
 		setExporting(true);
 		try {
@@ -132,7 +141,7 @@ function Shell() {
 								<Button
 									variant="outline"
 									aria-label="Ouvrir la présentation"
-									disabled
+									onClick={openPresentation}
 								>
 									<MonitorPlay className="size-4" />
 								</Button>
