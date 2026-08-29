@@ -19,6 +19,7 @@ import { SortableItem } from "../../components/sortable-item";
 import { addItem, editItem, moveItem, removeItem } from "../../domain/items";
 import { useProsit } from "../../prosit-store";
 import { findSection } from "../../sections";
+import { metaTags, pageFor } from "../../seo";
 import { useStepKeyDown } from "../../shortcuts";
 
 export const Route = createFileRoute("/_shell/$section")({
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/_shell/$section")({
 	loader: ({ params }) => {
 		if (!findSection(params.section)) throw notFound();
 	},
+	head: ({ params }) => ({ meta: metaTags(pageFor(`/${params.section}`)) }),
 	component: Section,
 });
 

@@ -52,3 +52,39 @@ d'étape sont en `Alt+Shift`, donc ils sont liés deux fois : globalement via
 `useShortcut`, et sur les champs via `matchesShortcut` (`src/shortcuts.ts`).
 
 Si le design system laissait passer Alt, la seconde liaison disparaîtrait.
+
+## Repli des URL inconnues (dépend de l'hébergeur)
+
+Le build écrit un `index.html` par route, donc les huit URL réelles marchent en
+rafraîchissement direct sur n'importe quel hébergeur statique, **sans règle de
+réécriture**. Seules les URL inconnues (`/nimportequoi`) ont besoin d'un repli
+pour atteindre le 404 de l'application plutôt que celui de l'hébergeur :
+
+- **Netlify** — `public/_redirects` : `/* /index.html 200`
+- **Vercel** — `vercel.json` : `{"rewrites":[{"source":"/(.*)","destination":"/index.html"}]}`
+- **nginx** — `try_files $uri $uri/ /index.html;`
+- **Caddy / GitHub Pages** — `try_files` équivalent, ou une copie de
+  `index.html` en `404.html`
+
+Rien n'a été ajouté au dépôt : l'hébergeur actuel n'est pas connu, et poser le
+mauvais fichier est pire que de ne rien poser. Une ligne à ajouter le jour du
+déploiement.
+
+## Carte sociale
+
+`public/og.png` est générée par `bun run og` et **commitée**. Le design system
+ne livre que du woff2, que resvg ne sait pas lire, donc le nom est composé en
+Georgia — la police que le paquet désigne lui-même comme substitut de Bitter.
+La carte n'est donc pas au pixel près ce que serait la même chose rendue par le
+navigateur, mais elle reste dans la famille.
+
+L'ancienne version générait deux images distinctes (`opengraph-image` et
+`twitter-image`) par `next/og`, au contenu quasi identique. Il n'y en a plus
+qu'une, référencée par les deux jeux de balises.
+
+## Taille du bundle
+
+`docxtemplater` et `pizzip` pèsent ~490 kB et ne servent qu'au clic sur
+« Exporter ». Ils sont chargés à ce moment-là (`import()` dans
+`src/domain/docx.ts`), ce qui ramène le premier chargement à ~27 kB gzip.
+À surveiller si l'export devient utilisé au démarrage.

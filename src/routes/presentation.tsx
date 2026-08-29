@@ -6,8 +6,10 @@ import { PresentationView, blockId } from "../components/presentation-view";
 import { type Prosit, isEmpty } from "../domain/prosit";
 import { load } from "../domain/storage";
 import { subscribe } from "../domain/sync";
+import { metaTags, pageFor } from "../seo";
 
 export const Route = createFileRoute("/presentation")({
+	head: () => ({ meta: metaTags(pageFor("/presentation")) }),
 	component: Presentation,
 });
 

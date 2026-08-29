@@ -2,17 +2,21 @@ name: Code quality
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 jobs:
-  quality:
+  check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Biome
-        uses: biomejs/setup-biome@v1
-        with:
-          version: 1.2.2
-      - name: Run Biome
-        run: biome ci ./src
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+        env:
+          # The design system lives on GitHub Packages; .npmrc reads this.
+          GITHUB_TOKEN: ${{ github.token }}
+      - run: bun run lint
+      - run: bun run test
+      - run: bun run build
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

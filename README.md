@@ -1,39 +1,72 @@
 [![Code quality](https://github.com/Aldresus/dynamicProsit/actions/workflows/biome.yml/badge.svg?branch=main)](https://github.com/Aldresus/dynamicProsit/actions/workflows/biome.yml)
 
+# DynamicPrositX
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Un outil pour accompagner les prosits : un formulaire en sept étapes, un export
+`.docx`, et une vue de présentation à projeter qui suit le formulaire en direct.
 
-## Getting Started
+<https://prosit.hugochampy.fr>
 
-First, run the development server:
+## Démarrer
+
+Le design system est publié sur GitHub Packages, il faut donc un `GITHUB_TOKEN`
+(token classique, scope `read:packages`) dans l'environnement — `.npmrc` le lit,
+et n'est jamais commité avec sa valeur.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Commande | Ce qu'elle fait |
+| --- | --- |
+| `bun run dev` | serveur de développement |
+| `bun run build` | typecheck, bundle, puis prérendu des huit pages |
+| `bun run test` | tests unitaires (Vitest) |
+| `bun run lint` | Biome |
+| `bun run og` | régénère `public/og.png` (uniquement si le texte change) |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Vite + React 19 + TanStack Router, en SPA statique. Tailwind v4 et
+[`@aldresus/design-system`](https://github.com/Aldresus/hcds) pour l'interface.
 
-## Learn More
+```
+src/
+  domain/      types, stockage, opérations sur les listes, export .docx, sync
+  routes/      arbre TanStack Router (fichiers)
+  components/  vues réutilisables
+  sections.ts  LA table des sept étapes
+  seo.ts       métadonnées par page
+scripts/       prérendu et génération de la carte sociale
+```
 
-To learn more about Next.js, take a look at the following resources:
+Deux points portent le reste :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**`sections.ts` est la source unique des étapes.** Ajouter une étape à un prosit
+est une ligne dans ce tableau : la navigation, les raccourcis, la route, la vue
+de présentation, le sitemap et les métadonnées en découlent. Les six pages de
+liste partagent une seule route `$section`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+**Le document vit dans `localStorage` et voyage par `BroadcastChannel`.** La
+fenêtre de présentation n'a pas d'état propre : elle lit le stockage une fois
+pour s'afficher, puis suit le canal que le formulaire publie.
 
-## Deploy on Vercel
+## Format des données
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`prositVersion` vaut **3**. Les documents v1 et v2 ne sont plus migrés : un
+prosit enregistré dans une version antérieure est ignoré silencieusement au
+chargement et remplacé par un document vide.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Le stockage est traité comme une entrée non fiable — il est modifiable par
+l'utilisateur — donc chaque champ est vérifié au chargement.
+
+## Déploiement
+
+`bun run build` produit un `dist/` entièrement statique, avec un `index.html`
+par route. N'importe quel hébergeur de fichiers convient ; voir `NOTES.md` pour
+la règle de repli des URL inconnues selon l'hébergeur.
+
+## Notes
+
+`NOTES.md` liste les décisions de la réécriture qui méritent une relecture.

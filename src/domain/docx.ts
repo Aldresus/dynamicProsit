@@ -1,5 +1,3 @@
-import Docxtemplater from "docxtemplater";
-import PizZip from "pizzip";
 import templateUrl from "../assets/template.docx?url";
 import type { Prosit } from "./prosit";
 
@@ -47,7 +45,16 @@ export const documentName = (prosit: Prosit): string => {
 };
 
 export async function exportDocx(prosit: Prosit): Promise<void> {
-	const zip = new PizZip(await loadTemplate());
+	// docxtemplater and pizzip are ~490 kB and matter only once someone clicks
+	// export, so they load then rather than sitting in the first paint.
+	const [{ default: Docxtemplater }, { default: PizZip }, template] =
+		await Promise.all([
+			import("docxtemplater"),
+			import("pizzip"),
+			loadTemplate(),
+		]);
+
+	const zip = new PizZip(template);
 	const doc = new Docxtemplater(zip, {
 		paragraphLoop: true,
 		linebreaks: true,
