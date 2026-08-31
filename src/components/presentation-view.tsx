@@ -84,8 +84,13 @@ export function PresentationView({
 						title={listSection.presentationTitle.replace(/\s*:$/, "")}
 					>
 						{/* `xl` is Bitter, the same face as the title above it. `lg` is the
-						    sans tier; `text-xl` puts back the projector size it costs. */}
-						<List ordered={listSection.ordered} size="lg" className="text-xl">
+						    sans tier; `text-xl` puts back the projector size it costs, and
+						    `font-normal` the weight that size otherwise bumps to 600. */}
+						<List
+							ordered={listSection.ordered}
+							size="lg"
+							className="text-xl font-normal"
+						>
 							{items.map((item) => (
 								<li key={item.id}>{item.content}</li>
 							))}
