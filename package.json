@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "bun run scripts/prerender.ts && vite build",
+		"build": "vite build && bun run scripts/prerender.ts",
 		"preview": "vite preview",
 		"test": "vitest run",
 		"lint": "biome check .",
