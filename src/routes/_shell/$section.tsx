@@ -1,4 +1,4 @@
-import { Button, Field, Kbd, Textarea } from "@aldresus/design-system";
+import { Button, Field, Kbd, List, Textarea } from "@aldresus/design-system";
 import {
 	DndContext,
 	type DragEndEvent,
@@ -14,7 +14,7 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { type KeyboardEvent, useState } from "react";
+import { type KeyboardEvent, useRef, useState } from "react";
 import { SortableItem } from "../../components/sortable-item";
 import { addItem, editItem, moveItem, removeItem } from "../../domain/items";
 import { useProsit } from "../../prosit-store";
@@ -41,6 +41,13 @@ function Section() {
 	const { prosit, setList } = useProsit();
 	const [draft, setDraft] = useState("");
 	const stepKeyDown = useStepKeyDown();
+	/*
+	 * Adding and removing a line changes the page silently: the field empties, a
+	 * row appears or vanishes, and a screen reader says nothing. dnd-kit
+	 * announces its own reordering; these two are ours to report.
+	 */
+	const [announcement, setAnnouncement] = useState("");
+	const field = useRef<HTMLTextAreaElement>(null);
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -55,8 +62,26 @@ function Section() {
 	const items = prosit[section.field];
 
 	const add = () => {
-		setList(section.field, addItem(items, draft));
+		const next = addItem(items, draft);
+		if (next.length === items.length) return;
+		setList(section.field, next);
+		// The stored line, not the draft: `addItem` capitalises it.
+		setAnnouncement(
+			`« ${next[next.length - 1]?.content} » ajouté, ${next.length} au total.`,
+		);
 		setDraft("");
+	};
+
+	/*
+	 * Deleting the row that holds focus drops it on <body>, and the next Tab
+	 * starts over at the top of the page. The field the user was working in is
+	 * the one place worth landing.
+	 */
+	const remove = (id: string, content: string) => {
+		const next = removeItem(items, id);
+		setList(section.field, next);
+		setAnnouncement(`« ${content} » supprimé, ${next.length} restant(s).`);
+		field.current?.focus();
 	};
 
 	/**
@@ -114,8 +139,13 @@ function Section() {
 				}}
 				className="sticky top-0 z-10 flex flex-col gap-3 bg-surface pt-2 pb-4"
 			>
-				<Field label={<span className="hcds-heading">{section.label}</span>}>
+				{/* Field's own gap is tuned for a 14px label; this one is 30px. */}
+				<Field
+					className="gap-3"
+					label={<span className="hcds-heading">{section.label}</span>}
+				>
 					<Textarea
+						ref={field}
 						autosize
 						rows={1}
 						maxRows={6}
@@ -126,7 +156,7 @@ function Section() {
 						autoFocus
 					/>
 				</Field>
-				<div className="flex items-center justify-between gap-4">
+				<div className="flex items-start justify-between gap-4">
 					<p className="hcds-caption text-fg-muted">
 						<Kbd keys="Enter" /> pour ajouter · cliquez une ligne pour la
 						modifier
@@ -136,6 +166,16 @@ function Section() {
 					</Button>
 				</div>
 			</form>
+
+			<p aria-live="polite" className="sr-only">
+				{announcement}
+			</p>
+
+			{items.length === 0 && (
+				<p className="hcds-body text-fg-muted">
+					Rien ici pour l'instant. Écrivez au-dessus, la liste se remplit.
+				</p>
+			)}
 
 			<DndContext
 				sensors={sensors}
@@ -147,21 +187,24 @@ function Section() {
 					items={items.map((item) => item.id)}
 					strategy={verticalListSortingStrategy}
 				>
-					<ul className="flex flex-col gap-1">
-						{items.map((item, index) => (
+					{/*
+						No `flex` here, and none on the row either: it replaces a list
+						item's `display: list-item` and takes the marker with it. The
+						step numbers used to be a hand-drawn span standing in for the
+						one the browser would have painted.
+					*/}
+					<List ordered={section.ordered} unmarked={!section.ordered}>
+						{items.map((item) => (
 							<SortableItem
 								key={item.id}
 								item={item}
-								index={section.ordered ? index : undefined}
 								onEdit={(content) =>
 									setList(section.field, editItem(items, item.id, content))
 								}
-								onDelete={() =>
-									setList(section.field, removeItem(items, item.id))
-								}
+								onDelete={() => remove(item.id, item.content)}
 							/>
 						))}
-					</ul>
+					</List>
 				</SortableContext>
 			</DndContext>
 		</div>

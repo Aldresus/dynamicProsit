@@ -1,14 +1,22 @@
 import {
 	AppShell,
 	AppShellAside,
+	AppShellHeader,
 	AppShellMain,
 	AppShellSidebar,
+	AppShellSidebarTrigger,
 	Button,
+	Drawer,
+	DrawerContent,
+	DrawerHeader,
+	DrawerTitle,
 	Nav,
 	NavGroup,
 	NavItem,
 	Select,
 	SelectItem,
+	Tooltip,
+	TooltipProvider,
 	useShortcut,
 	useToast,
 } from "@aldresus/design-system";
@@ -32,13 +40,19 @@ import {
 	Undo2,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { ConfirmModal } from "../components/confirm-modal";
 import { HelpAside } from "../components/help-aside";
-import { ResetModal } from "../components/reset-modal";
 import { exportDocx, importDocx } from "../domain/docx";
 import { prositLabel } from "../domain/prosit";
 import { onStateRequest, publishState } from "../domain/sync";
 import { useProsit } from "../prosit-store";
-import { STEPS, linkProps, nextStep, previousStep } from "../sections";
+import {
+	INFORMATIONS,
+	STEPS,
+	linkProps,
+	nextStep,
+	previousStep,
+} from "../sections";
 import { useGoToStep } from "../shortcuts";
 import { useTheme } from "../theme";
 
@@ -60,8 +74,21 @@ function Shell() {
 	const goToStep = useGoToStep();
 	const { scheme, toggle } = useTheme();
 	const [helpOpen, setHelpOpen] = useState(false);
-	const [resetOpen, setResetOpen] = useState(false);
+	const [confirming, setConfirming] = useState(false);
 	const [exporting, setExporting] = useState(false);
+	/*
+	 * AppShellAside is hidden below `lg`, so on a narrow window Aide and F1
+	 * toggled a panel nobody could see — a button that does nothing is worse than
+	 * no button. Under that width the same content opens as a drawer.
+	 */
+	const [docked, setDocked] = useState(false);
+	useEffect(() => {
+		const wide = window.matchMedia("(min-width: 64rem)");
+		const sync = () => setDocked(wide.matches);
+		sync();
+		wide.addEventListener("change", sync);
+		return () => wide.removeEventListener("change", sync);
+	}, []);
 	const presentationWindow = useRef<Window | null>(null);
 	const fileInput = useRef<HTMLInputElement>(null);
 	const toast = useToast();
@@ -151,6 +178,28 @@ function Shell() {
 	useShortcut("Mod+Enter", () => goToStep(nextStep(slug)));
 	useShortcut("Mod+Shift+Enter", () => goToStep(previousStep(slug)));
 	useShortcut("Mod+S", exportDocument);
+	/*
+	 * Not `useShortcut`: it preventDefaults before the handler runs, and typing
+	 * is deliberately untracked (see the store), so Ctrl+Z inside a field has to
+	 * stay the browser's own undo rather than leap past the paragraph being
+	 * written to whatever structural change came before it.
+	 */
+	useEffect(() => {
+		const onKeyDown = (event: KeyboardEvent) => {
+			if (event.key !== "z" || event.shiftKey || event.altKey) return;
+			if (!event.ctrlKey && !event.metaKey) return;
+			const focused = document.activeElement;
+			if (
+				focused instanceof HTMLInputElement ||
+				focused instanceof HTMLTextAreaElement
+			)
+				return;
+			event.preventDefault();
+			undo();
+		};
+		window.addEventListener("keydown", onKeyDown);
+		return () => window.removeEventListener("keydown", onKeyDown);
+	}, [undo]);
 	useShortcut("Mod+Alt+L", toggle);
 	useShortcut("F1", () => setHelpOpen((open) => !open));
 
@@ -162,19 +211,49 @@ function Shell() {
 
 	const previous = previousStep(slug);
 	const next = nextStep(slug);
+	const current = STEPS.find((step) => step.slug === slug) ?? INFORMATIONS;
 	const dark = scheme === "dark";
+	// The last prosit cannot be deleted, only emptied.
+	const deletes = prosits.length > 1;
 
 	return (
 		<AppShell>
+			{/*
+				Tab lands on the sidebar first — twelve controls before the field you
+				came to type in. `fixed` keeps it out of the shell's grid: an in-flow
+				child would take a column of its own.
+			*/}
+			{/* Parked above the viewport rather than `sr-only`: `not-sr-only` resets
+			    `position` to static, which drops it back into the shell's grid as a
+			    column of its own the moment it takes focus. */}
+			<a
+				href="#contenu"
+				className="fixed top-2 left-2 z-50 -translate-y-16 rounded-control bg-accent px-3 py-2 text-fg-on-accent focus:translate-y-0"
+			>
+				Aller au contenu
+			</a>
+
+			{/*
+				Below `md` the sidebar is a drawer, and this is the only thing that
+				opens it — without it the whole nav, export and présentation are
+				unreachable on a phone. The row collapses to nothing above `md`.
+			*/}
+			<AppShellHeader className="md:hidden">
+				<AppShellSidebarTrigger aria-label="Ouvrir le menu" />
+				<span className="hcds-ui truncate">{current.label}</span>
+			</AppShellHeader>
+
 			{/*
 				AppShellSidebar is already a padded, scrolling flex column — an inner
 				wrapper with its own padding and `h-full` made the content taller than
 				the column it sat in, which is what put a scrollbar on the nav.
 			*/}
-			<AppShellSidebar className="gap-4 overflow-y-hidden">
+			{/* The mobile drawer's heading, and its accessible name. Not the app name:
+			    the sidebar's own h1 says that, right underneath. */}
+			<AppShellSidebar className="gap-4 overflow-y-hidden" title="Menu">
 				<h1 className="hcds-subheading px-1 leading-tight">
 					Les prosits là,
-					<span className="block font-normal text-fg-muted">super</span>
+					<span className="hcds-ui block font-normal text-fg-muted">super</span>
 				</h1>
 
 				{/*
@@ -201,15 +280,26 @@ function Shell() {
 							</SelectItem>
 						))}
 					</Select>
-					<Button variant="ghost" onClick={create} aria-label="Nouveau prosit">
-						<Plus className="size-4" />
-					</Button>
+					{/* Icon-only: the label has to live somewhere a pointer can find it. */}
+					<Tooltip content="Commencer un nouveau prosit">
+						<Button
+							variant="ghost"
+							iconOnly
+							onClick={create}
+							aria-label="Nouveau prosit"
+						>
+							<Plus className="size-4" />
+						</Button>
+					</Tooltip>
 				</div>
 
 				{/* The nav takes the squeeze so the actions below stay reachable; the
 				    column itself no longer scrolls, which used to push Exporter off
 				    the bottom on a short window. */}
-				<Nav className="hcds-scroll min-h-0 flex-1 overflow-y-auto">
+				<Nav
+					aria-label="Étapes du prosit"
+					className="hcds-scroll min-h-0 flex-1 overflow-y-auto"
+				>
 					<NavGroup>
 						{STEPS.map((step) => (
 							<NavItem
@@ -224,100 +314,113 @@ function Shell() {
 					</NavGroup>
 				</Nav>
 
-				<div className="flex flex-col gap-2">
-					<div className="flex gap-2">
-						<Button
-							className="min-w-0 flex-1"
-							onClick={exportDocument}
-							loading={exporting}
-						>
-							<FileDown className="size-4" />
-							Exporter en .docx
-						</Button>
-						<Button
-							variant="outline"
-							onClick={() => fileInput.current?.click()}
-							aria-label="Importer un prosit depuis un .docx"
-						>
-							<FileUp className="size-4" />
-						</Button>
-						{/* The button is the control; this is only the file picker behind it. */}
-						<input
-							ref={fileInput}
-							type="file"
-							accept=".docx"
-							hidden
-							onChange={(event) => {
-								const file = event.target.files?.[0];
-								// Cleared so picking the same file twice fires again.
-								event.target.value = "";
-								if (file) void importDocument(file);
-							}}
-						/>
-					</div>
-					<Button variant="outline" onClick={openPresentation}>
-						<MonitorPlay className="size-4" />
-						Présentation
-					</Button>
-					<div className="flex gap-2">
-						<Button
-							className="flex-1"
-							variant="ghost"
-							onClick={() => setHelpOpen((open) => !open)}
-						>
-							<PanelRight className="size-4" />
-							Aide
-						</Button>
-						<Button
-							className="flex-1"
-							variant="ghost"
-							onClick={toggle}
-							aria-label={`Passer en thème ${dark ? "clair" : "sombre"}`}
-						>
-							{dark ? (
-								<Sun className="size-4" />
-							) : (
-								<MoonStar className="size-4" />
-							)}
-							Thème
-						</Button>
-					</div>
-					{/*
-						Undo belongs in the toast that reports the deletion, but the
-						design system's ToastList renders only title, description and
-						close — no Toast.Action — so actionProps would go nowhere.
-						A visible control it is.
-					*/}
-					<Button variant="ghost" onClick={undo} disabled={!canUndo}>
-						<Undo2 className="size-4" />
-						Annuler
-					</Button>
-					{/*
-						Deleting the only prosit is a reset with extra steps, so the
-						button appears once there is a choice to make.
-					*/}
-					{prosits.length > 1 ? (
+				{/* Grouped so one tooltip opening makes its neighbours instant — the
+				    icon-only import button is unreadable without them. */}
+				<TooltipProvider>
+					<div className="flex flex-col gap-2">
+						<div className="flex gap-2">
+							<Tooltip content="Enregistrer le prosit en .docx (Ctrl+S)">
+								<Button
+									className="min-w-0 flex-1"
+									onClick={exportDocument}
+									loading={exporting}
+								>
+									<FileDown className="size-4" />
+									Exporter
+								</Button>
+							</Tooltip>
+							{/* Was icon-only, and nobody guessed a .docx could come back in. */}
+							<Tooltip content="Ouvrir un .docx exporté depuis cette app">
+								<Button
+									className="min-w-0 flex-1"
+									variant="outline"
+									onClick={() => fileInput.current?.click()}
+								>
+									<FileUp className="size-4" />
+									Importer
+								</Button>
+							</Tooltip>
+							{/* The button is the control; this is only the file picker behind it. */}
+							<input
+								ref={fileInput}
+								type="file"
+								accept=".docx"
+								hidden
+								onChange={(event) => {
+									const file = event.target.files?.[0];
+									// Cleared so picking the same file twice fires again.
+									event.target.value = "";
+									if (file) void importDocument(file);
+								}}
+							/>
+						</div>
+						{/*
+							Undo belongs in the toast that reports the deletion, but the
+							design system's ToastList renders only title, description and
+							close — no Toast.Action — so actionProps would go nowhere. A
+							visible control it is, and it sits beside the actions that undo
+							it rather than buried between Thème and a delete button.
+						*/}
+						<Tooltip content="Revenir à l'état précédent (Ctrl+Z)">
+							<Button variant="outline" onClick={undo} disabled={!canUndo}>
+								<Undo2 className="size-4" />
+								Annuler
+							</Button>
+						</Tooltip>
+						<Tooltip content="Ouvrir la vue projetée dans une seconde fenêtre">
+							<Button variant="outline" onClick={openPresentation}>
+								<MonitorPlay className="size-4" />
+								Présentation
+							</Button>
+						</Tooltip>
+						<div className="flex gap-2">
+							<Tooltip content="Les raccourcis clavier (F1)">
+								<Button
+									className="flex-1"
+									variant="ghost"
+									onClick={() => setHelpOpen((open) => !open)}
+								>
+									<PanelRight className="size-4" />
+									Aide
+								</Button>
+							</Tooltip>
+							<Tooltip
+								content={`Passer en thème ${dark ? "clair" : "sombre"} (Ctrl+Alt+L)`}
+							>
+								<Button
+									className="flex-1"
+									variant="ghost"
+									onClick={toggle}
+									aria-label={`Passer en thème ${dark ? "clair" : "sombre"}`}
+								>
+									{dark ? (
+										<Sun className="size-4" />
+									) : (
+										<MoonStar className="size-4" />
+									)}
+									Thème
+								</Button>
+							</Tooltip>
+						</div>
+						{/*
+							Deleting the only prosit is a reset with extra steps, so the
+							button says which of the two it is — and both ask first, since
+							undo is one step and a mis-click here costs the document.
+						*/}
 						<Button
 							variant="ghost"
 							className="text-danger"
-							onClick={() => remove(prosit.id)}
+							onClick={() => setConfirming(true)}
 						>
 							<Trash2 className="size-4" />
-							Supprimer ce prosit
+							{deletes ? "Supprimer ce prosit" : "Réinitialiser le prosit"}
 						</Button>
-					) : (
-						<Button
-							variant="ghost"
-							className="text-danger"
-							onClick={() => setResetOpen(true)}
-						>
-							Réinitialiser le prosit
-						</Button>
-					)}
-				</div>
+					</div>
+				</TooltipProvider>
 			</AppShellSidebar>
 
-			<AppShellMain padding="lg">
+			{/* `tabIndex={-1}`: the skip link has to be able to land focus here. */}
+			<AppShellMain id="contenu" tabIndex={-1} padding="lg">
 				{/*
 					Capped at the reading measure rather than `contained`, which stops at
 					the 80rem page width — a 1091px text input is not a text input anyone
@@ -325,12 +428,22 @@ function Shell() {
 					the fields instead of straddling the empty space beside them.
 				*/}
 				<div className="mx-auto flex w-full max-w-measure flex-col">
+					{/* The arrow is the only thing saying which way "Livrables" goes, and
+					    an arrow is not read aloud. */}
 					<div className="flex items-center justify-between">
-						<Button variant="ghost" onClick={() => goToStep(previous)}>
+						<Button
+							variant="ghost"
+							onClick={() => goToStep(previous)}
+							aria-label={`Étape précédente : ${previous.label}`}
+						>
 							<ArrowLeft className="size-4" />
 							{previous.label}
 						</Button>
-						<Button variant="ghost" onClick={() => goToStep(next)}>
+						<Button
+							variant="ghost"
+							onClick={() => goToStep(next)}
+							aria-label={`Étape suivante : ${next.label}`}
+						>
 							{next.label}
 							<ArrowRight className="size-4" />
 						</Button>
@@ -339,7 +452,7 @@ function Shell() {
 				</div>
 			</AppShellMain>
 
-			{helpOpen && (
+			{helpOpen && docked && (
 				<AppShellAside>
 					<div className="p-4">
 						<HelpAside />
@@ -347,10 +460,30 @@ function Shell() {
 				</AppShellAside>
 			)}
 
-			<ResetModal
-				open={resetOpen}
-				onOpenChange={setResetOpen}
-				onConfirm={reset}
+			<Drawer open={helpOpen && !docked} onOpenChange={setHelpOpen}>
+				<DrawerContent side="right" size="sm">
+					<DrawerHeader>
+						<DrawerTitle>Aide</DrawerTitle>
+					</DrawerHeader>
+					<HelpAside />
+				</DrawerContent>
+			</Drawer>
+
+			<ConfirmModal
+				open={confirming}
+				onOpenChange={setConfirming}
+				onConfirm={() => (deletes ? remove(prosit.id) : reset())}
+				title={
+					deletes
+						? `Supprimer « ${prositLabel(prosit)} » ?`
+						: "Réinitialiser le prosit ?"
+				}
+				description={
+					deletes
+						? "Ce prosit et tout son contenu seront effacés."
+						: "Tout le contenu saisi sera effacé."
+				}
+				confirmLabel={deletes ? "Supprimer" : "Réinitialiser"}
 			/>
 		</AppShell>
 	);

@@ -9,21 +9,31 @@ import {
 	ModalTitle,
 } from "@aldresus/design-system";
 
-interface ResetModalProps {
+interface ConfirmModalProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	onConfirm: () => void;
+	title: string;
+	description: string;
+	/** Wording on the danger button — say the deed, not "OK". */
+	confirmLabel: string;
 }
 
-export function ResetModal({ open, onOpenChange, onConfirm }: ResetModalProps) {
+/** Every irreversible action in the sidebar goes through this. */
+export function ConfirmModal({
+	open,
+	onOpenChange,
+	onConfirm,
+	title,
+	description,
+	confirmLabel,
+}: ConfirmModalProps) {
 	return (
 		<Modal open={open} onOpenChange={onOpenChange}>
 			<ModalContent size="sm">
 				<ModalHeader>
-					<ModalTitle>Réinitialiser le prosit ?</ModalTitle>
-					<ModalDescription>
-						Tout le contenu saisi sera effacé. C'est irréversible.
-					</ModalDescription>
+					<ModalTitle>{title}</ModalTitle>
+					<ModalDescription>{description}</ModalDescription>
 				</ModalHeader>
 				<ModalFooter>
 					<ModalClose render={<Button variant="ghost">Annuler</Button>} />
@@ -34,7 +44,7 @@ export function ResetModal({ open, onOpenChange, onConfirm }: ResetModalProps) {
 							onOpenChange(false);
 						}}
 					>
-						Réinitialiser
+						{confirmLabel}
 					</Button>
 				</ModalFooter>
 			</ModalContent>
