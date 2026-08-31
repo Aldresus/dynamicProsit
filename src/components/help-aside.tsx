@@ -5,6 +5,7 @@ const COMMANDS = [
 	{ keys: "Mod+Enter", label: "étape suivante" },
 	{ keys: "Mod+Shift+Enter", label: "étape précédente" },
 	{ keys: "Mod+S", label: "exporter en .docx" },
+	{ keys: "Mod+Z", label: "annuler la dernière action" },
 	{ keys: "Mod+Alt+L", label: "changer de thème" },
 	{ keys: "F1", label: "afficher ou masquer cette aide" },
 ];

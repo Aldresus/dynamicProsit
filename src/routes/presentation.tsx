@@ -32,11 +32,17 @@ function Presentation() {
 		return stop;
 	}, []);
 
-	// Follow the form: bring the step being edited into view.
+	/*
+	 * Follow the form: bring the step being edited into view. This fires on every
+	 * step change, projected large — the one animation in the app someone may
+	 * need switched off.
+	 */
 	useEffect(() => {
-		document
-			.getElementById(blockId(section))
-			?.scrollIntoView({ behavior: "smooth", block: "center" });
+		const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		document.getElementById(blockId(section))?.scrollIntoView({
+			behavior: still ? "auto" : "smooth",
+			block: "center",
+		});
 	}, [section]);
 
 	const empty = isEmpty(prosit);
