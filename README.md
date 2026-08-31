@@ -54,12 +54,26 @@ pour s'afficher, puis suit le canal que le formulaire publie.
 
 ## Format des données
 
-`prositVersion` vaut **3**. Les documents v1 et v2 ne sont plus migrés : un
-prosit enregistré dans une version antérieure est ignoré silencieusement au
-chargement et remplacé par un document vide.
+La version vaut **4**. Le stockage ne contient plus un prosit mais une
+bibliothèque : `{ version, current, prosits }`. Un document v3 — un seul prosit
+à la racine — devient une bibliothèque d'un élément, rien n'est perdu. Les
+documents v1 et v2 ne sont pas migrés : ils sont ignorés silencieusement au
+chargement.
 
 Le stockage est traité comme une entrée non fiable — il est modifiable par
-l'utilisateur — donc chaque champ est vérifié au chargement.
+l'utilisateur — donc chaque champ est vérifié au chargement. Un `.docx`
+importé passe par la même vérification, pour la même raison.
+
+## Aller-retour `.docx`
+
+Un `.docx` est un paquet OPC, c'est-à-dire une archive zip de parties XML, et
+OOXML réserve `customXml` aux données applicatives : Word les ignore au rendu
+et les conserve à l'enregistrement. Le fichier exporté embarque donc le prosit
+lui-même, dans `customXml/item1.xml`, et `Importer` le relit tel quel.
+
+Pas de JSON séparé à garder synchronisé : le fichier qu'on envoie à un
+camarade est aussi celui qui lui rend le prosit modifiable. Un `.docx` qui ne
+vient pas de cette application est refusé avec un message qui le dit.
 
 ## Déploiement
 

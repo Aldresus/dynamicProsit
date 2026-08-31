@@ -9,7 +9,7 @@ import {
 } from "../sections";
 import { addItem, editItem, moveItem, newItem, removeItem } from "./items";
 import { PROSIT_VERSION, emptyProsit, isEmpty } from "./prosit";
-import { load, save } from "./storage";
+import { emptyLibrary, load, loadCurrent, parseProsit, save } from "./storage";
 
 // A stand-in for the real thing: enough of the Storage surface for load/save.
 function stubStorage() {
@@ -41,76 +41,105 @@ describe("storage", () => {
 
 	it("round-trips a document", () => {
 		const prosit = { ...emptyProsit(), titre: "Oh non mon fromage" };
-		save(prosit);
-		expect(load().titre).toBe("Oh non mon fromage");
+		const library = {
+			...emptyLibrary(),
+			current: prosit.id,
+			prosits: [prosit],
+		};
+		save(library);
+		expect(loadCurrent().titre).toBe("Oh non mon fromage");
 	});
 
-	it("returns an empty document when nothing is stored", () => {
-		expect(isEmpty(load())).toBe(true);
+	it("starts with one empty document when nothing is stored", () => {
+		expect(load().prosits).toHaveLength(1);
+		expect(isEmpty(loadCurrent())).toBe(true);
+	});
+
+	// v3 held a single document at the root. The shape changed; the content is
+	// still good, so it becomes a library of one rather than being discarded.
+	it("migrates a v3 document into a library of one", () => {
+		store.write(
+			JSON.stringify({ prositVersion: 3, titre: "l'ancien", motsCles: [] }),
+		);
+		const library = load();
+		expect(library.prosits).toHaveLength(1);
+		expect(loadCurrent().titre).toBe("l'ancien");
 	});
 
 	it("discards a v2 document silently", () => {
 		store.write(
 			JSON.stringify({ prositVersion: 2, titre: "ancien", motsCles: [] }),
 		);
-		expect(load().titre).toBe("");
+		expect(loadCurrent().titre).toBe("");
 	});
 
 	it("discards a v1 document silently", () => {
 		store.write(JSON.stringify({ prositVersion: 1, motsCles: ["fromage"] }));
-		expect(load().motsCles).toEqual([]);
+		expect(loadCurrent().motsCles).toEqual([]);
 	});
 
 	it("discards a document with no version at all", () => {
 		store.write(JSON.stringify({ titre: "sans version" }));
-		expect(load().titre).toBe("");
+		expect(loadCurrent().titre).toBe("");
 	});
 
 	it("survives unparseable JSON", () => {
 		store.write("{ not json");
-		expect(isEmpty(load())).toBe(true);
+		expect(isEmpty(loadCurrent())).toBe(true);
 	});
 
 	it("survives a non-object payload", () => {
 		store.write('"a string"');
-		expect(isEmpty(load())).toBe(true);
+		expect(isEmpty(loadCurrent())).toBe(true);
+	});
+
+	it("survives a library holding no documents", () => {
+		store.write(
+			JSON.stringify({ version: PROSIT_VERSION, current: "x", prosits: [] }),
+		);
+		expect(load().prosits).toHaveLength(1);
+	});
+
+	// A `current` naming a document that is not there would leave the form with
+	// nothing to edit.
+	it("falls back to the first document when current points nowhere", () => {
+		store.write(
+			JSON.stringify({
+				version: PROSIT_VERSION,
+				current: "disparu",
+				prosits: [{ id: "a", titre: "premier" }],
+			}),
+		);
+		expect(load().current).toBe("a");
+		expect(loadCurrent().titre).toBe("premier");
 	});
 
 	// localStorage is user-writable, so a well-versioned document can still lie.
 	it("replaces a field of the wrong type with its empty value", () => {
-		store.write(
-			JSON.stringify({
-				prositVersion: PROSIT_VERSION,
-				titre: 42,
-				contexte: "ok",
-			}),
-		);
-		const prosit = load();
+		const prosit = parseProsit({ titre: 42, contexte: "ok" });
 		expect(prosit.titre).toBe("");
 		expect(prosit.contexte).toBe("ok");
 	});
 
 	it("drops malformed rows from a list but keeps the good ones", () => {
-		store.write(
-			JSON.stringify({
-				prositVersion: PROSIT_VERSION,
-				motsCles: [
-					{ id: "a", content: "fromage" },
-					{ id: "b" },
-					"pas un objet",
-					null,
-					{ id: 7, content: "id numérique" },
-				],
-			}),
-		);
-		expect(load().motsCles).toEqual([{ id: "a", content: "fromage" }]);
+		const prosit = parseProsit({
+			motsCles: [
+				{ id: "a", content: "fromage" },
+				{ id: "b" },
+				"pas un objet",
+				null,
+				{ id: 7, content: "id numérique" },
+			],
+		});
+		expect(prosit.motsCles).toEqual([{ id: "a", content: "fromage" }]);
 	});
 
 	it("replaces a list field that is not an array", () => {
-		store.write(
-			JSON.stringify({ prositVersion: PROSIT_VERSION, livrables: "nope" }),
-		);
-		expect(load().livrables).toEqual([]);
+		expect(parseProsit({ livrables: "nope" }).livrables).toEqual([]);
+	});
+
+	it("gives a document with no id one of its own", () => {
+		expect(parseProsit({ titre: "sans id" }).id).not.toBe("");
 	});
 });
 

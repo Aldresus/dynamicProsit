@@ -4,7 +4,7 @@ import { Columns2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PresentationView, blockId } from "../components/presentation-view";
 import { type Prosit, isEmpty } from "../domain/prosit";
-import { load } from "../domain/storage";
+import { loadCurrent } from "../domain/storage";
 import { onState, requestState } from "../domain/sync";
 import { metaTags, pageFor } from "../seo";
 
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/presentation")({
  * to paint immediately, then lives off the BroadcastChannel the form publishes.
  */
 function Presentation() {
-	const [prosit, setProsit] = useState<Prosit>(load);
+	const [prosit, setProsit] = useState<Prosit>(loadCurrent);
 	const [section, setSection] = useState<string | null>(null);
 	const [split, setSplit] = useState(false);
 

@@ -133,3 +133,42 @@ champs du formulaire — un échange perdant.
 L'historique ne retient que les changements structurels (ajout, édition,
 suppression, réordonnancement, réinitialisation), pas la frappe : vingt entrées
 consommées par vingt caractères n'auraient rien annulé d'utile.
+
+## Plusieurs prosits : la version 4
+
+L'ancienne application n'en connaissait qu'un — la clé de stockage était la
+chaîne littérale `"prosit"`, donc en commencer un nouveau détruisait le
+précédent. Le stockage porte maintenant `{ version, current, prosits }`.
+
+**La migration depuis la v3 est faite, pas sautée.** La forme a changé, le
+contenu était bon : un document v3 devient une bibliothèque d'un élément. Les
+v1 et v2 restent écartées silencieusement, comme convenu.
+
+**Supprimer et réinitialiser ne cohabitent pas.** Tant qu'il n'y a qu'un
+prosit, supprimer serait une réinitialisation avec une étape de plus — le
+bouton n'apparaît qu'à partir du deuxième. Les deux passent par l'historique
+d'annulation.
+
+**`items` sur le `Select` n'est pas décoratif.** Sans la table
+valeur → libellé, Base UI affiche l'identifiant brut dans le déclencheur. Cela
+mériterait peut-être d'être documenté côté design system : la prop se lit
+comme une optimisation alors qu'elle conditionne l'affichage.
+
+## L'aller-retour passe par le .docx, pas par du JSON
+
+Le prosit exporté voyage dans `customXml/item1.xml`, la partie qu'OOXML
+réserve aux données applicatives. Trois parties de plus sont nécessaires et
+aucune n'est facultative : `itemProps1.xml` (déclarée dans
+`[Content_Types].xml`, sinon Word refuse le fichier entier), les relations de
+l'élément, et une relation depuis `document.xml` — une partie que rien ne
+référence est une partie que Word peut supprimer.
+
+**Ce qui n'a pas pu être vérifié ici : la survie à un enregistrement Word.**
+La spécification garantit la conservation des parties `customXml`, et
+l'aller-retour est testé de bout en bout (export réel, réimport réel, y compris
+avec des caractères que XML refuserait tels quels). Mais aucune installation de
+Word n'était disponible pour confirmer qu'un fichier ouvert puis réenregistré
+garde encore ses données. À tester une fois.
+
+**L'identifiant est régénéré à l'import.** Importer deux fois le même fichier
+donne deux prosits, pas un document occupant deux emplacements.

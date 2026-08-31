@@ -1,5 +1,9 @@
-/** Bumped when the stored shape changes. Older documents are discarded, not migrated. */
-export const PROSIT_VERSION = 3;
+/**
+ * Bumped when the stored shape changes. v4 is the first version to hold more
+ * than one document, so a prosit carries an `id` and the version moved up to
+ * the library that owns them.
+ */
+export const PROSIT_VERSION = 4;
 
 export interface OrderedItem {
 	id: string;
@@ -26,7 +30,7 @@ export type TextField =
 	| "scribe"
 	| "secretaire";
 
-export type Prosit = { prositVersion: number } & Record<TextField, string> &
+export type Prosit = { id: string } & Record<TextField, string> &
 	Record<ListField, OrderedItem[]>;
 
 export const TEXT_FIELDS: readonly TextField[] = [
@@ -51,7 +55,7 @@ export const LIST_FIELDS: readonly ListField[] = [
 
 export function emptyProsit(): Prosit {
 	return {
-		prositVersion: PROSIT_VERSION,
+		id: crypto.randomUUID(),
 		titre: "",
 		lien: "",
 		generalisation: "",
@@ -76,3 +80,7 @@ export function isEmpty(prosit: Prosit): boolean {
 		LIST_FIELDS.every((f) => prosit[f].length === 0)
 	);
 }
+
+/** What the switcher shows. An untitled prosit still needs to be pickable. */
+export const prositLabel = (prosit: Prosit): string =>
+	prosit.titre.trim() || "Prosit sans titre";

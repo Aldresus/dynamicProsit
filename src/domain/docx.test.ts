@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import { describe, expect, it } from "vitest";
-import { documentName, templateData } from "./docx";
+import { documentName, embedProsit, importDocx, templateData } from "./docx";
 import { addItem } from "./items";
 import { emptyProsit } from "./prosit";
 
@@ -121,5 +121,69 @@ describe("documentName", () => {
 
 	it("does not produce a hidden file", () => {
 		expect(named("...caché")).toBe("PA-caché.docx");
+	});
+});
+
+/** Export and re-import, through the very functions the app uses. */
+const roundTrip = async (prosit: ReturnType<typeof filled>) => {
+	const doc = new Docxtemplater(new PizZip(readFileSync(TEMPLATE)), {
+		paragraphLoop: true,
+		linebreaks: true,
+	});
+	doc.render(templateData(prosit));
+	embedProsit(doc.getZip(), prosit);
+	const bytes: ArrayBuffer = doc.getZip().generate({ type: "arraybuffer" });
+	return importDocx(new File([bytes], "prosit.docx"));
+};
+
+describe("docx round-trip", () => {
+	it("brings every field back", async () => {
+		const original = filled();
+		const back = await roundTrip(original);
+		expect(back.titre).toBe(original.titre);
+		expect(back.contexte).toBe(original.contexte);
+		expect(back.motsCles).toEqual(original.motsCles);
+		expect(back.planDAction).toEqual(original.planDAction);
+	});
+
+	// Two imports of one file are two prosits, not one document in two slots.
+	it("gives the imported document an id of its own", async () => {
+		const original = filled();
+		expect((await roundTrip(original)).id).not.toBe(original.id);
+	});
+
+	it("survives characters XML would otherwise choke on", async () => {
+		const original = filled();
+		original.contexte = 'a < b & c > d "e" <w:p/>';
+		expect((await roundTrip(original)).contexte).toBe(original.contexte);
+	});
+
+	it("keeps the document readable as a .docx", async () => {
+		const doc = new Docxtemplater(new PizZip(readFileSync(TEMPLATE)), {
+			paragraphLoop: true,
+			linebreaks: true,
+		});
+		doc.render(templateData(filled()));
+		embedProsit(doc.getZip(), filled());
+		const zip = new PizZip(doc.getZip().generate({ type: "arraybuffer" }));
+		// The properties part must be declared or Word refuses the whole file.
+		expect(zip.file("[Content_Types].xml")?.asText()).toContain(
+			"/customXml/itemProps1.xml",
+		);
+		// A part nothing points at is a part Word is free to drop.
+		expect(zip.file("word/_rels/document.xml.rels")?.asText()).toContain(
+			"../customXml/item1.xml",
+		);
+	});
+
+	it("refuses a .docx that carries no prosit", async () => {
+		const bare = new File([readFileSync(TEMPLATE)], "vierge.docx");
+		await expect(importDocx(bare)).rejects.toThrow(/ne contient pas/);
+	});
+
+	it("refuses something that is not a .docx at all", async () => {
+		await expect(
+			importDocx(new File(["pas un zip"], "note.txt")),
+		).rejects.toThrow(/lisible/);
 	});
 });

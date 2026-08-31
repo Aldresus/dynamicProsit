@@ -7,6 +7,8 @@ import {
 	Nav,
 	NavGroup,
 	NavItem,
+	Select,
+	SelectItem,
 	useShortcut,
 	useToast,
 } from "@aldresus/design-system";
@@ -20,16 +22,20 @@ import {
 	ArrowLeft,
 	ArrowRight,
 	FileDown,
+	FileUp,
 	MonitorPlay,
 	MoonStar,
 	PanelRight,
+	Plus,
 	Sun,
+	Trash2,
 	Undo2,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { HelpAside } from "../components/help-aside";
 import { ResetModal } from "../components/reset-modal";
-import { exportDocx } from "../domain/docx";
+import { exportDocx, importDocx } from "../domain/docx";
+import { prositLabel } from "../domain/prosit";
 import { onStateRequest, publishState } from "../domain/sync";
 import { useProsit } from "../prosit-store";
 import { STEPS, linkProps, nextStep, previousStep } from "../sections";
@@ -47,7 +53,8 @@ const slugOf = (pathname: string): string | null => {
 };
 
 function Shell() {
-	const { prosit, reset, undo, canUndo } = useProsit();
+	const { prosit, prosits, select, create, remove, add, reset, undo, canUndo } =
+		useProsit();
 	const { pathname } = useLocation();
 	const slug = slugOf(pathname);
 	const goToStep = useGoToStep();
@@ -56,6 +63,7 @@ function Shell() {
 	const [resetOpen, setResetOpen] = useState(false);
 	const [exporting, setExporting] = useState(false);
 	const presentationWindow = useRef<Window | null>(null);
+	const fileInput = useRef<HTMLInputElement>(null);
 	const toast = useToast();
 
 	/**
@@ -89,6 +97,24 @@ function Shell() {
 
 		presentationWindow.current = opened;
 		opened.focus();
+	};
+
+	/**
+	 * The exported .docx carries the prosit inside it, so a file mailed to a
+	 * teammate is also the way to hand them the document itself. No separate
+	 * JSON to keep in step with it.
+	 */
+	const importDocument = async (file: File) => {
+		try {
+			add(await importDocx(file));
+			toast.add({ type: "success", title: "Prosit importé" });
+		} catch (error) {
+			toast.add({
+				type: "danger",
+				title: "L'import a échoué",
+				description: error instanceof Error ? error.message : undefined,
+			});
+		}
 	};
 
 	const exportDocument = async () => {
@@ -151,6 +177,35 @@ function Shell() {
 					<span className="block font-normal text-fg-muted">super</span>
 				</h1>
 
+				{/*
+					One prosit was the old app's whole model: the storage key was the
+					literal string "prosit", so starting a new one meant destroying the
+					last. The switcher is the only place that has to say so.
+				*/}
+				<div className="flex gap-2">
+					{/* `items` is not decoration: without the value-to-label map Base UI
+					    renders the raw id in the trigger. */}
+					<Select
+						className="min-w-0 flex-1"
+						aria-label="Prosit en cours"
+						value={prosit.id}
+						items={prosits.map((item) => ({
+							value: item.id,
+							label: prositLabel(item),
+						}))}
+						onValueChange={(id) => id && select(id)}
+					>
+						{prosits.map((item) => (
+							<SelectItem key={item.id} value={item.id}>
+								{prositLabel(item)}
+							</SelectItem>
+						))}
+					</Select>
+					<Button variant="ghost" onClick={create} aria-label="Nouveau prosit">
+						<Plus className="size-4" />
+					</Button>
+				</div>
+
 				{/* The nav takes the squeeze so the actions below stay reachable; the
 				    column itself no longer scrolls, which used to push Exporter off
 				    the bottom on a short window. */}
@@ -170,10 +225,36 @@ function Shell() {
 				</Nav>
 
 				<div className="flex flex-col gap-2">
-					<Button onClick={exportDocument} loading={exporting}>
-						<FileDown className="size-4" />
-						Exporter en .docx
-					</Button>
+					<div className="flex gap-2">
+						<Button
+							className="min-w-0 flex-1"
+							onClick={exportDocument}
+							loading={exporting}
+						>
+							<FileDown className="size-4" />
+							Exporter en .docx
+						</Button>
+						<Button
+							variant="outline"
+							onClick={() => fileInput.current?.click()}
+							aria-label="Importer un prosit depuis un .docx"
+						>
+							<FileUp className="size-4" />
+						</Button>
+						{/* The button is the control; this is only the file picker behind it. */}
+						<input
+							ref={fileInput}
+							type="file"
+							accept=".docx"
+							hidden
+							onChange={(event) => {
+								const file = event.target.files?.[0];
+								// Cleared so picking the same file twice fires again.
+								event.target.value = "";
+								if (file) void importDocument(file);
+							}}
+						/>
+					</div>
 					<Button variant="outline" onClick={openPresentation}>
 						<MonitorPlay className="size-4" />
 						Présentation
@@ -211,13 +292,28 @@ function Shell() {
 						<Undo2 className="size-4" />
 						Annuler
 					</Button>
-					<Button
-						variant="ghost"
-						className="text-danger"
-						onClick={() => setResetOpen(true)}
-					>
-						Réinitialiser le prosit
-					</Button>
+					{/*
+						Deleting the only prosit is a reset with extra steps, so the
+						button appears once there is a choice to make.
+					*/}
+					{prosits.length > 1 ? (
+						<Button
+							variant="ghost"
+							className="text-danger"
+							onClick={() => remove(prosit.id)}
+						>
+							<Trash2 className="size-4" />
+							Supprimer ce prosit
+						</Button>
+					) : (
+						<Button
+							variant="ghost"
+							className="text-danger"
+							onClick={() => setResetOpen(true)}
+						>
+							Réinitialiser le prosit
+						</Button>
+					)}
 				</div>
 			</AppShellSidebar>
 
