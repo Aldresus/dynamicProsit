@@ -125,7 +125,9 @@ export function SortableItem({ item, onEdit, onDelete }: SortableItemProps) {
 					size="sm"
 					onClick={onDelete}
 					aria-label={`Supprimer « ${item.content} »`}
-					className="mt-0.5 self-start text-fg-subtle hover:text-danger"
+					// ponytail: le survol est la teinte du ghost, pas un rouge. Repasser
+					// au rouge le jour où le design system aura un ghost destructeur.
+					className="mt-0.5 self-start text-fg-subtle"
 				>
 					<Trash2 className="size-4" />
 				</Button>

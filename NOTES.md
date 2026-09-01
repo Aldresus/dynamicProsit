@@ -32,17 +32,31 @@ Trois issues possibles, par ordre de coût :
 L'option 3 est celle qui a du sens si on veut vraiment valider : elle place le
 contrôle à la frontière qui compte au lieu de gêner la saisie.
 
-## Pont de tokens Tailwind
+## Styles : rien que les deux imports
 
-`src/styles.css` recopie à la main le vocabulaire sémantique du design system
-(`--color-surface` → `var(--hcds-surface)`, etc.). Le paquet compile avec
-`@theme inline`, donc sa feuille livre les utilitaires déjà résolus et les
-entrées `--color-*` ne survivent pas à son build : le Tailwind de l'app ne
-connaît pas le vocabulaire sans ce bloc.
+`src/styles.css` ne fait plus que les deux imports de la documentation. Le bloc
+`@theme inline` qui recopiait le vocabulaire (`--color-surface` →
+`var(--hcds-surface)`) a été retiré : recopier des jetons, c'est les écraser au
+prochain changement du design system.
 
-À supprimer le jour où `@aldresus/design-system` expose un `theme.css` pour ses
-consommateurs. C'est le seul endroit du dépôt qui peut dériver silencieusement
-du design system.
+Ce que ça implique. Le paquet compile avec `@theme inline`, donc sa feuille
+livre les utilitaires déjà résolus, pas le vocabulaire. L'app hérite donc de
+**ce que le design system utilise lui-même** — ce qui couvre tout ce qu'elle
+écrit (`bg-surface`, `text-fg-muted`, `max-w-measure`, `hover:bg-surface-sunken`
+…), vérifié classe par classe sur le CSS émis. Une classe qu'aucun composant du
+paquet n'emploie ne serait générée par personne, et sans erreur.
+
+La seule qui était dans ce cas, `hover:text-danger` sur la corbeille de
+`sortable-item.tsx`, a disparu : la ligne s'appuie maintenant sur la teinte de
+survol du ghost. Reste à demander au design system, dans l'ordre :
+
+1. **un ghost destructeur** — `danger` est un bouton rouge plein, trop lourd
+   pour une icône de ligne ; il manque le cran discret qui rougit au survol ;
+2. **un `theme.css` pour les consommateurs** (ou un `@theme` non-`inline`), qui
+   rendrait tout le vocabulaire utilisable côté app sans le recopier.
+
+Avec le premier, la corbeille retrouve son rouge. Avec le second, la question ne
+se pose plus du tout.
 
 ## Raccourcis liés deux fois
 
@@ -100,35 +114,22 @@ qu'une, référencée par les deux jeux de balises.
 `src/domain/docx.ts`), ce qui ramène le premier chargement à ~27 kB gzip.
 À surveiller si l'export devient utilisé au démarrage.
 
-## Fenêtre de présentation : non vérifiable dans l'aperçu
 
-Le bouton « Présentation » appelle `window.open(url, "prosit-presentation",
-"popup=yes,width=1280,height=800")` — une vraie seconde fenêtre, à poser sur le
-projecteur, pas un onglet.
+## Annuler : le toast, Ctrl+Z, et le bouton
 
-**Ce comportement n'a pas pu être vérifié ici.** Le panneau d'aperçu utilisé
-pendant la réécriture n'implémente pas les fenêtres multiples : il a navigué
-dans l'onglet courant au lieu d'en ouvrir une seconde. Dans un vrai navigateur,
-des `features` non vides forcent une fenêtre popup. La logique autour a été
-vérifiée avec deux onglets réels (synchronisation, surlignage, demande d'état).
+Les deux impasses qui avaient imposé le seul bouton dans la barre latérale sont
+levées depuis le design system 2.3.0.
 
-À confirmer d'un clic dans Chrome/Firefox. Si un navigateur ouvre malgré tout un
-onglet, tout continue de fonctionner — c'est juste moins pratique à projeter.
+**Le toast porte son action.** `ToastList` rend maintenant `Toast.Action`, donc
+l'`actionProps` de `toast.add()` aboutit : « Annuler » vit là où la suppression
+vient d'avoir lieu.
 
-## Annuler : un bouton, pas un toast ni Ctrl+Z
+**`Mod+Z` est lié.** `useShortcut` laisse passer les touches d'édition natives
+(z, y, x, c, v, a) quand le focus est dans un champ, donc le Ctrl+Z du
+navigateur y survit et le raccourci n'annule que hors saisie.
 
-Deux impasses ont conduit au bouton dans la barre latérale.
-
-**Le toast ne peut pas porter d'action.** Base UI accepte `actionProps` et
-exporte `Toast.Action`, mais le `ToastList` du design system ne rend que le
-titre, la description et la fermeture. Un `actionProps` passé à `toast.add()`
-n'aboutit nulle part. C'est pourtant là que « Annuler » devrait vivre, juste
-après la suppression qu'il annule.
-
-**`Mod+Z` casserait l'annulation native.** `useShortcut` appelle
-`preventDefault()` dès que la combinaison correspond, y compris dans un champ de
-saisie. Le lier reviendrait à supprimer le Ctrl+Z du navigateur dans tous les
-champs du formulaire — un échange perdant.
+Le bouton de la barre latérale reste : il couvre ce qu'aucun toast ne rapporte
+— ajout, édition, réordonnancement — et reste la seule cible tactile.
 
 L'historique ne retient que les changements structurels (ajout, édition,
 suppression, réordonnancement, réinitialisation), pas la frappe : vingt entrées
@@ -162,13 +163,6 @@ aucune n'est facultative : `itemProps1.xml` (déclarée dans
 `[Content_Types].xml`, sinon Word refuse le fichier entier), les relations de
 l'élément, et une relation depuis `document.xml` — une partie que rien ne
 référence est une partie que Word peut supprimer.
-
-**Ce qui n'a pas pu être vérifié ici : la survie à un enregistrement Word.**
-La spécification garantit la conservation des parties `customXml`, et
-l'aller-retour est testé de bout en bout (export réel, réimport réel, y compris
-avec des caractères que XML refuserait tels quels). Mais aucune installation de
-Word n'était disponible pour confirmer qu'un fichier ouvert puis réenregistré
-garde encore ses données. À tester une fois.
 
 **L'identifiant est régénéré à l'import.** Importer deux fois le même fichier
 donne deux prosits, pas un document occupant deux emplacements.

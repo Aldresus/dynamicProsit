@@ -178,28 +178,10 @@ function Shell() {
 	useShortcut("Mod+Enter", () => goToStep(nextStep(slug)));
 	useShortcut("Mod+Shift+Enter", () => goToStep(previousStep(slug)));
 	useShortcut("Mod+S", exportDocument);
-	/*
-	 * Not `useShortcut`: it preventDefaults before the handler runs, and typing
-	 * is deliberately untracked (see the store), so Ctrl+Z inside a field has to
-	 * stay the browser's own undo rather than leap past the paragraph being
-	 * written to whatever structural change came before it.
-	 */
-	useEffect(() => {
-		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key !== "z" || event.shiftKey || event.altKey) return;
-			if (!event.ctrlKey && !event.metaKey) return;
-			const focused = document.activeElement;
-			if (
-				focused instanceof HTMLInputElement ||
-				focused instanceof HTMLTextAreaElement
-			)
-				return;
-			event.preventDefault();
-			undo();
-		};
-		window.addEventListener("keydown", onKeyDown);
-		return () => window.removeEventListener("keydown", onKeyDown);
-	}, [undo]);
+	// Since design system 2.3.0 `useShortcut` leaves the native editing keys
+	// alone inside a field, so Ctrl+Z in a text area stays the browser's own
+	// undo — typing is deliberately untracked (see the store).
+	useShortcut("Mod+Z", undo);
 	useShortcut("Mod+Alt+L", toggle);
 	useShortcut("F1", () => setHelpOpen((open) => !open));
 
@@ -355,11 +337,10 @@ function Shell() {
 							/>
 						</div>
 						{/*
-							Undo belongs in the toast that reports the deletion, but the
-							design system's ToastList renders only title, description and
-							close — no Toast.Action — so actionProps would go nowhere. A
-							visible control it is, and it sits beside the actions that undo
-							it rather than buried between Thème and a delete button.
+							The deletion toast now carries its own Annuler (ToastList renders
+							Toast.Action since 2.3.0). This one stays for everything else the
+							history holds — ajout, édition, réordonnancement — which no toast
+							reports.
 						*/}
 						<Tooltip content="Revenir à l'état précédent (Ctrl+Z)">
 							<Button variant="outline" onClick={undo} disabled={!canUndo}>
@@ -472,7 +453,15 @@ function Shell() {
 			<ConfirmModal
 				open={confirming}
 				onOpenChange={setConfirming}
-				onConfirm={() => (deletes ? remove(prosit.id) : reset())}
+				onConfirm={() => {
+					if (deletes) remove(prosit.id);
+					else reset();
+					// Annuler where the thing it undoes just happened.
+					toast.add({
+						title: deletes ? "Prosit supprimé" : "Prosit réinitialisé",
+						actionProps: { children: "Annuler", onClick: undo },
+					});
+				}}
 				title={
 					deletes
 						? `Supprimer « ${prositLabel(prosit)} » ?`
