@@ -54,10 +54,11 @@ function parse(raw: string): Library {
 	const stored: unknown = JSON.parse(raw);
 	if (!isRecord(stored)) return emptyLibrary();
 
-	// v1 and v2 are discarded silently. v3 held a single document at the root,
-	// so it becomes a library of one rather than being thrown away — the shape
-	// changed, the content is still perfectly good.
-	if (stored.prositVersion === 3) {
+	// Every version before this one held a single document at the root, under a
+	// `prositVersion`, with the field names we still use. It becomes a library of
+	// one rather than being thrown away — the shape changed, the content is still
+	// perfectly good.
+	if ("prositVersion" in stored && !Array.isArray(stored.prosits)) {
 		const only = parseProsit(stored);
 		return { version: PROSIT_VERSION, current: only.id, prosits: [only] };
 	}

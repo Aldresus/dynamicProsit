@@ -35,6 +35,7 @@ import {
 	MoonStar,
 	PanelRight,
 	Plus,
+	Redo2,
 	Sun,
 	Trash2,
 	Undo2,
@@ -60,6 +61,26 @@ export const Route = createFileRoute("/_shell")({
 	component: Shell,
 });
 
+/*
+ * AppShellSidebar renders its children twice — once in the desktop column, once
+ * inside its mobile Drawer — and keeps that drawer's open state in a private
+ * context: no `useAppShell`, nothing to call, so a nav click left the drawer
+ * covering the page it had just navigated to. `DrawerClose` is not the way out
+ * either: the desktop copy has no `Dialog.Root` above it and Base UI throws,
+ * which takes the whole app down (verified).
+ *
+ * ponytail: so we click the drawer's own close button. Ceiling: it is found by
+ * the aria-label the design system puts on it — if that ever changes the drawer
+ * simply stops closing, no crash. Upgrade path: a `useAppShell` export.
+ * `closest` returns null in the desktop copy, where this is a no-op.
+ */
+const closeMobileNav = (event: { currentTarget: Element }) => {
+	event.currentTarget
+		.closest('[role="dialog"]')
+		?.querySelector<HTMLButtonElement>('button[aria-label="Close"]')
+		?.click();
+};
+
 /** `/` is Informations; every other step is `/<slug>`. */
 const slugOf = (pathname: string): string | null => {
 	const slug = pathname.replace(/^\/|\/$/g, "");
@@ -67,8 +88,19 @@ const slugOf = (pathname: string): string | null => {
 };
 
 function Shell() {
-	const { prosit, prosits, select, create, remove, add, reset, undo, canUndo } =
-		useProsit();
+	const {
+		prosit,
+		prosits,
+		select,
+		create,
+		remove,
+		add,
+		reset,
+		undo,
+		canUndo,
+		redo,
+		canRedo,
+	} = useProsit();
 	const { pathname } = useLocation();
 	const slug = slugOf(pathname);
 	const goToStep = useGoToStep();
@@ -182,6 +214,9 @@ function Shell() {
 	// alone inside a field, so Ctrl+Z in a text area stays the browser's own
 	// undo — typing is deliberately untracked (see the store).
 	useShortcut("Mod+Z", undo);
+	// Les deux conventions du rétablissement, sans en privilégier une.
+	useShortcut("Mod+Shift+Z", redo);
+	useShortcut("Mod+Y", redo);
 	useShortcut("Mod+Alt+L", toggle);
 	useShortcut("F1", () => setHelpOpen((open) => !open));
 
@@ -289,6 +324,7 @@ function Shell() {
 								icon={<step.icon className="size-4" />}
 								active={slug === step.slug}
 								render={<Link {...linkProps(step)} />}
+								onClick={closeMobileNav}
 							>
 								{step.label}
 							</NavItem>
@@ -342,12 +378,31 @@ function Shell() {
 							history holds — ajout, édition, réordonnancement — which no toast
 							reports.
 						*/}
-						<Tooltip content="Revenir à l'état précédent (Ctrl+Z)">
-							<Button variant="outline" onClick={undo} disabled={!canUndo}>
-								<Undo2 className="size-4" />
-								Annuler
-							</Button>
-						</Tooltip>
+						<div className="flex gap-2">
+							<Tooltip content="Revenir à l'état précédent (Ctrl+Z)">
+								<Button
+									variant="outline"
+									onClick={undo}
+									disabled={!canUndo}
+									className="flex-1"
+								>
+									<Undo2 className="size-4" />
+									Annuler
+								</Button>
+							</Tooltip>
+							{/* Sans lui, une annulation de trop ne se rattrape qu'au clavier. */}
+							<Tooltip content="Rétablir ce qui vient d'être annulé (Ctrl+Maj+Z)">
+								<Button
+									variant="outline"
+									onClick={redo}
+									disabled={!canRedo}
+									aria-label="Rétablir"
+									className="shrink-0"
+								>
+									<Redo2 className="size-4" />
+								</Button>
+							</Tooltip>
+						</div>
 						<Tooltip content="Ouvrir la vue projetée dans une seconde fenêtre">
 							<Button variant="outline" onClick={openPresentation}>
 								<MonitorPlay className="size-4" />

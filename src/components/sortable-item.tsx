@@ -111,7 +111,13 @@ export function SortableItem({ item, onEdit, onDelete }: SortableItemProps) {
 					<button
 						ref={trigger}
 						type="button"
-						onClick={() => setEditing(true)}
+						// Le brouillon est semé à l'ouverture, pas au montage : entre les
+						// deux, le texte a pu changer sous nos pieds (une annulation), et
+						// un brouillon périmé réécrirait la version restaurée à la sortie.
+						onClick={() => {
+							setDraft(item.content);
+							setEditing(true);
+						}}
 						// The text is its own label on screen; a reader needs the verb too.
 						aria-label={`Modifier « ${item.content} »`}
 						className="hcds-body flex-1 cursor-text whitespace-pre-wrap rounded-control px-2 py-1.5 text-left hover:bg-surface-sunken"

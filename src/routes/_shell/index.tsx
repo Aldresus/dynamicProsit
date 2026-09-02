@@ -38,6 +38,11 @@ function Informations() {
 				event.preventDefault();
 				navigate({ to: "/$section", params: { section: "mots-clefs" } });
 			}}
+			// A prosit is written as a draft: `Field required` puts a real HTML
+			// `required` on the control, which would block Entrée on an empty form.
+			// `noValidate` drops the browser's gate and keeps the `*` and the
+			// `aria-required` the label carries.
+			noValidate
 			className="flex flex-col gap-8 py-4"
 		>
 			<section className="flex flex-col gap-4">
@@ -84,8 +89,16 @@ function Informations() {
 				</div>
 			</section>
 
-			{/* Enter anywhere in the form moves on, as it did before. */}
-			<input type="submit" hidden />
+			{/*
+				Enter anywhere in the form moves on, and this button is the only thing
+				that makes that happen: implicit submission clicks the form's default
+				button. `sr-only` rather than `hidden` so it is actually rendered, and
+				out of the a11y tree and the tab order — the visible « Étape suivante »
+				at the top of the page is the control, this is just its anchor.
+			*/}
+			<button type="submit" className="sr-only" tabIndex={-1} aria-hidden>
+				Étape suivante
+			</button>
 		</form>
 	);
 }

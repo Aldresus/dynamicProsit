@@ -66,15 +66,52 @@ describe("storage", () => {
 		expect(loadCurrent().titre).toBe("l'ancien");
 	});
 
-	it("discards a v2 document silently", () => {
+	// v2 is what the shipped app writes, so this is the migration that matters.
+	it("migrates a v2 document without losing anything", () => {
 		store.write(
-			JSON.stringify({ prositVersion: 2, titre: "ancien", motsCles: [] }),
+			JSON.stringify({
+				prositVersion: 2,
+				currentAnchor: "informations",
+				touched: true,
+				titre: "Le fromage a disparu",
+				lien: "https://example.org",
+				contexte: "Un vol au réfectoire",
+				animateur: "Alice",
+				motsCles: [
+					{ id: "m1", content: "Fromage" },
+					{ id: "m2", content: "Vol" },
+				],
+				problematiques: [{ id: "p1", content: "Qui a pris le fromage ?" }],
+			}),
 		);
-		expect(loadCurrent().titre).toBe("");
+		const library = load();
+		expect(library.prosits).toHaveLength(1);
+		const prosit = loadCurrent();
+		expect(prosit.id).not.toBe("");
+		expect(prosit.titre).toBe("Le fromage a disparu");
+		expect(prosit.lien).toBe("https://example.org");
+		expect(prosit.contexte).toBe("Un vol au réfectoire");
+		expect(prosit.animateur).toBe("Alice");
+		expect(prosit.motsCles).toEqual([
+			{ id: "m1", content: "Fromage" },
+			{ id: "m2", content: "Vol" },
+		]);
+		expect(prosit.problematiques).toEqual([
+			{ id: "p1", content: "Qui a pris le fromage ?" },
+		]);
 	});
 
-	it("discards a v1 document silently", () => {
-		store.write(JSON.stringify({ prositVersion: 1, motsCles: ["fromage"] }));
+	// v1 held plain strings in its lists. The shipped app rewrote those to v2 on
+	// load years ago, so only the text fields are worth carrying over.
+	it("keeps a v1 document but drops its string lists", () => {
+		store.write(
+			JSON.stringify({
+				prositVersion: 1,
+				titre: "très ancien",
+				motsCles: ["fromage"],
+			}),
+		);
+		expect(loadCurrent().titre).toBe("très ancien");
 		expect(loadCurrent().motsCles).toEqual([]);
 	});
 
