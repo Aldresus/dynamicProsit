@@ -1,12 +1,15 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.4.0/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"organizeImports": { "enabled": true },
 	"linter": {
 		"enabled": true,
-		"rules": {
-			"recommended": true
-		}
+		"rules": { "recommended": true }
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"files": {
+		"ignore": ["dist", "legacy", "src/routeTree.gen.ts"]
 	}
 }

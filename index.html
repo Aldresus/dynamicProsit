@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" href="/favicon.ico" />
+		<title>DynamicPrositX, l'outil pour vos prosits réussis !</title>
+		<!--
+			useColorScheme puts `.dark` on <html> after hydration. These pages are
+			prerendered, so without this the first paint is light and then snaps —
+			straight into the eyes of a room being shown the projector view.
+			The key and the stored values ("dark" / "light") must match the hook's.
+		-->
+		<script>
+			try {
+				var choice = localStorage.getItem("dynamicprosit-theme");
+				var dark =
+					choice === "dark" ||
+					(choice === null &&
+						window.matchMedia("(prefers-color-scheme: dark)").matches);
+				if (dark) document.documentElement.classList.add("dark");
+			} catch (_) {}
+		</script>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="module" src="/src/main.tsx"></script>
+	</body>
+</html>
