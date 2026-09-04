@@ -1,7 +1,7 @@
 import { LIST_SECTIONS } from "./sections";
 
 export const SITE = {
-	origin: "https://prosit.hugochampy.fr",
+	origin: "https://prosit.fr",
 	name: "DynamicPrositX",
 	title: "DynamicPrositX, l'outil pour vos prosits réussis !",
 	description:

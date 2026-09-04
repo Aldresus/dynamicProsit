@@ -2,10 +2,11 @@
 
 # DynamicPrositX
 
-Un outil pour accompagner les prosits : un formulaire en sept étapes, un export
-`.docx`, et une vue de présentation à projeter qui suit le formulaire en direct.
+Un outil pour accompagner les prosits : un formulaire en sept étapes, une
+bibliothèque de prosits, un export `.docx` réimportable, et une vue de
+présentation à projeter qui suit le formulaire en direct.
 
-<https://prosit.hugochampy.fr>
+<https://prosit.fr>
 
 ## Démarrer
 
@@ -26,6 +27,19 @@ bun run dev
 | `bun run lint` | Biome |
 | `bun run og` | régénère `public/og.png` (uniquement si le texte change) |
 
+## Utiliser
+
+Les sept étapes s'enchaînent au clavier : `Alt+Shift+A` à `Alt+Shift+U` pour y
+aller directement, `Mod+Entrée` pour ajouter une ligne, `Mod+Z` pour annuler,
+`Mod+Alt+L` pour basculer le thème. **`F1` affiche la liste complète** — elle
+vit dans l'aide, pas ici, pour ne pas dériver.
+
+Les listes se réordonnent au glisser-déposer. Le sélecteur en barre latérale
+change de prosit : le stockage en garde plusieurs, pas un seul.
+
+`/presentation` s'ouvre dans une seconde fenêtre à projeter. Elle n'a aucun
+contrôle : elle suit ce que fait le formulaire.
+
 ## Architecture
 
 Vite + React 19 + TanStack Router, en SPA statique. Tailwind v4 et
@@ -33,15 +47,18 @@ Vite + React 19 + TanStack Router, en SPA statique. Tailwind v4 et
 
 ```
 src/
-  domain/      types, stockage, opérations sur les listes, export .docx, sync
-  routes/      arbre TanStack Router (fichiers)
-  components/  vues réutilisables
-  sections.ts  LA table des sept étapes
-  seo.ts       métadonnées par page
-scripts/       prérendu et génération de la carte sociale
+  domain/          types, stockage, opérations sur les listes, export .docx, sync
+  routes/          arbre TanStack Router (fichiers)
+  components/      vues réutilisables
+  sections.ts      LA table des sept étapes
+  prosit-store.tsx état, historique d'annulation, bibliothèque
+  shortcuts.ts     raccourcis clavier
+  theme.tsx        thème clair / sombre
+  seo.ts           métadonnées par page
+scripts/           prérendu et génération de la carte sociale
 ```
 
-Deux points portent le reste :
+Trois points portent le reste :
 
 **`sections.ts` est la source unique des étapes.** Ajouter une étape à un prosit
 est une ligne dans ce tableau : la navigation, les raccourcis, la route, la vue
@@ -50,7 +67,11 @@ liste partagent une seule route `$section`.
 
 **Le document vit dans `localStorage` et voyage par `BroadcastChannel`.** La
 fenêtre de présentation n'a pas d'état propre : elle lit le stockage une fois
-pour s'afficher, puis suit le canal que le formulaire publie.
+pour s'afficher, puis suit le canal `prosit` que le formulaire publie.
+
+**L'annulation est un reducer, pas un patch.** `prosit-store.tsx` garde vingt
+états et groupe les frappes consécutives dans un même champ, pour que `Mod+Z`
+recule d'une idée et non d'une lettre.
 
 ## Format des données
 
@@ -73,12 +94,14 @@ lui-même, dans `customXml/item1.xml`, et `Importer` le relit tel quel.
 
 Pas de JSON séparé à garder synchronisé : le fichier qu'on envoie à un
 camarade est aussi celui qui lui rend le prosit modifiable. Un `.docx` qui ne
-vient pas de cette application est refusé avec un message qui le dit.
+vient pas de cette application n'a pas le bon namespace et est refusé avec un
+message qui le dit.
 
 ## Déploiement
 
 `bun run build` produit un `dist/` entièrement statique, avec un `index.html`
-par route. `vercel.json` porte la configuration de déploiement.
+par route, plus `sitemap.xml` et `robots.txt`. `vercel.json` porte la
+configuration de déploiement.
 
 Le déploiement a besoin de `GITHUB_TOKEN` **à l'installation** — le design
 system est sur GitHub Packages — sinon `bun install` échoue en 401. Voir
